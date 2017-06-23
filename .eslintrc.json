@@ -1,0 +1,40 @@
+{
+    "extends": ["eslint:recommended", "plugin:react/recommended"],
+    "env": {
+        "browser": true,
+        "commonjs": true,
+        "es6": true,
+        "node": true,
+        "jquery": true
+    },
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "sourceType": "module"
+    },
+    "globals": {
+        "d3": true,
+        "L": true
+    },
+    "plugins": [
+        "react"
+    ],
+    "rules": {
+        "no-const-assign": "warn",
+        "no-this-before-super": "warn",
+        "no-undef": "warn",
+        "no-unreachable": "warn",
+        "no-unused-vars": ["warn", {"args": "none"}],
+        "constructor-super": "warn",
+        "valid-typeof": "warn",
+        "indent": ["error", 4, { "SwitchCase": 1 }],
+        "no-console": ["warn", { "allow": ["warn", "error"]}],
+        "one-var": ["error", "never"],
+        "semi": ["error", "always"],
+        "quotes": ["error", "single"],
+        "no-trailing-spaces": "error",
+        "space-before-function-paren": ["error", {"anonymous": "always", "named": "never"}],
+        "no-unexpected-multiline": "warn"
+    }
+}

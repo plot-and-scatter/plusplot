@@ -1,0 +1,45 @@
+{
+  "name": "plottable",
+  "version": "1.0.0",
+  "description": "A small graphing library for React built in D3",
+  "main": "lib/plottable.js",
+  "scripts": {
+    "start": "babel -s inline -d lib -w src",
+    "build": "babel -s inline -d lib src",
+    "test": "mocha --compilers js:babel-core/register ./test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/plot-and-scatter/plottable.git"
+  },
+  "keywords": [
+    "plotandscatter",
+    "react",
+    "d3",
+    "graphs"
+  ],
+  "author": "Frank Hangler <frank@plotandscatter.com> (http://plotandscatter.com)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/plot-and-scatter/plottable/issues"
+  },
+  "homepage": "https://github.com/plot-and-scatter/plottable#readme",
+  "devDependencies": {
+    "babel-core": "^6.25.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.23.0",
+    "babel-preset-stage-0": "^6.24.1",
+    "babel-runtime": "^6.23.0",
+    "chai": "^4.0.2",
+    "eslint": "^3.18.0",
+    "eslint-plugin-react": "^7.1.0",
+    "mocha": "^3.4.2",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1"
+  },
+  "dependencies": {
+    "d3": "^4.9.1"
+  }
+}
