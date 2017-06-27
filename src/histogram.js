@@ -1,4 +1,5 @@
 import AbstractPlot from './abstract-plot';
+import * as d3 from 'd3';
 
 class Histogram extends AbstractPlot {
     constructor(props) {

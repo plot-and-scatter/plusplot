@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import * as d3 from 'd3';
 
 class AbstractPlot extends React.Component {
 
@@ -15,24 +16,24 @@ class AbstractPlot extends React.Component {
     }
 
     componentDidMount() {
-        // console.log('Plottable.componentDidMount()');
+        // console.log('AbstractPlot.componentDidMount()');
         this.initialSetup();
     }
 
     componentDidUpdate() {
-        // console.log('Plottable.componentDidUpdate()');
+        // console.log('AbstractPlot.componentDidUpdate()');
         if (this.props.data.length === 0) { this.resetGraphic(); }
         this.updateGraphicDimensions();
         this.updateGraphicContents();
     }
 
     initialSetup() {
-        // console.log('Plottable.initialSetup()');
+        // console.log('AbstractPlot.initialSetup()');
 
         const xAxisLabel = 'X Axis Label';
         const yAxisLabel = 'Y Axis Label';
 
-        this.svg = d3.select(this.svgAttachmentPoint);
+        this.svg = d3.select(this.svg);
 
         this.wrapper = this.svg.append('g')
             .attr('class', 'wrapper')
@@ -77,7 +78,7 @@ class AbstractPlot extends React.Component {
 
     updateGraphicDimensions() {
         // Set dimensions and margins of graphic
-        // const width = this.svgAttachmentPoint.getBoundingClientRect().width;
+        // const width = this.svg.getBoundingClientRect().width;
         // this.width = width - this.margin.left - this.margin.right;
         this.width = 600;
 
@@ -88,16 +89,16 @@ class AbstractPlot extends React.Component {
     }
 
     getXScale() {
-        throw('Plottable.getXScale(): unimplemented stub method');
+        throw('AbstractPlot.getXScale(): unimplemented stub method');
     }
 
     getYScale() {
-        throw('Plottable.getYScale(): unimplemented stub method');
+        throw('AbstractPlot.getYScale(): unimplemented stub method');
     }
 
     updateVizComponents() {
 
-        // console.log('Plottable.updateVizComponents()');
+        // console.log('AbstractPlot.updateVizComponents()');
 
         // this.svg.selectAll('.bar').transition().duration(500).call(this.setBarSizes);
         // this.svg.selectAll('rect.majority').transition().duration(500).call(this.setMajorityLineSize);
@@ -152,7 +153,7 @@ class AbstractPlot extends React.Component {
 
     updateGraphicContents() {
 
-        // console.log('In Plottable.updateGraphicContents()');
+        // console.log('In AbstractPlot.updateGraphicContents()');
 
         // // define filtered data
         // let filterData = (data) => {
@@ -198,14 +199,14 @@ class AbstractPlot extends React.Component {
     }
 
     resetGraphic() {
-        // console.log('In Plottable.resetGraphic()');
+        // console.log('In AbstractPlot.resetGraphic()');
     }
 
     render() {
         return (
-            <div className="ps-plottable">
+            <div className="ps-AbstractPlot">
                 <svg
-                    ref={(svgAttachmentPoint) => { this.svgAttachmentPoint = svgAttachmentPoint; }}>
+                    ref={(svg) => { this.svg = svg; }}>
                 </svg>
             </div>
         );
