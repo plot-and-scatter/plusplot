@@ -1,16 +1,17 @@
 {
-  "name": "plottable",
-  "version": "1.0.0",
+  "name": "@plot-and-scatter/plusplot",
+  "version": "0.1.0",
   "description": "A small graphing library for React built in D3",
-  "main": "lib/plottable.js",
+  "main": "lib/plusplot.js",
   "scripts": {
     "start": "babel -s inline -d lib -w src",
     "build": "babel -s inline -d lib src",
+    "prepublishOnly": "npm test && npm run build",
     "test": "mocha --compilers js:babel-core/register ./test"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/plot-and-scatter/plottable.git"
+    "url": "git+https://github.com/plot-and-scatter/plusplot.git"
   },
   "keywords": [
     "plotandscatter",
@@ -21,9 +22,9 @@
   "author": "Frank Hangler <frank@plotandscatter.com> (http://plotandscatter.com)",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/plot-and-scatter/plottable/issues"
+    "url": "https://github.com/plot-and-scatter/plusplot/issues"
   },
-  "homepage": "https://github.com/plot-and-scatter/plottable#readme",
+  "homepage": "https://github.com/plot-and-scatter/plusplot#readme",
   "devDependencies": {
     "babel-core": "^6.25.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
@@ -35,11 +36,12 @@
     "chai": "^4.0.2",
     "eslint": "^3.18.0",
     "eslint-plugin-react": "^7.1.0",
-    "mocha": "^3.4.2",
+    "mocha": "^3.4.2"
+  },
+  "dependencies": {
+    "d3": "^4.9.1",
     "react": "^15.6.1",
     "react-dom": "^15.6.1"
   },
-  "dependencies": {
-    "d3": "^4.9.1"
-  }
+  "false": {}
 }
