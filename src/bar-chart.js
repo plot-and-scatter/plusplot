@@ -1,4 +1,5 @@
 import AbstractPlot from './abstract-plot';
+import PropTypes from 'prop-types';
 import * as d3 from 'd3';
 
 /**
@@ -68,5 +69,12 @@ class BarChart extends AbstractPlot {
         return super.render();
     }
 }
+
+BarChart.propTypes = {
+    data: PropTypes.arrayOf(PropTypes.shape({
+        category: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+        count: PropTypes.number.isRequired
+    })).isRequired
+};
 
 module.exports = BarChart;

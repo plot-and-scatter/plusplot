@@ -322,6 +322,10 @@ var _abstractPlot = require('./abstract-plot');
 
 var _abstractPlot2 = _interopRequireDefault(_abstractPlot);
 
+var _propTypes = require('prop-types');
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
 var _d = require('d3');
 
 var d3 = _interopRequireWildcard(_d);
@@ -429,9 +433,16 @@ var BarChart = function (_AbstractPlot) {
     return BarChart;
 }(_abstractPlot2.default);
 
+BarChart.propTypes = {
+    data: _propTypes2.default.arrayOf(_propTypes2.default.shape({
+        category: _propTypes2.default.oneOfType([_propTypes2.default.string, _propTypes2.default.number]).isRequired,
+        count: _propTypes2.default.number.isRequired
+    })).isRequired
+};
+
 module.exports = BarChart;
 
-},{"./abstract-plot":2,"babel-runtime/core-js/object/get-prototype-of":10,"babel-runtime/helpers/classCallCheck":14,"babel-runtime/helpers/createClass":15,"babel-runtime/helpers/get":16,"babel-runtime/helpers/inherits":17,"babel-runtime/helpers/possibleConstructorReturn":18,"d3":98}],4:[function(require,module,exports){
+},{"./abstract-plot":2,"babel-runtime/core-js/object/get-prototype-of":10,"babel-runtime/helpers/classCallCheck":14,"babel-runtime/helpers/createClass":15,"babel-runtime/helpers/get":16,"babel-runtime/helpers/inherits":17,"babel-runtime/helpers/possibleConstructorReturn":18,"d3":98,"prop-types":128}],4:[function(require,module,exports){
 'use strict';
 
 var _getPrototypeOf = require('babel-runtime/core-js/object/get-prototype-of');
