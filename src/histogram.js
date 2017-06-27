@@ -9,19 +9,51 @@ class Histogram extends AbstractPlot {
         this.setBarSizes = this.setBarSizes.bind(this);
     }
 
+    static defaultBinning(data, numTicks=10) {
+        // This is somewhat complicated. Basically, we can't just
+        // rely on d3.histogram to give nice bins, because the x0 of the
+        // first bin and the x1 of the last bin are effectively infinite.
+        // So we build a temporarily scale and 'nice' it, then use that
+        // scale to build the histogram bins. For more information,
+        // see https://github.com/d3/d3-array/issues/46
+        const extent = d3.extent(data, d => +d.value || +d);
+        const scale = d3.scaleLinear().domain(extent).nice(numTicks);
+        const bins = d3.histogram()
+            .domain(scale.domain())
+            .thresholds(scale.ticks())
+            .value(d => +d.value || +d)(data);
+
+        const filteredBins = bins.filter(bin => (bin.x1 - bin.x0 > 0 || bin.length > 0));
+
+        return filteredBins;
+    }
+
+    getBinWidth(bin) {
+        return bin.x1 - bin.x0;
+    }
+
     getXScale() {
         const minRange = 0;
         const maxRange = this.width;
 
         // Note that we assume the data has already been 'niced'; see
-        // PlottableFactory.
+        // defaultBinning().
+
         // Min will be x0 of the first bin
         const minDomain = +this.props.data[0].x0;
-        // Max will be x1 of the last bin
-        const maxDomain = +this.props.data[this.props.data.length-1].x1;
+
+        // If the last bin has a width of zero, max will be x1 of the last bin
+        // plus the width of the penultimate bin
+        const dataLength = this.props.data.length;
+        const lastBinWidth = this.getBinWidth(this.props.data[dataLength-1]);
+        let maxDomain = this.props.data[dataLength-1].x1;
+        if (lastBinWidth === 0) {
+            const penultimateBinWidth = this.getBinWidth(this.props.data[dataLength-2]);
+            maxDomain += penultimateBinWidth;
+        }
 
         return d3.scaleLinear()
-            .rangeRound([minRange, maxRange])
+            .range([minRange, maxRange])
             .domain([minDomain, maxDomain])
             .nice();
     }
@@ -42,9 +74,13 @@ class Histogram extends AbstractPlot {
         const x = this.getXScale();
         const y = this.getYScale();
 
+        // Calculate the standard width, which will be of the first bin.
+        const firstBin = this.props.data[0];
+        const width = x(firstBin.x1) - x(firstBin.x0) - 1;
+
         bars.attr('x', 1)
-            .attr('y', d => this.getYScale()(d.length))
-            .attr('width', d => x(d.x1) - x(d.x0) - 1)
+            .attr('y', d => y(d.length))
+            .attr('width', width)
             .attr('height', d => this.height - y(d.length))
             .attr('transform', d => `translate(${x(d.x0)}, 0)`);
     }
