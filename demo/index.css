@@ -2,3 +2,13 @@ body,
 html {
     font-family: Helvetica, Arial, sans-serif;
 }
+
+.data {
+    font-family: Inconsolata, Consolas, Monaco, monospace;
+    background-color: #eee;
+    padding: 1rem;
+}
+
+.data i {
+    color: #aaa;
+}
