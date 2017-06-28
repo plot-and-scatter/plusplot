@@ -41,6 +41,10 @@ function App(props) {
             <PlusPlot.BarChart
                 data={barChartData}
                 options={{
+                    axisLabels: {
+                        xAxisLabel: 'X test',
+                        yAxisLabel: 'Y text'
+                    }
                 }}
             />
             <h3>Data</h3>

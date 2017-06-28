@@ -15,6 +15,10 @@ class AbstractPlot extends React.Component {
                 right: 15,
                 bottom: 40,
                 left: 50
+            },
+            axisLabels: {
+                xAxisLabel: 'X Axis Label',
+                yAxisLabel: 'Y Axis Label'
             }
         };
 
@@ -23,10 +27,13 @@ class AbstractPlot extends React.Component {
         // options object. TODO: clean this up a little
         const propOptions = this.props.options || {};
         const mergedMargins = Object.assign(defaultOptions.margins, (propOptions.margins || {}));
+        const mergedAxisLabels = Object.assign(defaultOptions.axisLabels, (propOptions.axisLabels || {}));
         const mergedOptions = Object.assign(defaultOptions, this.props.options);
         mergedOptions.margins = mergedMargins;
+        mergedOptions.axisLabels = mergedAxisLabels;
 
         this.margins = mergedOptions.margins;
+        this.axisLabels = mergedOptions.axisLabels;
         this.height = mergedOptions.height - this.margins.top - this.margins.bottom;
         this.width = mergedOptions.width;
 
@@ -47,8 +54,8 @@ class AbstractPlot extends React.Component {
     }
 
     initialSetup() {
-        const xAxisLabel = 'X Axis Label';
-        const yAxisLabel = 'Y Axis Label';
+        // const xAxisLabel = 'X Axis Label';
+        // const yAxisLabel = 'Y Axis Label';
 
         this.svg = d3.select(this.svg);
 
@@ -70,13 +77,13 @@ class AbstractPlot extends React.Component {
             .attr('x', 0 - this.height/2)
             .attr('dy', 0)
             .style('text-anchor', 'middle')
-            .text(yAxisLabel);
+            .text(this.axisLabels.yAxisLabel);
 
         this.wrapper.append('text')
             .attr('class', 'axis-label x-axis-label')
             .attr('y', this.height + this.margins.bottom)
             .style('text-anchor', 'middle')
-            .text(xAxisLabel);
+            .text(this.axisLabels.xAxisLabel);
 
         this.updateGraphicDimensions();
 
@@ -148,6 +155,10 @@ AbstractPlot.propTypes = {
             right: PropTypes.number,
             bottom: PropTypes.number,
             left: PropTypes.number
+        }),
+        axisLabels: PropTypes.shape({
+            yAxisLabel: PropTypes.string,
+            xAxisLabel: PropTypes.string
         })
     })
 };
