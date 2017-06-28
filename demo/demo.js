@@ -698,10 +698,6 @@ var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstru
 
 var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
 
-var _get2 = require('babel-runtime/helpers/get');
-
-var _get3 = _interopRequireDefault(_get2);
-
 var _inherits2 = require('babel-runtime/helpers/inherits');
 
 var _inherits3 = _interopRequireDefault(_inherits2);
@@ -735,13 +731,62 @@ var ScatterPlot = function (_AbstractPlot) {
 
     function ScatterPlot(props) {
         (0, _classCallCheck3.default)(this, ScatterPlot);
-        return (0, _possibleConstructorReturn3.default)(this, (ScatterPlot.__proto__ || (0, _getPrototypeOf2.default)(ScatterPlot)).call(this, props));
+
+        var _this = (0, _possibleConstructorReturn3.default)(this, (ScatterPlot.__proto__ || (0, _getPrototypeOf2.default)(ScatterPlot)).call(this, props));
+
+        _this.setPointPositions = _this.setPointPositions.bind(_this);
+        return _this;
     }
 
     (0, _createClass3.default)(ScatterPlot, [{
-        key: 'render',
-        value: function render() {
-            return (0, _get3.default)(ScatterPlot.prototype.__proto__ || (0, _getPrototypeOf2.default)(ScatterPlot.prototype), 'render', this).call(this);
+        key: 'getXScale',
+        value: function getXScale() {
+            var minRange = 0;
+            var maxRange = this.width;
+            var minDomain = 0;
+            var maxDomain = d3.max(this.props.data.map(function (d) {
+                return d.x;
+            }));
+            return d3.scaleLinear().range([minRange, maxRange]).domain([minDomain, maxDomain]);
+        }
+    }, {
+        key: 'getYScale',
+        value: function getYScale() {
+            var minRange = 0;
+            var maxRange = this.height;
+            var minDomain = 0;
+            var maxDomain = d3.max(this.props.data.map(function (d) {
+                return d.y;
+            }));
+            return d3.scaleLinear().range([maxRange, minRange]) // Yes, we need to swap these
+            .domain([minDomain, maxDomain]);
+        }
+    }, {
+        key: 'setPointPositions',
+        value: function setPointPositions(points) {
+            var _this2 = this;
+
+            points.attr('r', 5).attr('cx', function (d) {
+                return _this2.getXScale()(d.x);
+            }).attr('cy', function (d) {
+                return _this2.getYScale()(d.y);
+            });
+        }
+    }, {
+        key: 'updateGraphicContents',
+        value: function updateGraphicContents() {
+            var points = this.wrapper.selectAll('.point').data(this.props.data);
+
+            var colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory20);
+
+            // Enter: add points
+            points.enter().append('circle').attr('class', 'point').attr('fill', function (d, i) {
+                return d.color || colorCategoryScale(i);
+            }).call(this.setPointPositions);
+
+            points.exit().remove();
+
+            this.updateVizComponents();
         }
     }]);
     return ScatterPlot;
@@ -749,7 +794,7 @@ var ScatterPlot = function (_AbstractPlot) {
 
 module.exports = ScatterPlot;
 
-},{"./abstract-plot":2,"babel-runtime/core-js/object/get-prototype-of":12,"babel-runtime/helpers/classCallCheck":16,"babel-runtime/helpers/createClass":17,"babel-runtime/helpers/get":18,"babel-runtime/helpers/inherits":19,"babel-runtime/helpers/possibleConstructorReturn":20,"d3":103}],7:[function(require,module,exports){
+},{"./abstract-plot":2,"babel-runtime/core-js/object/get-prototype-of":12,"babel-runtime/helpers/classCallCheck":16,"babel-runtime/helpers/createClass":17,"babel-runtime/helpers/inherits":19,"babel-runtime/helpers/possibleConstructorReturn":20,"d3":103}],7:[function(require,module,exports){
 module.exports = { "default": require("core-js/library/fn/json/stringify"), __esModule: true };
 },{"core-js/library/fn/json/stringify":22}],8:[function(require,module,exports){
 module.exports = { "default": require("core-js/library/fn/object/assign"), __esModule: true };
