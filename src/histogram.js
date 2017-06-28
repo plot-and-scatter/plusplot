@@ -90,11 +90,12 @@ class Histogram extends AbstractPlot {
             .data(this.props.data);
 
         const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory20);
+        const histogramColor = this.props.data.color || colorCategoryScale(0);
 
         // Enter: add bars
         bars.enter().append('rect')
             .attr('class', 'bar')
-            .attr('fill', colorCategoryScale(0)) // All bars are the same color
+            .attr('fill', histogramColor) // All bars are the same color
             .call(this.setBarSizes);
 
         bars.exit().remove();

@@ -5,11 +5,12 @@ const ReactDOM = require('react-dom');
 function App(props) {
 
     const barChartData = [
-        { category: 'Apples', count: 3},
-        { category: 'Bananas', count: 5},
-        { category: 'Oranges', count: 2},
-        { category: 'Strawberries', count: 7},
-        { category: 'Watermelons', count: 4},
+        { category: 'Apples', count: 3, color: 'rgba(0, 150, 0, 0.5)' },
+        { category: 'Bananas', count: 5, color: '#fe0' },
+        { category: 'Oranges', count: 2, color: 'orange' },
+        { category: 'Raspberries', count: 9, color: '#e25098' },
+        { category: 'Strawberries', count: 7, color: 'rgb(255, 0, 0)'},
+        { category: 'Watermelons', count: 4, color: 'green'},
     ];
     const barChartDataForDisplay = barChartData.map((item, index) => {
         return (
@@ -22,6 +23,7 @@ function App(props) {
         5, 5, 6, 6, 6, 6, 7, 7, 7, 8, 8, 9
     ];
     const histogramData = PlusPlot.Histogram.defaultBinning(randomData);
+    histogramData.color = '#fc0';
     const histogramDataForDisplay = histogramData.map((item, index) => {
         return(
             <span key={index}>
@@ -32,6 +34,19 @@ function App(props) {
                 {JSON.stringify(item.sort(), null, 1)}
                 <br/>
             </span>
+        );
+    });
+
+    const scatterPlotData = [
+        { x: 1, y: 3, color: 'black' }, { x: 5, y: 7 },
+        { x: 3, y: 1 }, { x: 4, y: 5 },
+        { x: 6, y: 5 }, { x: 6, y: 1 },
+        { x: 4, y: 4 }, { x: 3, y: 8 },
+        { x: 7, y: 2 }, { x: 2, y: 5 },
+    ];
+    const scatterPlotDataForDisplay = scatterPlotData.map((item, index) => {
+        return (
+            <span key={index}>&nbsp;&nbsp;{JSON.stringify(item, null, 1)}<br/></span>
         );
     });
 
@@ -59,6 +74,15 @@ function App(props) {
             <h3>Data</h3>
             <div className="data">
                 [<br/>{histogramDataForDisplay}]
+            </div>
+
+            <h2>PlusPlot.ScatterPlot</h2>
+            <PlusPlot.ScatterPlot
+                data={scatterPlotData}
+            />
+            <h3>Data</h3>
+            <div className="data">
+                [<br/>{scatterPlotDataForDisplay}]
             </div>
         </div>
     );

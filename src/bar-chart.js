@@ -57,7 +57,7 @@ class BarChart extends AbstractPlot {
         // Enter: add bars
         bars.enter().append('rect')
             .attr('class', 'bar')
-            .attr('fill', (d, i) => colorCategoryScale(i))
+            .attr('fill', (d, i) => d.color || colorCategoryScale(i))
             .call(this.setBarSizes);
 
         bars.exit().remove();
@@ -73,7 +73,8 @@ class BarChart extends AbstractPlot {
 BarChart.propTypes = {
     data: PropTypes.arrayOf(PropTypes.shape({
         category: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-        count: PropTypes.number.isRequired
+        count: PropTypes.number.isRequired,
+        color: PropTypes.string
     })).isRequired
 };
 
