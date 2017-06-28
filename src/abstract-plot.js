@@ -7,9 +7,28 @@ class AbstractPlot extends React.Component {
     constructor(props) {
         super(props);
 
-        this.margin = { top: 5, right: 15, bottom: 40, left: 50 };
-        this.height = this.props.options.height - this.margin.top - this.margin.bottom;
-        this.width = this.props.options.width;
+        const defaultOptions = {
+            height: 400,
+            width: 600,
+            margins: {
+                top: 5,
+                right: 15,
+                bottom: 40,
+                left: 50
+            }
+        };
+
+        // First, merge any sub-objects (e.g. margins); then merge the base
+        // options object; then reassign all merged sub-objects to the merged
+        // options object. TODO: clean this up a little
+        const propOptions = this.props.options || {};
+        const mergedMargins = Object.assign(defaultOptions.margins, (propOptions.margins || {}));
+        const mergedOptions = Object.assign(defaultOptions, this.props.options);
+        mergedOptions.margins = mergedMargins;
+
+        this.margins = mergedOptions.margins;
+        this.height = mergedOptions.height - this.margins.top - this.margins.bottom;
+        this.width = mergedOptions.width;
 
         this.updateGraphicDimensions = this.updateGraphicDimensions.bind(this);
         this.getXScale = this.getXScale.bind(this);
@@ -35,7 +54,7 @@ class AbstractPlot extends React.Component {
 
         this.wrapper = this.svg.append('g')
             .attr('class', 'wrapper')
-            .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');
+            .attr('transform', 'translate(' + this.margins.left + ',' + this.margins.top + ')');
 
         this.wrapper.append('g')
             .attr('class', 'y-axis');
@@ -47,7 +66,7 @@ class AbstractPlot extends React.Component {
         this.wrapper.append('text')
             .attr('class', 'axis-label y-axis-label')
             .attr('transform', 'rotate(-90)')
-            .attr('y', 0 - this.margin.left + 10)
+            .attr('y', 0 - this.margins.left + 10)
             .attr('x', 0 - this.height/2)
             .attr('dy', 0)
             .style('text-anchor', 'middle')
@@ -55,7 +74,7 @@ class AbstractPlot extends React.Component {
 
         this.wrapper.append('text')
             .attr('class', 'axis-label x-axis-label')
-            .attr('y', this.height + this.margin.bottom)
+            .attr('y', this.height + this.margins.bottom)
             .style('text-anchor', 'middle')
             .text(xAxisLabel);
 
@@ -74,10 +93,10 @@ class AbstractPlot extends React.Component {
     updateGraphicDimensions() {
         // Set dimensions and margins of graphic
         // const width = this.svg.getBoundingClientRect().width;
-        // this.width = width - this.margin.left - this.margin.right;
+        // this.width = width - this.margins.left - this.margins.right;
 
-        this.svg.attr('width', this.width + this.margin.left + this.margin.right)
-                .attr('height', this.height + this.margin.top + this.margin.bottom);
+        this.svg.attr('width', this.width + this.margins.left + this.margins.right)
+                .attr('height', this.height + this.margins.top + this.margins.bottom);
 
         this.wrapper.select('.x-axis-label').attr('x', this.width/2);
     }
@@ -123,15 +142,14 @@ AbstractPlot.propTypes = {
     data: PropTypes.array.isRequired,
     options: PropTypes.shape({
         height: PropTypes.number,
-        width: PropTypes.number
+        width: PropTypes.number,
+        margins: PropTypes.shape({
+            top: PropTypes.number,
+            right: PropTypes.number,
+            bottom: PropTypes.number,
+            left: PropTypes.number
+        })
     })
-};
-
-AbstractPlot.defaultProps = {
-    options: {
-        height: 400,
-        width: 600
-    }
 };
 
 module.exports = AbstractPlot;

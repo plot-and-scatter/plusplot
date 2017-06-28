@@ -41,8 +41,6 @@ function App(props) {
             <PlusPlot.BarChart
                 data={barChartData}
                 options={{
-                    height: 300,
-                    width: 700
                 }}
             />
             <h3>Data</h3>
