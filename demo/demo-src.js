@@ -17,7 +17,10 @@ function App(props) {
         );
     });
 
-    const randomData = [1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 8, 8, 9];
+    const randomData = [
+        1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5,
+        5, 5, 6, 6, 6, 6, 7, 7, 7, 8, 8, 9
+    ];
     const histogramData = PlusPlot.Histogram.defaultBinning(randomData);
     const histogramDataForDisplay = histogramData.map((item, index) => {
         return(
@@ -35,14 +38,22 @@ function App(props) {
     return(
         <div>
             <h2>PlusPlot.BarChart</h2>
-            <PlusPlot.BarChart data={barChartData} />
+            <PlusPlot.BarChart
+                data={barChartData}
+                options={{
+                    height: 300,
+                    width: 700
+                }}
+            />
             <h3>Data</h3>
             <div className="data">
                 [<br/>{barChartDataForDisplay}]
             </div>
 
             <h2>PlusPlot.Histogram</h2>
-            <PlusPlot.Histogram data={histogramData} />
+            <PlusPlot.Histogram
+                data={histogramData}
+            />
             <h3>Data</h3>
             <div className="data">
                 [<br/>{histogramDataForDisplay}]
