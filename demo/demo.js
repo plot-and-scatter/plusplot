@@ -599,13 +599,13 @@ var Histogram = function (_AbstractPlot) {
             var minDomain = +this.props.data[0].x0;
 
             // If the last bin has a width of zero, max will be x1 of the last bin
-            // plus the width of the penultimate bin
+            // plus the width of the second-to-last bin
             var dataLength = this.props.data.length;
             var lastBinWidth = this.getBinWidth(this.props.data[dataLength - 1]);
             var maxDomain = this.props.data[dataLength - 1].x1;
             if (lastBinWidth === 0) {
-                var penultimateBinWidth = this.getBinWidth(this.props.data[dataLength - 2]);
-                maxDomain += penultimateBinWidth;
+                var secondLastBinWidth = this.getBinWidth(this.props.data[dataLength - 2]);
+                maxDomain += secondLastBinWidth;
             }
 
             return d3.scaleLinear().range([minRange, maxRange]).domain([minDomain, maxDomain]).nice();
