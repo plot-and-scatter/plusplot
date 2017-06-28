@@ -5,11 +5,12 @@ const ReactDOM = require('react-dom');
 function App(props) {
 
     const barChartData = [
-        { category: 'Apples', count: 3},
-        { category: 'Bananas', count: 5},
-        { category: 'Oranges', count: 2},
-        { category: 'Strawberries', count: 7},
-        { category: 'Watermelons', count: 4},
+        { category: 'Apples', count: 3, color: 'rgba(0, 150, 0, 0.5)' },
+        { category: 'Bananas', count: 5, color: '#fe0' },
+        { category: 'Oranges', count: 2, color: 'orange' },
+        { category: 'Raspberries', count: 9, color: '#e25098' },
+        { category: 'Strawberries', count: 7, color: 'rgb(255, 0, 0)'},
+        { category: 'Watermelons', count: 4, color: 'green'},
     ];
     const barChartDataForDisplay = barChartData.map((item, index) => {
         return (
@@ -22,6 +23,7 @@ function App(props) {
         5, 5, 6, 6, 6, 6, 7, 7, 7, 8, 8, 9
     ];
     const histogramData = PlusPlot.Histogram.defaultBinning(randomData);
+    histogramData.color = '#fc0';
     const histogramDataForDisplay = histogramData.map((item, index) => {
         return(
             <span key={index}>

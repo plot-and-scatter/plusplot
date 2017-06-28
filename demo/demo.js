@@ -13,7 +13,7 @@ var ReactDOM = require('react-dom');
 
 function App(props) {
 
-    var barChartData = [{ category: 'Apples', count: 3 }, { category: 'Bananas', count: 5 }, { category: 'Oranges', count: 2 }, { category: 'Strawberries', count: 7 }, { category: 'Watermelons', count: 4 }];
+    var barChartData = [{ category: 'Apples', count: 3, color: 'rgba(0, 150, 0, 0.5)' }, { category: 'Bananas', count: 5, color: '#fe0' }, { category: 'Oranges', count: 2, color: 'orange' }, { category: 'Raspberries', count: 9, color: '#e25098' }, { category: 'Strawberries', count: 7, color: 'rgb(255, 0, 0)' }, { category: 'Watermelons', count: 4, color: 'green' }];
     var barChartDataForDisplay = barChartData.map(function (item, index) {
         return React.createElement(
             'span',
@@ -26,6 +26,7 @@ function App(props) {
 
     var randomData = [1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 8, 8, 9];
     var histogramData = PlusPlot.Histogram.defaultBinning(randomData);
+    histogramData.color = '#fc0';
     var histogramDataForDisplay = histogramData.map(function (item, index) {
         return React.createElement(
             'span',
@@ -435,7 +436,7 @@ var BarChart = function (_AbstractPlot) {
 
             // Enter: add bars
             bars.enter().append('rect').attr('class', 'bar').attr('fill', function (d, i) {
-                return colorCategoryScale(i);
+                return d.color || colorCategoryScale(i);
             }).call(this.setBarSizes);
 
             bars.exit().remove();
@@ -454,7 +455,8 @@ var BarChart = function (_AbstractPlot) {
 BarChart.propTypes = {
     data: _propTypes2.default.arrayOf(_propTypes2.default.shape({
         category: _propTypes2.default.oneOfType([_propTypes2.default.string, _propTypes2.default.number]).isRequired,
-        count: _propTypes2.default.number.isRequired
+        count: _propTypes2.default.number.isRequired,
+        color: _propTypes2.default.string
     })).isRequired
 };
 
@@ -593,9 +595,10 @@ var Histogram = function (_AbstractPlot) {
             var bars = this.wrapper.selectAll('.bar').data(this.props.data);
 
             var colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory20);
+            var histogramColor = this.props.data.color || colorCategoryScale(0);
 
             // Enter: add bars
-            bars.enter().append('rect').attr('class', 'bar').attr('fill', colorCategoryScale(0)) // All bars are the same color
+            bars.enter().append('rect').attr('class', 'bar').attr('fill', histogramColor) // All bars are the same color
             .call(this.setBarSizes);
 
             bars.exit().remove();
