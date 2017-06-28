@@ -37,6 +37,19 @@ function App(props) {
         );
     });
 
+    const scatterPlotData = [
+        { x: 1, y: 3, color: 'black' }, { x: 5, y: 7 },
+        { x: 3, y: 1 }, { x: 4, y: 5 },
+        { x: 6, y: 5 }, { x: 6, y: 1 },
+        { x: 4, y: 4 }, { x: 3, y: 8 },
+        { x: 7, y: 2 }, { x: 2, y: 5 },
+    ];
+    const scatterPlotDataForDisplay = scatterPlotData.map((item, index) => {
+        return (
+            <span key={index}>&nbsp;&nbsp;{JSON.stringify(item, null, 1)}<br/></span>
+        );
+    });
+
     return(
         <div>
             <h2>PlusPlot.BarChart</h2>
@@ -57,6 +70,15 @@ function App(props) {
             <h3>Data</h3>
             <div className="data">
                 [<br/>{histogramDataForDisplay}]
+            </div>
+
+            <h2>PlusPlot.ScatterPlot</h2>
+            <PlusPlot.ScatterPlot
+                data={scatterPlotData}
+            />
+            <h3>Data</h3>
+            <div className="data">
+                [<br/>{scatterPlotDataForDisplay}]
             </div>
         </div>
     );
