@@ -58,7 +58,11 @@ function App(props) {
                 options={{
                     axisLabels: {
                         xAxisLabel: 'X test',
-                        yAxisLabel: 'Y text'
+                        yAxisLabel: 'Y test'
+                    },
+                    axisVisible: {
+                        xAxisVisible: 'none',
+                        yAxisVisible: 'none'
                     }
                 }}
             />

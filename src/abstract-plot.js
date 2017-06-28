@@ -19,6 +19,10 @@ class AbstractPlot extends React.Component {
             axisLabels: {
                 xAxisLabel: 'X Axis Label',
                 yAxisLabel: 'Y Axis Label'
+            },
+            axisVisible: {
+                xAxisVisible: 'unset',
+                yAxisVisible: 'unset'
             }
         };
 
@@ -28,12 +32,15 @@ class AbstractPlot extends React.Component {
         const propOptions = this.props.options || {};
         const mergedMargins = Object.assign(defaultOptions.margins, (propOptions.margins || {}));
         const mergedAxisLabels = Object.assign(defaultOptions.axisLabels, (propOptions.axisLabels || {}));
+        const mergedAxisVisible = Object.assign(defaultOptions.axisVisible, (propOptions.axisVisible || {}));
         const mergedOptions = Object.assign(defaultOptions, this.props.options);
         mergedOptions.margins = mergedMargins;
         mergedOptions.axisLabels = mergedAxisLabels;
+        mergedOptions.axisVisible = mergedAxisVisible;
 
         this.margins = mergedOptions.margins;
         this.axisLabels = mergedOptions.axisLabels;
+        this.axisVisible = mergedOptions.axisVisible;
         this.height = mergedOptions.height - this.margins.top - this.margins.bottom;
         this.width = mergedOptions.width;
 
@@ -64,11 +71,13 @@ class AbstractPlot extends React.Component {
             .attr('transform', 'translate(' + this.margins.left + ',' + this.margins.top + ')');
 
         this.wrapper.append('g')
-            .attr('class', 'y-axis');
+            .attr('class', 'y-axis')
+            .style('display', this.axisVisible.yAxisVisible);
 
         this.wrapper.append('g')
             .attr('class', 'x-axis')
-            .attr('transform', 'translate(0,' + this.height + ')');
+            .attr('transform', 'translate(0,' + this.height + ')')
+            .style('display', this.axisVisible.xAxisVisible);
 
         this.wrapper.append('text')
             .attr('class', 'axis-label y-axis-label')
@@ -77,13 +86,15 @@ class AbstractPlot extends React.Component {
             .attr('x', 0 - this.height/2)
             .attr('dy', 0)
             .style('text-anchor', 'middle')
-            .text(this.axisLabels.yAxisLabel);
+            .text(this.axisLabels.yAxisLabel)
+            .style('display', this.axisVisible.yAxisVisible);
 
         this.wrapper.append('text')
             .attr('class', 'axis-label x-axis-label')
             .attr('y', this.height + this.margins.bottom)
             .style('text-anchor', 'middle')
-            .text(this.axisLabels.xAxisLabel);
+            .text(this.axisLabels.xAxisLabel)
+            .style('display', this.axisVisible.xAxisVisible);
 
         this.updateGraphicDimensions();
 
@@ -159,6 +170,10 @@ AbstractPlot.propTypes = {
         axisLabels: PropTypes.shape({
             yAxisLabel: PropTypes.string,
             xAxisLabel: PropTypes.string
+        }),
+        axisVisible: PropTypes.shape({
+            yAxisVisible: PropTypes.string,
+            xAxisVisible: PropTypes.string
         })
     })
 };
