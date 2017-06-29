@@ -59,8 +59,7 @@ function App(props) {
         );
     });
 
-    const scatterPlotData = [];
-    for (let i = 0; i < 20; i++) { scatterPlotData.push(getRandomXY(1, 9)); }
+    const scatterPlotData = getArrayOfRandomXY(20, 1, 9);
     const scatterPlotDataForDisplay = scatterPlotData.map((item, index) => {
         return (
             <span key={index}>&nbsp;&nbsp;{JSON.stringify(item, null, 1)}<br /></span>
