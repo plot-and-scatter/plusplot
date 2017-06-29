@@ -75,27 +75,30 @@ class App extends React.Component {
             scatterPlotData: [],
             lineChartData: []
         };
-        this.init();
     }
 
-    init() {
+    componentDidMount() {
+        this.refreshData();
+    }
 
+    refreshData() {
+        this.setState({
+            barChartData: DataGenerator.generateBarChartData(),
+            histogramData: DataGenerator.generateHistogramData(),
+            scatterPlotData: DataGenerator.generateScatterPlotData(),
+            lineChartData: DataGenerator.generateLineChartData(),
+        });
     }
 
     render() {
 
-        const barChartData = DataGenerator.generateBarChartData();
-        const histogramData = DataGenerator.generateHistogramData();
-        const scatterPlotData = DataGenerator.generateScatterPlotData();
-        const lineChartData = DataGenerator.generateLineChartData();
-
-        const barChartDataForDisplay = barChartData.map((item, index) => {
+        const barChartDataForDisplay = this.state.barChartData.map((item, index) => {
             return (
                 <span key={index}>&nbsp;&nbsp;{JSON.stringify(item, null, 1)}<br /></span>
             );
         });
 
-        const histogramDataForDisplay = histogramData.map((item, index) => {
+        const histogramDataForDisplay = this.state.histogramData.map((item, index) => {
             return (
                 <span key={index}>
                     &nbsp;&nbsp;
@@ -108,13 +111,13 @@ class App extends React.Component {
             );
         });
 
-        const scatterPlotDataForDisplay = scatterPlotData.map((item, index) => {
+        const scatterPlotDataForDisplay = this.state.scatterPlotData.map((item, index) => {
             return (
                 <span key={index}>&nbsp;&nbsp;{JSON.stringify(item, null, 1)}<br /></span>
             );
         });
 
-        const lineChartDataForDisplay = lineChartData.map((item, index) => {
+        const lineChartDataForDisplay = this.state.lineChartData.map((item, index) => {
             return (
                 <span key={index}>&nbsp;&nbsp;{JSON.stringify(item, null, 1)}<br/></span>
             );
@@ -123,28 +126,28 @@ class App extends React.Component {
         return(
             <div>
                 <h2>PlusPlot.BarChart</h2>
-                <PlusPlot.BarChart data={barChartData} />
+                <PlusPlot.BarChart data={this.state.barChartData} />
                 <h3>Data</h3>
                 <div className="data">
                     [<br />{barChartDataForDisplay}]
                 </div>
 
                 <h2>PlusPlot.Histogram</h2>
-                <PlusPlot.Histogram data={histogramData} />
+                <PlusPlot.Histogram data={this.state.histogramData} />
                 <h3>Data</h3>
                 <div className="data">
                     [<br />{histogramDataForDisplay}]
                 </div>
 
                 <h2>PlusPlot.ScatterPlot</h2>
-                <PlusPlot.ScatterPlot data={scatterPlotData} />
+                <PlusPlot.ScatterPlot data={this.state.scatterPlotData} />
                 <h3>Data</h3>
                 <div className="data">
                     [<br />{scatterPlotDataForDisplay}]
                 </div>
 
                 <h2>PlusPlot.LineChart</h2>
-                <PlusPlot.LineChart data={lineChartData} />
+                <PlusPlot.LineChart data={this.state.lineChartData} />
                 <h3>Data</h3>
                 <div className="data">
                     [<br/>{lineChartDataForDisplay}]
