@@ -68,8 +68,7 @@ class AbstractPlot extends React.Component {
     initialSetup() {
         // const xAxisLabel = 'X Axis Label';
         // const yAxisLabel = 'Y Axis Label';
-
-        this.svg = d3.select(this.svg);
+        this.svg = d3.select(this.svgRef);
 
         this.wrapper = this.svg.append('g')
             .attr('class', 'wrapper')
@@ -117,7 +116,6 @@ class AbstractPlot extends React.Component {
         // Set dimensions and margins of graphic
         // const width = this.svg.getBoundingClientRect().width;
         // this.width = width - this.margins.left - this.margins.right;
-
         this.svg.attr('width', this.width + this.margins.left + this.margins.right)
             .attr('height', this.height + this.margins.top + this.margins.bottom);
 
@@ -155,7 +153,7 @@ class AbstractPlot extends React.Component {
     render() {
         return (
             <div className="ps-AbstractPlot">
-                <svg ref={(svg) => { this.svg = svg; }}></svg>
+                <svg ref={(svgRef) => { this.svgRef = svgRef; }}></svg>
             </div>
         );
     }

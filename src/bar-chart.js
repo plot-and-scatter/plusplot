@@ -42,6 +42,7 @@ class BarChart extends AbstractPlot {
     }
 
     setBarSizes(bars) {
+        // console.log('got in here');
         bars.attr('x', d => this.getXScale()(d.category))
             .attr('y', d => this.getYScale()(d.count))
             .attr('width', this.getXScale().bandwidth())
@@ -49,6 +50,8 @@ class BarChart extends AbstractPlot {
     }
 
     updateGraphicContents() {
+        // console.log('got in BarChart.updateGraphicContents');
+
         const bars = this.wrapper.selectAll('.bar')
             .data(this.props.data, d => d.category);
 
@@ -59,6 +62,8 @@ class BarChart extends AbstractPlot {
             .attr('class', 'bar')
             .attr('fill', (d, i) => d.color || colorCategoryScale(i))
             .call(this.setBarSizes);
+
+
 
         bars.exit().remove();
 
