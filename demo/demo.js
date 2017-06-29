@@ -85,12 +85,7 @@ function App(props) {
         ),
         React.createElement(PlusPlot.BarChart, {
             data: barChartData,
-            options: {
-                axisLabels: {
-                    xAxisLabel: 'X test',
-                    yAxisLabel: 'Y text'
-                }
-            }
+            options: {}
         }),
         React.createElement(
             'h3',
@@ -245,9 +240,11 @@ var AbstractPlot = function (_React$Component) {
                 bottom: 40,
                 left: 50
             },
-            axisLabels: {
+            axes: {
                 xAxisLabel: 'X Axis Label',
-                yAxisLabel: 'Y Axis Label'
+                yAxisLabel: 'Y Axis Label',
+                xAxisVisible: 'unset',
+                yAxisVisible: 'unset'
             }
         };
 
@@ -256,13 +253,23 @@ var AbstractPlot = function (_React$Component) {
         // options object. TODO: clean this up a little
         var propOptions = _this.props.options || {};
         var mergedMargins = (0, _assign2.default)(defaultOptions.margins, propOptions.margins || {});
-        var mergedAxisLabels = (0, _assign2.default)(defaultOptions.axisLabels, propOptions.axisLabels || {});
+
+        var mergedAxes = (0, _assign2.default)(defaultOptions.axes, propOptions.axes || {});
+
+        // const mergedAxisLabels = Object.assign(defaultOptions.axisLabels, (propOptions.axisLabels || {}));
+        // const mergedAxisVisible = Object.assign(defaultOptions.axisVisible, (propOptions.axisVisible || {}));
+
         var mergedOptions = (0, _assign2.default)(defaultOptions, _this.props.options);
+
         mergedOptions.margins = mergedMargins;
-        mergedOptions.axisLabels = mergedAxisLabels;
+        mergedOptions.axes = mergedAxes;
+        // mergedOptions.axisLabels = mergedAxisLabels;
+        // mergedOptions.axisVisible = mergedAxisVisible;
 
         _this.margins = mergedOptions.margins;
-        _this.axisLabels = mergedOptions.axisLabels;
+        _this.axes = mergedOptions.axes;
+        // this.axisLabels = mergedOptions.axisLabels;
+        // this.axisVisible = mergedOptions.axisVisible;
         _this.height = mergedOptions.height - _this.margins.top - _this.margins.bottom;
         _this.width = mergedOptions.width;
 
@@ -299,13 +306,13 @@ var AbstractPlot = function (_React$Component) {
 
             this.wrapper = this.svg.append('g').attr('class', 'wrapper').attr('transform', 'translate(' + this.margins.left + ',' + this.margins.top + ')');
 
-            this.wrapper.append('g').attr('class', 'y-axis');
+            this.wrapper.append('g').attr('class', 'y-axis').style('display', this.axes.yAxisVisible);
 
-            this.wrapper.append('g').attr('class', 'x-axis').attr('transform', 'translate(0,' + this.height + ')');
+            this.wrapper.append('g').attr('class', 'x-axis').attr('transform', 'translate(0,' + this.height + ')').style('display', this.axes.xAxisVisible);
 
-            this.wrapper.append('text').attr('class', 'axis-label y-axis-label').attr('transform', 'rotate(-90)').attr('y', 0 - this.margins.left + 10).attr('x', 0 - this.height / 2).attr('dy', 0).style('text-anchor', 'middle').text(this.axisLabels.yAxisLabel);
+            this.wrapper.append('text').attr('class', 'axis-label y-axis-label').attr('transform', 'rotate(-90)').attr('y', 0 - this.margins.left + 10).attr('x', 0 - this.height / 2).attr('dy', 0).style('text-anchor', 'middle').text(this.axes.yAxisLabel).style('display', this.axes.yAxisVisible);
 
-            this.wrapper.append('text').attr('class', 'axis-label x-axis-label').attr('y', this.height + this.margins.bottom).style('text-anchor', 'middle').text(this.axisLabels.xAxisLabel);
+            this.wrapper.append('text').attr('class', 'axis-label x-axis-label').attr('y', this.height + this.margins.bottom).style('text-anchor', 'middle').text(this.axes.xAxisLabel).style('display', this.axes.xAxisVisible);
 
             this.updateGraphicDimensions();
 
@@ -381,9 +388,11 @@ AbstractPlot.propTypes = {
             bottom: _propTypes2.default.number,
             left: _propTypes2.default.number
         }),
-        axisLabels: _propTypes2.default.shape({
+        axes: _propTypes2.default.shape({
             yAxisLabel: _propTypes2.default.string,
-            xAxisLabel: _propTypes2.default.string
+            xAxisLabel: _propTypes2.default.string,
+            yAxisVisible: _propTypes2.default.string,
+            xAxisVisible: _propTypes2.default.string
         })
     })
 };

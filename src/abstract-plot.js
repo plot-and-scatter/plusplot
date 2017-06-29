@@ -16,9 +16,11 @@ class AbstractPlot extends React.Component {
                 bottom: 40,
                 left: 50
             },
-            axisLabels: {
+            axes: {
                 xAxisLabel: 'X Axis Label',
-                yAxisLabel: 'Y Axis Label'
+                yAxisLabel: 'Y Axis Label',
+                xAxisVisible: 'unset',
+                yAxisVisible: 'unset'
             }
         };
 
@@ -27,13 +29,23 @@ class AbstractPlot extends React.Component {
         // options object. TODO: clean this up a little
         const propOptions = this.props.options || {};
         const mergedMargins = Object.assign(defaultOptions.margins, (propOptions.margins || {}));
-        const mergedAxisLabels = Object.assign(defaultOptions.axisLabels, (propOptions.axisLabels || {}));
+
+        const mergedAxes = Object.assign(defaultOptions.axes, (propOptions.axes || {}));
+
+        // const mergedAxisLabels = Object.assign(defaultOptions.axisLabels, (propOptions.axisLabels || {}));
+        // const mergedAxisVisible = Object.assign(defaultOptions.axisVisible, (propOptions.axisVisible || {}));
+
         const mergedOptions = Object.assign(defaultOptions, this.props.options);
+
         mergedOptions.margins = mergedMargins;
-        mergedOptions.axisLabels = mergedAxisLabels;
+        mergedOptions.axes = mergedAxes;
+        // mergedOptions.axisLabels = mergedAxisLabels;
+        // mergedOptions.axisVisible = mergedAxisVisible;
 
         this.margins = mergedOptions.margins;
-        this.axisLabels = mergedOptions.axisLabels;
+        this.axes = mergedOptions.axes;
+        // this.axisLabels = mergedOptions.axisLabels;
+        // this.axisVisible = mergedOptions.axisVisible;
         this.height = mergedOptions.height - this.margins.top - this.margins.bottom;
         this.width = mergedOptions.width;
 
@@ -64,26 +76,30 @@ class AbstractPlot extends React.Component {
             .attr('transform', 'translate(' + this.margins.left + ',' + this.margins.top + ')');
 
         this.wrapper.append('g')
-            .attr('class', 'y-axis');
+            .attr('class', 'y-axis')
+            .style('display', this.axes.yAxisVisible);
 
         this.wrapper.append('g')
             .attr('class', 'x-axis')
-            .attr('transform', 'translate(0,' + this.height + ')');
+            .attr('transform', 'translate(0,' + this.height + ')')
+            .style('display', this.axes.xAxisVisible);
 
         this.wrapper.append('text')
             .attr('class', 'axis-label y-axis-label')
             .attr('transform', 'rotate(-90)')
             .attr('y', 0 - this.margins.left + 10)
-            .attr('x', 0 - this.height/2)
+            .attr('x', 0 - this.height / 2)
             .attr('dy', 0)
             .style('text-anchor', 'middle')
-            .text(this.axisLabels.yAxisLabel);
+            .text(this.axes.yAxisLabel)
+            .style('display', this.axes.yAxisVisible);
 
         this.wrapper.append('text')
             .attr('class', 'axis-label x-axis-label')
             .attr('y', this.height + this.margins.bottom)
             .style('text-anchor', 'middle')
-            .text(this.axisLabels.xAxisLabel);
+            .text(this.axes.xAxisLabel)
+            .style('display', this.axes.xAxisVisible);
 
         this.updateGraphicDimensions();
 
@@ -103,17 +119,17 @@ class AbstractPlot extends React.Component {
         // this.width = width - this.margins.left - this.margins.right;
 
         this.svg.attr('width', this.width + this.margins.left + this.margins.right)
-                .attr('height', this.height + this.margins.top + this.margins.bottom);
+            .attr('height', this.height + this.margins.top + this.margins.bottom);
 
-        this.wrapper.select('.x-axis-label').attr('x', this.width/2);
+        this.wrapper.select('.x-axis-label').attr('x', this.width / 2);
     }
 
     getXScale() {
-        throw('AbstractPlot.getXScale(): unimplemented stub method');
+        throw ('AbstractPlot.getXScale(): unimplemented stub method');
     }
 
     getYScale() {
-        throw('AbstractPlot.getYScale(): unimplemented stub method');
+        throw ('AbstractPlot.getYScale(): unimplemented stub method');
     }
 
     updateVizComponents() {
@@ -156,9 +172,11 @@ AbstractPlot.propTypes = {
             bottom: PropTypes.number,
             left: PropTypes.number
         }),
-        axisLabels: PropTypes.shape({
+        axes: PropTypes.shape({
             yAxisLabel: PropTypes.string,
-            xAxisLabel: PropTypes.string
+            xAxisLabel: PropTypes.string,
+            yAxisVisible: PropTypes.string,
+            xAxisVisible: PropTypes.string
         })
     })
 };
