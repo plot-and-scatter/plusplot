@@ -103,32 +103,28 @@ class App extends React.Component {
         return(
             <div>
                 <h2>PlusPlot.BarChart</h2>
-                <PlusPlot.BarChart
-                    data={barChartData} />
+                <PlusPlot.BarChart data={barChartData} />
                 <h3>Data</h3>
                 <div className="data">
                     [<br />{barChartDataForDisplay}]
                 </div>
 
                 <h2>PlusPlot.Histogram</h2>
-                <PlusPlot.Histogram
-                    data={histogramData} />
+                <PlusPlot.Histogram data={histogramData} />
                 <h3>Data</h3>
                 <div className="data">
                     [<br />{histogramDataForDisplay}]
                 </div>
 
                 <h2>PlusPlot.ScatterPlot</h2>
-                <PlusPlot.ScatterPlot
-                    data={scatterPlotData} />
+                <PlusPlot.ScatterPlot data={scatterPlotData} />
                 <h3>Data</h3>
                 <div className="data">
                     [<br />{scatterPlotDataForDisplay}]
                 </div>
 
                 <h2>PlusPlot.LineChart</h2>
-                <PlusPlot.LineChart
-                    data={lineChartData} />
+                <PlusPlot.LineChart data={lineChartData} />
                 <h3>Data</h3>
                 <div className="data">
                     [<br/>{lineChartDataForDisplay}]
