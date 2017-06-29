@@ -75,6 +75,7 @@ class App extends React.Component {
             scatterPlotData: [],
             lineChartData: []
         };
+        this.refreshData = this.refreshData.bind(this);
     }
 
     componentDidMount() {
@@ -125,6 +126,8 @@ class App extends React.Component {
 
         return(
             <div>
+                <button onClick={this.refreshData}>Refresh data</button>
+
                 <h2>PlusPlot.BarChart</h2>
                 <PlusPlot.BarChart data={this.state.barChartData} />
                 <h3>Data</h3>
