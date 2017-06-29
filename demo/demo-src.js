@@ -50,7 +50,6 @@ function App(props) {
         );
     });
 
-<<<<<<< HEAD
     const lineChartData = [
         { color: 'blue', values: [ {x: 0, y: 1}, {x: 1, y: 3}, {x: 2, y: 0} ]},
         { color: 'red', values: [ {x: 0, y: 3}, {x: 1, y: 1}, {x: 2, y: 3} ]},
@@ -63,9 +62,6 @@ function App(props) {
     });
 
     return(
-=======
-    return (
->>>>>>> fce7a86f1fdb44262d5185dfeef3e2449d43f139
         <div>
             <h2>PlusPlot.BarChart</h2>
             <PlusPlot.BarChart
