@@ -1,9 +1,11 @@
-import Histogram from './histogram';
 import BarChart from './bar-chart';
+import Histogram from './histogram';
+import LineChart from './line-chart';
 import ScatterPlot from './scatter-plot';
 
 module.exports = {
-    Histogram,
     BarChart,
+    Histogram,
+    LineChart,
     ScatterPlot
 };
