@@ -2,58 +2,99 @@ const PlusPlot = require('../lib/plusplot');
 const React = require('react');
 const ReactDOM = require('react-dom');
 
+class Utils {
+    // Get an integer in the range of min, max, inclusive.
+    // From https://stackoverflow.com/a/1527820
+    static getRandomInt(min=1, max=9) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    static getRandomXY(min=1, max=5) {
+        return { x: Utils.getRandomInt(min, max), y: Utils.getRandomInt(min, max) };
+    }
+
+    static getArrayOfRandomXY(length=5, min=1, max=5) {
+        const array = [];
+        for (let i = 0; i < length; i++) { array.push(Utils.getRandomXY(min, max)); }
+        return array;
+    }
+
+    static getArrayOfLinearY(length=5, min=1, max=5) {
+        const array = [];
+        for (let i = 0; i < length; i++) {
+            array.push({ x: i, y: Utils.getRandomInt(min, max)});
+        }
+        return array;
+    }
+}
+
+class DataGenerator {
+    static generateBarChartData() {
+        const barChartData = [
+            { category: 'Apples', count: Utils.getRandomInt(), color: 'rgba(0, 150, 0, 0.5)' },
+            { category: 'Bananas', count: Utils.getRandomInt(), color: '#fe0' },
+            { category: 'Oranges', count: Utils.getRandomInt(), color: 'orange' },
+            { category: 'Raspberries', count: Utils.getRandomInt(), color: '#e25098' },
+            { category: 'Strawberries', count: Utils.getRandomInt(), color: 'rgb(255, 0, 0)' },
+            { category: 'Watermelons', count: Utils.getRandomInt(), color: 'green' },
+        ];
+        return barChartData;
+    }
+
+    static generateHistogramData() {
+        let histogramData = [];
+        for (let i = 0; i < 100; i++) { histogramData.push(Utils.getRandomInt(1, 9)); }
+        histogramData = PlusPlot.Histogram.defaultBinning(histogramData);
+        histogramData.color = '#fc0';
+        return histogramData;
+    }
+
+    static generateScatterPlotData() {
+        const scatterPlotData = Utils.getArrayOfRandomXY(20, 1, 9);
+        return scatterPlotData;
+    }
+
+    static generateLineChartData() {
+        const lineChartData = [
+            { color: 'blue', values: Utils.getArrayOfLinearY() },
+            { color: 'red', values: Utils.getArrayOfLinearY() },
+            { color: 'green', values: Utils.getArrayOfLinearY() },
+        ];
+        return lineChartData;
+    }
+}
+
+
 class App extends React.Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            barChartData: [],
+            histogramData: [],
+            scatterPlotData: [],
+            lineChartData: []
+        };
+        this.init();
     }
 
-    // Get an integer in the range of min, max, inclusive.
-    // From https://stackoverflow.com/a/1527820
-    getRandomInt(min=1, max=9) {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
+    init() {
+
     }
 
-    getRandomXY(min=1, max=5) {
-        return { x: this.getRandomInt(min, max), y: this.getRandomInt(min, max) };
-    }
+    render() {
 
-    getArrayOfRandomXY(length=5, min=1, max=5) {
-        const array = [];
-        for (let i = 0; i < length; i++) { array.push(this.getRandomXY(min, max)); }
-        return array;
-    }
+        const barChartData = DataGenerator.generateBarChartData();
+        const histogramData = DataGenerator.generateHistogramData();
+        const scatterPlotData = DataGenerator.generateScatterPlotData();
+        const lineChartData = DataGenerator.generateLineChartData();
 
-    getArrayOfLinearY(length=5, min=1, max=5) {
-        const array = [];
-        for (let i = 0; i < length; i++) {
-            array.push({ x: i, y: this.getRandomInt(min, max)});
-        }
-        return array;
-    }
-
-    generateBarChartData() {
-        const barChartData = [
-            { category: 'Apples', count: this.getRandomInt(), color: 'rgba(0, 150, 0, 0.5)' },
-            { category: 'Bananas', count: this.getRandomInt(), color: '#fe0' },
-            { category: 'Oranges', count: this.getRandomInt(), color: 'orange' },
-            { category: 'Raspberries', count: this.getRandomInt(), color: '#e25098' },
-            { category: 'Strawberries', count: this.getRandomInt(), color: 'rgb(255, 0, 0)' },
-            { category: 'Watermelons', count: this.getRandomInt(), color: 'green' },
-        ];
         const barChartDataForDisplay = barChartData.map((item, index) => {
             return (
                 <span key={index}>&nbsp;&nbsp;{JSON.stringify(item, null, 1)}<br /></span>
             );
         });
-        return { barChartData, barChartDataForDisplay };
-    }
 
-    generateHistogramData() {
-        let histogramData = [];
-        for (let i = 0; i < 100; i++) { histogramData.push(this.getRandomInt(1, 9)); }
-        histogramData = PlusPlot.Histogram.defaultBinning(histogramData);
-        histogramData.color = '#fc0';
         const histogramDataForDisplay = histogramData.map((item, index) => {
             return (
                 <span key={index}>
@@ -66,39 +107,18 @@ class App extends React.Component {
                 </span>
             );
         });
-        return { histogramData, histogramDataForDisplay };
-    }
 
-    generateScatterPlotData() {
-        const scatterPlotData = this.getArrayOfRandomXY(20, 1, 9);
         const scatterPlotDataForDisplay = scatterPlotData.map((item, index) => {
             return (
                 <span key={index}>&nbsp;&nbsp;{JSON.stringify(item, null, 1)}<br /></span>
             );
         });
-        return { scatterPlotData, scatterPlotDataForDisplay };
-    }
 
-    generateLineChartData() {
-        const lineChartData = [
-            { color: 'blue', values: this.getArrayOfLinearY() },
-            { color: 'red', values: this.getArrayOfLinearY() },
-            { color: 'green', values: this.getArrayOfLinearY() },
-        ];
         const lineChartDataForDisplay = lineChartData.map((item, index) => {
             return (
                 <span key={index}>&nbsp;&nbsp;{JSON.stringify(item, null, 1)}<br/></span>
             );
         });
-        return { lineChartData, lineChartDataForDisplay };
-    }
-
-    render() {
-
-        const { barChartData, barChartDataForDisplay } = this.generateBarChartData();
-        const { histogramData, histogramDataForDisplay } = this.generateHistogramData();
-        const { scatterPlotData, scatterPlotDataForDisplay } = this.generateScatterPlotData();
-        const { lineChartData, lineChartDataForDisplay } = this.generateLineChartData();
 
         return(
             <div>
