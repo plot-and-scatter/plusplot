@@ -9,12 +9,12 @@ function App(props) {
         { category: 'Bananas', count: 5, color: '#fe0' },
         { category: 'Oranges', count: 2, color: 'orange' },
         { category: 'Raspberries', count: 9, color: '#e25098' },
-        { category: 'Strawberries', count: 7, color: 'rgb(255, 0, 0)'},
-        { category: 'Watermelons', count: 4, color: 'green'},
+        { category: 'Strawberries', count: 7, color: 'rgb(255, 0, 0)' },
+        { category: 'Watermelons', count: 4, color: 'green' },
     ];
     const barChartDataForDisplay = barChartData.map((item, index) => {
         return (
-            <span key={index}>&nbsp;&nbsp;{JSON.stringify(item, null, 1)}<br/></span>
+            <span key={index}>&nbsp;&nbsp;{JSON.stringify(item, null, 1)}<br /></span>
         );
     });
 
@@ -25,14 +25,14 @@ function App(props) {
     const histogramData = PlusPlot.Histogram.defaultBinning(randomData);
     histogramData.color = '#fc0';
     const histogramDataForDisplay = histogramData.map((item, index) => {
-        return(
+        return (
             <span key={index}>
                 &nbsp;&nbsp;
                 <i>x0</i>: {item.x0.toFixed(1)}&nbsp;&nbsp;
                 <i>x1</i>: {item.x1.toFixed(1)}&nbsp;
                 &nbsp;&nbsp;
                 {JSON.stringify(item.sort(), null, 1)}
-                <br/>
+                <br />
             </span>
         );
     });
@@ -46,29 +46,21 @@ function App(props) {
     ];
     const scatterPlotDataForDisplay = scatterPlotData.map((item, index) => {
         return (
-            <span key={index}>&nbsp;&nbsp;{JSON.stringify(item, null, 1)}<br/></span>
+            <span key={index}>&nbsp;&nbsp;{JSON.stringify(item, null, 1)}<br /></span>
         );
     });
 
-    return(
+    return (
         <div>
             <h2>PlusPlot.BarChart</h2>
             <PlusPlot.BarChart
                 data={barChartData}
                 options={{
-                    axisLabels: {
-                        xAxisLabel: 'X test',
-                        yAxisLabel: 'Y test'
-                    },
-                    axisVisible: {
-                        xAxisVisible: 'none',
-                        yAxisVisible: 'none'
-                    }
                 }}
             />
             <h3>Data</h3>
             <div className="data">
-                [<br/>{barChartDataForDisplay}]
+                [<br />{barChartDataForDisplay}]
             </div>
 
             <h2>PlusPlot.Histogram</h2>
@@ -77,7 +69,7 @@ function App(props) {
             />
             <h3>Data</h3>
             <div className="data">
-                [<br/>{histogramDataForDisplay}]
+                [<br />{histogramDataForDisplay}]
             </div>
 
             <h2>PlusPlot.ScatterPlot</h2>
@@ -86,7 +78,7 @@ function App(props) {
             />
             <h3>Data</h3>
             <div className="data">
-                [<br/>{scatterPlotDataForDisplay}]
+                [<br />{scatterPlotDataForDisplay}]
             </div>
         </div>
     );
