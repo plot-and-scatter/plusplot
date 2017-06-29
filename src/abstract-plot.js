@@ -102,7 +102,7 @@ class AbstractPlot extends React.Component {
 
         this.updateGraphicDimensions();
 
-        if (this.props.data) {
+        if (this.props.data && this.props.data.length > 0) {
             this.updateGraphicContents();
         }
 
