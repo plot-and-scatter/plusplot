@@ -37,21 +37,24 @@ class LineChart extends AbstractPlot {
             .x(d => this.getXScale()(d.x))
             .y(d => this.getYScale()(d.y));
 
-        lines.attr('d', d => lineFunction(d.values));
+        const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory20);
+
+        lines.attr('d', d => lineFunction(d.values))
+            .attr('fill', 'none')
+            .attr('stroke', (d, i) => d.color || colorCategoryScale(i));
+    }
+
+    updateVizComponents() {
+        super.updateVizComponents();
+        this.svg.selectAll('.line').transition().duration(500).call(this.drawLines);
     }
 
     updateGraphicContents() {
         const lines = this.wrapper.selectAll('.line')
             .data(this.props.data);
 
-        const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory20);
-
-        // Enter: add lines
         lines.enter().append('path')
-            .attr('class', 'line')
-            .attr('fill', 'none')
-            .attr('stroke', (d, i) => d.color || colorCategoryScale(i))
-            .call(this.drawLines);
+            .attr('class', 'line');
 
         lines.exit().remove();
 
