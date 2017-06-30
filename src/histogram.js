@@ -74,6 +74,9 @@ class Histogram extends AbstractPlot {
         const x = this.getXScale();
         const y = this.getYScale();
 
+        const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory20);
+        const histogramColor = this.props.data.color || colorCategoryScale(0);
+
         // Calculate the standard width, which will be of the first bin.
         const firstBin = this.props.data[0];
         const width = x(firstBin.x1) - x(firstBin.x0) - 1;
@@ -82,21 +85,21 @@ class Histogram extends AbstractPlot {
             .attr('y', d => y(d.length))
             .attr('width', width)
             .attr('height', d => this.height - y(d.length))
+            .attr('fill', histogramColor) // All bars are the same color
             .attr('transform', d => `translate(${x(d.x0)}, 0)`);
+    }
+
+    updateVizComponents() {
+        super.updateVizComponents();
+        this.svg.selectAll('.bar').transition().duration(500).call(this.setBarSizes);
     }
 
     updateGraphicContents() {
         const bars = this.wrapper.selectAll('.bar')
             .data(this.props.data);
 
-        const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory20);
-        const histogramColor = this.props.data.color || colorCategoryScale(0);
-
-        // Enter: add bars
         bars.enter().append('rect')
-            .attr('class', 'bar')
-            .attr('fill', histogramColor) // All bars are the same color
-            .call(this.setBarSizes);
+            .attr('class', 'bar');
 
         bars.exit().remove();
 
