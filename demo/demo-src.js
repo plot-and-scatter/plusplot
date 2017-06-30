@@ -124,32 +124,33 @@ class App extends React.Component {
             );
         });
 
+        const refreshAllDataButton = <button onClick={this.refreshData}>Refresh all data</button>;
+
         return(
             <div>
-                <button onClick={this.refreshData}>Refresh data</button>
 
-                <h2>PlusPlot.BarChart</h2>
+                <h2>PlusPlot.BarChart {refreshAllDataButton}</h2>
                 <PlusPlot.BarChart data={this.state.barChartData} />
                 <h3>Data</h3>
                 <div className="data">
                     [<br />{barChartDataForDisplay}]
                 </div>
 
-                <h2>PlusPlot.Histogram</h2>
+                <h2>PlusPlot.Histogram {refreshAllDataButton}</h2>
                 <PlusPlot.Histogram data={this.state.histogramData} />
                 <h3>Data</h3>
                 <div className="data">
                     [<br />{histogramDataForDisplay}]
                 </div>
 
-                <h2>PlusPlot.ScatterPlot</h2>
+                <h2>PlusPlot.ScatterPlot {refreshAllDataButton}</h2>
                 <PlusPlot.ScatterPlot data={this.state.scatterPlotData} />
                 <h3>Data</h3>
                 <div className="data">
                     [<br />{scatterPlotDataForDisplay}]
                 </div>
 
-                <h2>PlusPlot.LineChart</h2>
+                <h2>PlusPlot.LineChart {refreshAllDataButton}</h2>
                 <PlusPlot.LineChart data={this.state.lineChartData} />
                 <h3>Data</h3>
                 <div className="data">
