@@ -59,7 +59,7 @@ class AbstractPlot extends React.Component {
     }
 
     componentDidUpdate() {
-        // console.log('AbstractPlot.componentDidUpdate()');
+        console.log('AbstractPlot.componentDidUpdate()');
         if (this.props.data.length === 0) { this.resetGraphic(); }
         this.updateGraphicDimensions();
         this.updateGraphicContents();

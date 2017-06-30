@@ -42,28 +42,25 @@ class BarChart extends AbstractPlot {
     }
 
     setBarSizes(bars) {
-        // console.log('got in here');
+        const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory20);
         bars.attr('x', d => this.getXScale()(d.category))
             .attr('y', d => this.getYScale()(d.count))
             .attr('width', this.getXScale().bandwidth())
-            .attr('height', d => this.height - this.getYScale()(d.count));
+            .attr('height', d => this.height - this.getYScale()(d.count))
+            .attr('fill', (d, i) => d.color || colorCategoryScale(i));
+    }
+
+    updateVizComponents() {
+        super.updateVizComponents();
+        this.svg.selectAll('.bar').transition().duration(500).call(this.setBarSizes);
     }
 
     updateGraphicContents() {
-        // console.log('got in BarChart.updateGraphicContents');
-
         const bars = this.wrapper.selectAll('.bar')
             .data(this.props.data, d => d.category);
 
-        const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory20);
-
-        // Enter: add bars
         bars.enter().append('rect')
-            .attr('class', 'bar')
-            .attr('fill', (d, i) => d.color || colorCategoryScale(i))
-            .call(this.setBarSizes);
-
-
+            .attr('class', 'bar');
 
         bars.exit().remove();
 
