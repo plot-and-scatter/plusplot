@@ -28,23 +28,25 @@ class ScatterPlot extends AbstractPlot {
     }
 
     setPointPositions(points) {
-        points
-            .attr('r', 5)
+        const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory20);
+
+        points.attr('r', 5)
             .attr('cx', d => this.getXScale()(d.x))
-            .attr('cy', d => this.getYScale()(d.y));
+            .attr('cy', d => this.getYScale()(d.y))
+            .attr('fill', (d, i) => d.color || colorCategoryScale(i));
+    }
+
+    updateVizComponents() {
+        super.updateVizComponents();
+        this.svg.selectAll('.point').transition().duration(500).call(this.setPointPositions);
     }
 
     updateGraphicContents() {
         const points = this.wrapper.selectAll('.point')
             .data(this.props.data);
 
-        const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory20);
-
-        // Enter: add points
         points.enter().append('circle')
-            .attr('class', 'point')
-            .attr('fill', (d, i) => d.color || colorCategoryScale(i))
-            .call(this.setPointPositions);
+            .attr('class', 'point');
 
         points.exit().remove();
 
