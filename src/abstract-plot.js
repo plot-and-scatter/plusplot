@@ -10,6 +10,7 @@ class AbstractPlot extends React.Component {
         const defaultOptions = {
             height: 400,
             width: 600,
+            widthByParent: true,
             margins: {
                 top: 5,
                 right: 15,
@@ -48,6 +49,7 @@ class AbstractPlot extends React.Component {
         // this.axisVisible = mergedOptions.axisVisible;
         this.height = mergedOptions.height - this.margins.top - this.margins.bottom;
         this.width = mergedOptions.width;
+        this.widthByParent = mergedOptions.widthByParent;
 
         this.updateGraphicDimensions = this.updateGraphicDimensions.bind(this);
         this.getXScale = this.getXScale.bind(this);
@@ -59,7 +61,7 @@ class AbstractPlot extends React.Component {
     }
 
     componentDidUpdate() {
-        console.log('AbstractPlot.componentDidUpdate()');
+        // console.log('AbstractPlot.componentDidUpdate()');
         if (this.props.data.length === 0) { this.resetGraphic(); }
         this.updateGraphicDimensions();
         this.updateGraphicContents();
@@ -114,8 +116,14 @@ class AbstractPlot extends React.Component {
 
     updateGraphicDimensions() {
         // Set dimensions and margins of graphic
-        // const width = this.svg.getBoundingClientRect().width;
-        // this.width = width - this.margins.left - this.margins.right;
+
+        // Use the parent's bounding rectangle for the width, if the option
+        // has been set
+        if (this.widthByParent) {
+            const width = this.svgRef.parentNode.getBoundingClientRect().width;
+            this.width = width - this.margins.left - this.margins.right;
+        }
+
         this.svg.attr('width', this.width + this.margins.left + this.margins.right)
             .attr('height', this.height + this.margins.top + this.margins.bottom);
 
@@ -164,6 +172,7 @@ AbstractPlot.propTypes = {
     options: PropTypes.shape({
         height: PropTypes.number,
         width: PropTypes.number,
+        widthByParent: PropTypes.boolean,
         margins: PropTypes.shape({
             top: PropTypes.number,
             right: PropTypes.number,
