@@ -14,7 +14,7 @@ class AbstractPlot extends React.Component {
             margins: {
                 top: 5,
                 right: 15,
-                bottom: 50,
+                bottom: 40,
                 left: 50
             },
             axes: {
@@ -97,7 +97,7 @@ class AbstractPlot extends React.Component {
 
         this.wrapper.append('text')
             .attr('class', 'axis-label x-axis-label')
-            .attr('y', this.height + this.margins.bottom)
+            .attr('y', this.height + this.margins.bottom - 5) // -5 to ensure descenders are visible
             .style('text-anchor', 'middle')
             .text(this.axes.xAxisLabel)
             .style('display', this.axes.xAxisVisible);
