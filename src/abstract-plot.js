@@ -21,7 +21,8 @@ class AbstractPlot extends React.Component {
                 xAxisLabel: 'X Axis Label',
                 yAxisLabel: 'Y Axis Label',
                 xAxisVisible: 'unset',
-                yAxisVisible: 'unset'
+                yAxisVisible: 'unset',
+                xAxisRotateTickLabels: 0
             }
         };
 
@@ -127,7 +128,8 @@ class AbstractPlot extends React.Component {
         this.svg.attr('width', this.width + this.margins.left + this.margins.right)
             .attr('height', this.height + this.margins.top + this.margins.bottom);
 
-        this.wrapper.select('.x-axis-label').attr('x', this.width / 2);
+        this.wrapper.select('.x-axis-label')
+            .attr('x', this.width / 2);
     }
 
     getXScale() {
@@ -149,6 +151,17 @@ class AbstractPlot extends React.Component {
         xAxis.transition()
             .duration(500)
             .call(d3.axisBottom(this.getXScale()));
+
+        const rotation = this.axes.xAxisRotateTickLabels;
+        const textAnchor = rotation < 0
+            ? 'end'
+            : rotation > 0
+            ? 'start'
+            : 'middle';
+
+        this.wrapper.selectAll('.x-axis .tick text')
+            .attr('transform', `rotate(${rotation})`)
+            .style('text-anchor', textAnchor);
     }
 
     updateGraphicContents() {

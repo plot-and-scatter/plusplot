@@ -130,7 +130,10 @@ class App extends React.Component {
             <div>
 
                 <h2>PlusPlot.BarChart {refreshAllDataButton}</h2>
-                <PlusPlot.BarChart data={this.state.barChartData} />
+                <PlusPlot.BarChart
+                    data={this.state.barChartData}
+                    options={{ axes: { xAxisRotateTickLabels: -15 }}}
+                />
                 <h3>Data</h3>
                 <div className="data">
                     [<br />{barChartDataForDisplay}]
