@@ -1,6 +1,6 @@
-import AbstractPlot from './abstract-plot';
-import PropTypes from 'prop-types';
-import * as d3 from 'd3';
+import AbstractPlot from './abstract-plot'
+import PropTypes from 'prop-types'
+import * as d3 from 'd3'
 
 /**
  * @class
@@ -16,68 +16,68 @@ import * as d3 from 'd3';
  *
  */
 class BarChart extends AbstractPlot {
-    constructor(props) {
-        super(props);
-        this.setBarSizes = this.setBarSizes.bind(this);
-    }
+  constructor (props) {
+    super(props)
+    this.setBarSizes = this.setBarSizes.bind(this)
+  }
 
-    getXScale() {
-        const minRange = 0;
-        const maxRange = this.width;
-        const domain = this.props.data.map(d => d.category);
-        return d3.scaleBand()
-            .range([minRange, maxRange])
-            .domain(domain)
-            .padding(0.2);
-    }
+  getXScale () {
+    const minRange = 0
+    const maxRange = this.width
+    const domain = this.props.data.map(d => d.category)
+    return d3.scaleBand()
+      .range([minRange, maxRange])
+      .domain(domain)
+      .padding(0.2)
+  }
 
-    getYScale() {
-        const minRange = 0;
-        const maxRange = this.height;
-        const minDomain = 0;
-        const maxDomain = d3.max(this.props.data.map(d => d.count));
-        return d3.scaleLinear()
-            .range([maxRange, minRange]) // Yes, we need to swap these
-            .domain([minDomain, maxDomain]);
-    }
+  getYScale () {
+    const minRange = 0
+    const maxRange = this.height
+    const minDomain = 0
+    const maxDomain = d3.max(this.props.data.map(d => d.count))
+    return d3.scaleLinear()
+      .range([maxRange, minRange]) // Yes, we need to swap these
+      .domain([minDomain, maxDomain])
+  }
 
-    setBarSizes(bars) {
-        const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory20);
-        bars.attr('x', d => this.getXScale()(d.category))
-            .attr('y', d => this.getYScale()(d.count))
-            .attr('width', this.getXScale().bandwidth())
-            .attr('height', d => this.height - this.getYScale()(d.count))
-            .attr('fill', (d, i) => d.color || colorCategoryScale(i));
-    }
+  setBarSizes (bars) {
+    const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory20)
+    bars.attr('x', d => this.getXScale()(d.category))
+      .attr('y', d => this.getYScale()(d.count))
+      .attr('width', this.getXScale().bandwidth())
+      .attr('height', d => this.height - this.getYScale()(d.count))
+      .attr('fill', (d, i) => d.color || colorCategoryScale(i))
+  }
 
-    updateVizComponents() {
-        super.updateVizComponents();
-        this.svg.selectAll('.bar').transition().duration(500).call(this.setBarSizes);
-    }
+  updateVizComponents () {
+    super.updateVizComponents()
+    this.svg.selectAll('.bar').transition().duration(500).call(this.setBarSizes)
+  }
 
-    updateGraphicContents() {
-        const bars = this.wrapper.selectAll('.bar')
-            .data(this.props.data, d => d.category);
+  updateGraphicContents () {
+    const bars = this.wrapper.selectAll('.bar')
+      .data(this.props.data, d => d.category)
 
-        bars.enter().append('rect')
-            .attr('class', 'bar');
+    bars.enter().append('rect')
+      .attr('class', 'bar')
 
-        bars.exit().remove();
+    bars.exit().remove()
 
-        this.updateVizComponents();
-    }
+    this.updateVizComponents()
+  }
 
-    render() {
-        return super.render();
-    }
+  render () {
+    return super.render()
+  }
 }
 
 BarChart.propTypes = {
-    data: PropTypes.arrayOf(PropTypes.shape({
-        category: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-        count: PropTypes.number.isRequired,
-        color: PropTypes.string
-    })).isRequired
-};
+  data: PropTypes.arrayOf(PropTypes.shape({
+    category: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    count: PropTypes.number.isRequired,
+    color: PropTypes.string
+  })).isRequired
+}
 
-module.exports = BarChart;
+module.exports = BarChart
