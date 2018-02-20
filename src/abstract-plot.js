@@ -61,19 +61,19 @@ class AbstractPlot extends React.Component {
   }
 
   componentDidMount () {
-    console.log('AbstractPlot.componentDidMount')
+    // console.log('AbstractPlot.componentDidMount')
     this.initialSetup()
   }
 
   componentDidUpdate () {
-    console.log('AbstractPlot.componentDidUpdate')
+    // console.log('AbstractPlot.componentDidUpdate')
     if (this.props.data.length === 0) { this.resetGraphic() }
     this.updateGraphicDimensions()
     this.updateGraphicContents()
   }
 
   initialSetup () {
-    console.log('AbstractPlot.initialSetup')
+    // console.log('AbstractPlot.initialSetup')
 
     // const xAxisLabel = 'X Axis Label';
     // const yAxisLabel = 'Y Axis Label';
@@ -116,14 +116,14 @@ class AbstractPlot extends React.Component {
     }
 
     window.addEventListener('resize', () => {
-      console.log('AbstractPlot.resize listener')
+      // console.log('AbstractPlot.resize listener')
       this.updateGraphicDimensions()
       this.updateVizComponents()
     })
   }
 
   updateGraphicDimensions () {
-    console.log('AbstractPlot.updateGraphicDimensions')
+    // console.log('AbstractPlot.updateGraphicDimensions')
     // Set dimensions and margins of graphic
 
     // Use the parent's bounding rectangle for the width, if the option
@@ -149,7 +149,7 @@ class AbstractPlot extends React.Component {
   }
 
   updateVizComponents () {
-    console.log('AbstractPlot.updateVizComponents')
+    // console.log('AbstractPlot.updateVizComponents')
 
     const yAxis = this.svg.select('.y-axis')
     const xAxis = this.svg.select('.x-axis')
@@ -176,7 +176,7 @@ class AbstractPlot extends React.Component {
   }
 
   updateGraphicContents () {
-    console.log('AbstractPlot.updateGraphicContents')
+    // console.log('AbstractPlot.updateGraphicContents')
     this.updateVizComponents()
   }
 
