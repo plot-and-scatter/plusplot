@@ -152,7 +152,8 @@ class AbstractPlot extends React.Component {
       .call(d3.axisBottom(this.getXScale()))
 
     const rotation = this.axes.xAxisRotateTickLabels
-    const textAnchor = rotation < 0
+    const textAnchor =
+            rotation < 0
             ? 'end'
             : rotation > 0
             ? 'start'
