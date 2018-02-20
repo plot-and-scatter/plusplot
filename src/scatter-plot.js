@@ -5,6 +5,7 @@ class ScatterPlot extends AbstractPlot {
   constructor (props) {
     super(props)
     this.setPointPositions = this.setPointPositions.bind(this)
+    this.setInitialPointPositions = this.setInitialPointPositions.bind(this)
   }
 
   getXScale () {
@@ -28,16 +29,30 @@ class ScatterPlot extends AbstractPlot {
   }
 
   setPointPositions (points) {
-    const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory20)
-
     points.attr('r', 5)
       .attr('cx', d => this.getXScale()(d.x))
       .attr('cy', d => this.getYScale()(d.y))
+  }
+
+  setInitialPointPositions (points) {
+    const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory20)
+
+    // Start the points in the middle, then 'burst' them out.
+    points.attr('r', 5)
+      .attr('cx', d => this.width / 2)
+      .attr('cy', d => this.height / 2)
       .attr('fill', (d, i) => d.color || colorCategoryScale(i))
   }
 
   updateVizComponents () {
     super.updateVizComponents()
+    if (this.state.initialUpdate) {
+      // Initial update? No animation
+      this.svg.selectAll('.point').call(this.setInitialPointPositions)
+      // The next line will, conveniently, re-trigger updateVizComponents(),
+      // which in turn will actually animate the height of the points.
+      this.setState({ initialUpdate: false })
+    }
     this.svg.selectAll('.point').transition().duration(500).call(this.setPointPositions)
   }
 

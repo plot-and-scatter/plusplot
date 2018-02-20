@@ -19,6 +19,7 @@ class BarChart extends AbstractPlot {
   constructor (props) {
     super(props)
     this.setBarSizes = this.setBarSizes.bind(this)
+    this.setInitialBarSizes = this.setInitialBarSizes.bind(this)
   }
 
   getXScale () {
@@ -50,8 +51,27 @@ class BarChart extends AbstractPlot {
       .attr('fill', (d, i) => d.color || colorCategoryScale(i))
   }
 
+  // When we initially set the bar locations, we want the x-values to be
+  // correct, but not the y-values -- that way we can animate the height of the
+  // bar changing
+  setInitialBarSizes (bars) {
+    const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory20)
+    bars.attr('x', d => this.getXScale()(d.category))
+      .attr('y', this.height)
+      .attr('width', this.getXScale().bandwidth())
+      .attr('height', 0)
+      .attr('fill', (d, i) => d.color || colorCategoryScale(i))
+  }
+
   updateVizComponents () {
     super.updateVizComponents()
+    if (this.state.initialUpdate) {
+      // Initial update? No animation
+      this.svg.selectAll('.bar').call(this.setInitialBarSizes)
+      // The next line will, conveniently, re-trigger updateVizComponents(),
+      // which in turn will actually animate the height of the bars.
+      this.setState({ initialUpdate: false })
+    }
     this.svg.selectAll('.bar').transition().duration(500).call(this.setBarSizes)
   }
 

@@ -7,6 +7,7 @@ class Histogram extends AbstractPlot {
 
     this.updateGraphicContents = this.updateGraphicContents.bind(this)
     this.setBarSizes = this.setBarSizes.bind(this)
+    this.setInitialBarSizes = this.setInitialBarSizes.bind(this)
   }
 
   static defaultBinning (data, numTicks = 10) {
@@ -74,9 +75,6 @@ class Histogram extends AbstractPlot {
     const x = this.getXScale()
     const y = this.getYScale()
 
-    const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory20)
-    const histogramColor = this.props.data.color || colorCategoryScale(0)
-
     // Calculate the standard width, which will be of the first bin.
     const firstBin = this.props.data[0]
     const width = x(firstBin.x1) - x(firstBin.x0) - 1
@@ -85,12 +83,35 @@ class Histogram extends AbstractPlot {
       .attr('y', d => y(d.length))
       .attr('width', width)
       .attr('height', d => this.height - y(d.length))
+      .attr('transform', d => `translate(${x(d.x0)}, 0)`)
+  }
+
+  setInitialBarSizes (bars) {
+    const x = this.getXScale()
+    const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory20)
+    const histogramColor = this.props.data.color || colorCategoryScale(0)
+
+    // Calculate the standard width, which will be of the first bin.
+    const firstBin = this.props.data[0]
+    const width = x(firstBin.x1) - x(firstBin.x0) - 1
+
+    bars.attr('x', 1)
+      .attr('y', this.height)
+      .attr('width', width)
+      .attr('height', 0)
       .attr('fill', histogramColor) // All bars are the same color
       .attr('transform', d => `translate(${x(d.x0)}, 0)`)
   }
 
   updateVizComponents () {
     super.updateVizComponents()
+    if (this.state.initialUpdate) {
+      // Initial update? No animation
+      this.svg.selectAll('.bar').call(this.setInitialBarSizes)
+      // The next line will, conveniently, re-trigger updateVizComponents(),
+      // which in turn will actually animate the height of the bars.
+      this.setState({ initialUpdate: false })
+    }
     this.svg.selectAll('.bar').transition().duration(500).call(this.setBarSizes)
   }
 
