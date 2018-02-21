@@ -26,6 +26,12 @@ class Utils {
     }
     return array
   }
+
+  static getArrayOfRandomInts (length = 5, min = 1, max = 9) {
+    const array = []
+    for (let i = 0; i < length; i++) { array.push(Utils.getRandomInt(min, max)) }
+    return array
+  }
 }
 
 class DataGenerator {
@@ -39,6 +45,17 @@ class DataGenerator {
       { category: 'Watermelons', count: Utils.getRandomInt(), color: 'green' }
     ]
     return barChartData
+  }
+
+  static generateGroupedBarChartData () {
+    const groupedBarChartData = [
+      { category: 'BC', values: Utils.getArrayOfRandomInts() },
+      { category: 'AB', values: Utils.getArrayOfRandomInts() },
+      { category: 'SK', values: Utils.getArrayOfRandomInts() },
+      { category: 'MB', values: Utils.getArrayOfRandomInts() },
+      { category: 'ON', values: Utils.getArrayOfRandomInts() }
+    ]
+    return groupedBarChartData
   }
 
   static generateHistogramData () {
@@ -69,6 +86,7 @@ class App extends React.Component {
     super(props)
     this.state = {
       barChartData: [],
+      groupedBarChartData: [],
       histogramData: [],
       scatterPlotData: [],
       lineChartData: []
@@ -83,6 +101,7 @@ class App extends React.Component {
   refreshData () {
     this.setState({
       barChartData: DataGenerator.generateBarChartData(),
+      groupedBarChartData: DataGenerator.generateGroupedBarChartData(),
       histogramData: DataGenerator.generateHistogramData(),
       scatterPlotData: DataGenerator.generateScatterPlotData(),
       lineChartData: DataGenerator.generateLineChartData()
@@ -90,6 +109,12 @@ class App extends React.Component {
   }
 
   render () {
+    const groupedBarChartDataForDisplay = this.state.groupedBarChartData.map((item, index) => {
+      return (
+        <span key={index}>&nbsp;&nbsp;{JSON.stringify(item, null, 1)}<br /></span>
+      )
+    })
+
     const barChartDataForDisplay = this.state.barChartData.map((item, index) => {
       return (
         <span key={index}>&nbsp;&nbsp;{JSON.stringify(item, null, 1)}<br /></span>
@@ -125,6 +150,16 @@ class App extends React.Component {
 
     return (
       <div>
+        <h2>PlusPlot.GroupedBarChart {refreshAllDataButton}</h2>
+        <PlusPlot.GroupedBarChart
+          data={this.state.groupedBarChartData}
+          options={{ axes: { xAxisRotateTickLabels: -15 } }}
+        />
+        <h3>Data</h3>
+        <div className='data'>
+          [<br />{groupedBarChartDataForDisplay}]
+        </div>
+
         <h2>PlusPlot.BarChart {refreshAllDataButton}</h2>
         <PlusPlot.BarChart
           data={this.state.barChartData}
