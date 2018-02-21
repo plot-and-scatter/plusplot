@@ -54,7 +54,12 @@ class GroupedBarChart extends AbstractPlot {
   }
 
   setBarSizes (barGroups) {
+    // TODO: Allow user to specify colours
     const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory20)
+
+    barGroups
+      .attr('transform', d => `translate(${this.getXScale()(d.category)},0)`)
+
     barGroups.selectAll('rect')
       .attr('x', (d, i) => this.getInnerXScale()(i))
       .attr('y', d => this.getYScale()(d))
@@ -68,6 +73,10 @@ class GroupedBarChart extends AbstractPlot {
   // bar changing
   setInitialBarSizes (barGroups) {
     const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory20)
+
+    barGroups
+      .attr('transform', d => `translate(${this.getXScale()(d.category)},0)`)
+
     barGroups.selectAll('rect')
       .attr('x', (d, i) => this.getInnerXScale()(i))
       .attr('y', d => this.height)
@@ -89,20 +98,23 @@ class GroupedBarChart extends AbstractPlot {
   }
 
   updateGraphicContents () {
+    // The bar groups are the groupings of bars
     const barGroups = this.wrapper.selectAll('.barGroup')
       .data(this.props.data, d => d.category)
 
     barGroups.enter().append('g')
         .attr('class', 'barGroup')
-        .attr('transform', d => `translate(${this.getXScale()(d.category)},0)`)
-      .selectAll('rect')
-      .data(d => d.values, (d, i) => i)
-      .enter().append('rect')
-        .attr('class', 'bar')
-
-    // TODO: What if data is updated?
 
     barGroups.exit().remove()
+
+    // The bars are the bars within each group
+    const bars = this.wrapper.selectAll('.barGroup').selectAll('.bar')
+        .data(d => d.values, (d, i) => i)
+
+    bars.enter().append('rect')
+        .attr('class', 'bar')
+
+    bars.exit().remove()
 
     this.updateVizComponents()
   }
