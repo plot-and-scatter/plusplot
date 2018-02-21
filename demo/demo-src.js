@@ -9,6 +9,12 @@ class Utils {
     return Math.floor(Math.random() * (max - min + 1)) + min
   }
 
+  static getArrayOfRandomInts (length = 5, min = 1, max = 9) {
+    const array = []
+    for (let i = 0; i < length; i++) { array.push(Utils.getRandomInt(min, max)) }
+    return array
+  }
+
   static getRandomXY (min = 1, max = 5) {
     return { x: Utils.getRandomInt(min, max), y: Utils.getRandomInt(min, max) }
   }
@@ -24,12 +30,6 @@ class Utils {
     for (let i = 0; i < length; i++) {
       array.push({ x: i, y: Utils.getRandomInt(min, max) })
     }
-    return array
-  }
-
-  static getArrayOfRandomInts (length = 5, min = 1, max = 9) {
-    const array = []
-    for (let i = 0; i < length; i++) { array.push(Utils.getRandomInt(min, max)) }
     return array
   }
 }
@@ -109,13 +109,13 @@ class App extends React.Component {
   }
 
   render () {
-    const groupedBarChartDataForDisplay = this.state.groupedBarChartData.map((item, index) => {
+    const barChartDataForDisplay = this.state.barChartData.map((item, index) => {
       return (
         <span key={index}>&nbsp;&nbsp;{JSON.stringify(item, null, 1)}<br /></span>
       )
     })
 
-    const barChartDataForDisplay = this.state.barChartData.map((item, index) => {
+    const groupedBarChartDataForDisplay = this.state.groupedBarChartData.map((item, index) => {
       return (
         <span key={index}>&nbsp;&nbsp;{JSON.stringify(item, null, 1)}<br /></span>
       )
@@ -150,16 +150,6 @@ class App extends React.Component {
 
     return (
       <div>
-        <h2>PlusPlot.GroupedBarChart {refreshAllDataButton}</h2>
-        <PlusPlot.GroupedBarChart
-          data={this.state.groupedBarChartData}
-          options={{ axes: { xAxisRotateTickLabels: -15 } }}
-        />
-        <h3>Data</h3>
-        <div className='data'>
-          [<br />{groupedBarChartDataForDisplay}]
-        </div>
-
         <h2>PlusPlot.BarChart {refreshAllDataButton}</h2>
         <PlusPlot.BarChart
           data={this.state.barChartData}
@@ -168,6 +158,16 @@ class App extends React.Component {
         <h3>Data</h3>
         <div className='data'>
           [<br />{barChartDataForDisplay}]
+        </div>
+
+        <h2>PlusPlot.GroupedBarChart {refreshAllDataButton}</h2>
+        <PlusPlot.GroupedBarChart
+          data={this.state.groupedBarChartData}
+          options={{ axes: { xAxisRotateTickLabels: -15 } }}
+        />
+        <h3>Data</h3>
+        <div className='data'>
+          [<br />{groupedBarChartDataForDisplay}]
         </div>
 
         <h2>PlusPlot.Histogram {refreshAllDataButton}</h2>
