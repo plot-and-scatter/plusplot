@@ -10,9 +10,14 @@ import * as d3 from 'd3'
  * property and a `values` array. The value of the `category` property is the
  * name of a higher-order category or grouping; the `values` array should be an
  * ordered list of values that will be grouped under the higher-order category.
+ * Every list of values must have the same length.
  *
- * e.g. `[{ category: 'A', count: 10}, { category: 'B', count: 15}]`
+ * e.g. `[{category: 'A', values: [1, 2, 3]}, {category: 'B', values: [4, 5, 6]}`
  *
+ * Can also take an optional `colors` array, which should be the same length as
+ * the `values` arrays; these colors will be used instead of the default color
+ * bands. If, however, `colors` is an array of only two elements, its two colors
+ * will be used as an interpolation range to color the bars in each group.
  */
 class GroupedBarChart extends AbstractPlot {
   constructor (props) {
@@ -54,9 +59,6 @@ class GroupedBarChart extends AbstractPlot {
   }
 
   setBarSizes (barGroups) {
-    // TODO: Allow user to specify colours
-    const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory20)
-
     barGroups
       .attr('transform', d => `translate(${this.getXScale()(d.category)},0)`)
 
@@ -65,14 +67,20 @@ class GroupedBarChart extends AbstractPlot {
       .attr('y', d => this.getYScale()(d))
       .attr('width', this.getInnerXScale().bandwidth())
       .attr('height', d => this.height - this.getYScale()(d))
-      .attr('fill', (d, i) => d.color || colorCategoryScale(i))
   }
 
   // When we initially set the bar locations, we want the x-values to be
   // correct, but not the y-values -- that way we can animate the height of the
   // bar changing
   setInitialBarSizes (barGroups) {
-    const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory20)
+    const barDomainExtent = d3.extent(this.getInnerXScale().domain())
+
+    const colorCategoryScale = this.props.colors
+      ? (this.props.colors.length === 2
+          ? d3.scaleLinear().domain(barDomainExtent).range(this.props.colors)
+          : d3.scaleOrdinal(this.props.colors)
+        )
+      : d3.scaleOrdinal(d3.schemeCategory20)
 
     barGroups
       .attr('transform', d => `translate(${this.getXScale()(d.category)},0)`)

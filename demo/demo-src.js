@@ -163,6 +163,7 @@ class App extends React.Component {
         <h2>PlusPlot.GroupedBarChart {refreshAllDataButton}</h2>
         <PlusPlot.GroupedBarChart
           data={this.state.groupedBarChartData}
+          colors={['red', 'blue']}
           options={{ axes: { xAxisRotateTickLabels: -15 } }}
         />
         <h3>Data</h3>
