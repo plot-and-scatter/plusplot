@@ -79,6 +79,17 @@ class DataGenerator {
     ]
     return lineChartData
   }
+
+  static generateSlopeGraphData () {
+    const slopeGraphData = [
+      { category: 'China', values: Utils.getArrayOfRandomInts(2, 0, 2000) },
+      { category: 'India', values: Utils.getArrayOfRandomInts(2, 0, 2000) },
+      { category: 'United States', values: Utils.getArrayOfRandomInts(2, 0, 2000) },
+      { category: 'Indonesia', values: Utils.getArrayOfRandomInts(2, 0, 2000) },
+      { category: 'Brazil', values: Utils.getArrayOfRandomInts(2, 0, 2000) }
+    ]
+    return slopeGraphData
+  }
 }
 
 class App extends React.Component {
@@ -89,7 +100,8 @@ class App extends React.Component {
       groupedBarChartData: [],
       histogramData: [],
       scatterPlotData: [],
-      lineChartData: []
+      lineChartData: [],
+      slopeGraphData: []
     }
     this.refreshData = this.refreshData.bind(this)
   }
@@ -104,7 +116,8 @@ class App extends React.Component {
       groupedBarChartData: DataGenerator.generateGroupedBarChartData(),
       histogramData: DataGenerator.generateHistogramData(),
       scatterPlotData: DataGenerator.generateScatterPlotData(),
-      lineChartData: DataGenerator.generateLineChartData()
+      lineChartData: DataGenerator.generateLineChartData(),
+      slopeGraphData: DataGenerator.generateSlopeGraphData()
     })
   }
 
@@ -141,6 +154,12 @@ class App extends React.Component {
     })
 
     const lineChartDataForDisplay = this.state.lineChartData.map((item, index) => {
+      return (
+        <span key={index}>&nbsp;&nbsp;{JSON.stringify(item, null, 1)}<br /></span>
+      )
+    })
+
+    const slopeGraphDataForDisplay = this.state.slopeGraphData.map((item, index) => {
       return (
         <span key={index}>&nbsp;&nbsp;{JSON.stringify(item, null, 1)}<br /></span>
       )
@@ -183,6 +202,17 @@ class App extends React.Component {
         <h3>Data</h3>
         <div className='data'>
           [<br />{scatterPlotDataForDisplay}]
+        </div>
+
+        <h2>PlusPlot.SlopeGraph {refreshAllDataButton}</h2>
+        <PlusPlot.SlopeGraph
+          data={this.state.slopeGraphData}
+          labels={['2005', '2015']}
+          options={{ margins: { top: 10, left: 125, bottom: 10, right: 125 } }}
+        />
+        <h3>Data</h3>
+        <div className='data'>
+          [<br />{slopeGraphDataForDisplay}]
         </div>
 
         <h2>PlusPlot.LineChart {refreshAllDataButton}</h2>

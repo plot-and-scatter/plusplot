@@ -83,31 +83,8 @@ class AbstractPlot extends React.Component {
       .attr('class', 'wrapper')
       .attr('transform', 'translate(' + this.margins.left + ',' + this.margins.top + ')')
 
-    this.wrapper.append('g')
-      .attr('class', 'y-axis')
-      .style('display', this.axes.yAxisVisible)
-
-    this.wrapper.append('g')
-      .attr('class', 'x-axis')
-      .attr('transform', 'translate(0,' + this.height + ')')
-      .style('display', this.axes.xAxisVisible)
-
-    this.wrapper.append('text')
-      .attr('class', 'axis-label y-axis-label')
-      .attr('transform', 'rotate(-90)')
-      .attr('y', 0 - this.margins.left + 10)
-      .attr('x', 0 - this.height / 2)
-      .attr('dy', 0)
-      .style('text-anchor', 'middle')
-      .text(this.axes.yAxisLabel)
-      .style('display', this.axes.yAxisVisible)
-
-    this.wrapper.append('text')
-      .attr('class', 'axis-label x-axis-label')
-      .attr('y', this.height + this.margins.bottom - 5) // -5 to ensure descenders are visible
-      .style('text-anchor', 'middle')
-      .text(this.axes.xAxisLabel)
-      .style('display', this.axes.xAxisVisible)
+    this.setupXAxis()
+    this.setupYAxis()
 
     this.updateGraphicDimensions()
 
@@ -146,6 +123,36 @@ class AbstractPlot extends React.Component {
 
   getYScale () {
     throw new Error('AbstractPlot.getYScale(): unimplemented stub method')
+  }
+
+  setupXAxis () {
+    this.wrapper.append('g')
+      .attr('class', 'x-axis')
+      .attr('transform', 'translate(0,' + this.height + ')')
+      .style('display', this.axes.xAxisVisible)
+
+    this.wrapper.append('text')
+      .attr('class', 'axis-label x-axis-label')
+      .attr('y', this.height + this.margins.bottom - 5) // -5 to ensure descenders are visible
+      .style('text-anchor', 'middle')
+      .text(this.axes.xAxisLabel)
+      .style('display', this.axes.xAxisVisible)
+  }
+
+  setupYAxis () {
+    this.wrapper.append('g')
+      .attr('class', 'y-axis')
+      .style('display', this.axes.yAxisVisible)
+
+    this.wrapper.append('text')
+      .attr('class', 'axis-label y-axis-label')
+      .attr('transform', 'rotate(-90)')
+      .attr('y', 0 - this.margins.left + 10)
+      .attr('x', 0 - this.height / 2)
+      .attr('dy', 0)
+      .style('text-anchor', 'middle')
+      .text(this.axes.yAxisLabel)
+      .style('display', this.axes.yAxisVisible)
   }
 
   updateVizComponents () {
