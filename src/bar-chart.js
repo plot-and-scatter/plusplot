@@ -122,7 +122,6 @@ class BarChart extends AbstractPlot {
       .data(this.props.yLines)
     yLineLabels.enter().append('text')
       .attr('class', 'yLineLabel')
-      .style('font-size', '0.8rem')
     yLineLabels.exit().remove()
 
     this.updateVizComponents()
