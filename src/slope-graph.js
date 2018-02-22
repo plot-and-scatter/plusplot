@@ -102,6 +102,7 @@ class SlopeGraph extends AbstractPlot {
       .style('text-anchor', side === 'left' ? 'end' : 'start')
       .style('alignment-baseline', 'middle')
       .style('font-size', '0.8rem')
+      .style('font-family', this.font)
 
     gElements.select('circle')
       .attr('fill', (d, i) => colorCategoryScale(i))

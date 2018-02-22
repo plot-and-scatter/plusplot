@@ -10,6 +10,7 @@ class AbstractPlot extends React.Component {
       height: 400,
       width: 600,
       widthByParent: true,
+      font: 'Avenir',
       margins: {
         top: 5,
         right: 15,
@@ -19,8 +20,10 @@ class AbstractPlot extends React.Component {
       axes: {
         xAxisLabel: 'X Axis Label',
         yAxisLabel: 'Y Axis Label',
-        xAxisVisible: 'unset',
-        yAxisVisible: 'unset',
+        xAxisVisible: true,
+        yAxisVisible: true,
+        xAxisTicksVisible: true,
+        yAxisTicksVisible: true,
         xAxisRotateTickLabels: 0
       }
     }
@@ -54,6 +57,7 @@ class AbstractPlot extends React.Component {
     this.height = mergedOptions.height - this.margins.top - this.margins.bottom
     this.width = mergedOptions.width
     this.widthByParent = mergedOptions.widthByParent
+    this.font = mergedOptions.font
 
     this.updateGraphicDimensions = this.updateGraphicDimensions.bind(this)
     this.getXScale = this.getXScale.bind(this)
@@ -129,20 +133,23 @@ class AbstractPlot extends React.Component {
     this.wrapper.append('g')
       .attr('class', 'x-axis')
       .attr('transform', 'translate(0,' + this.height + ')')
-      .style('display', this.axes.xAxisVisible)
+      .style('font-family', this.font)
+      .style('display', this.axes.xAxisVisible ? '' : 'none')
 
     this.wrapper.append('text')
       .attr('class', 'axis-label x-axis-label')
       .attr('y', this.height + this.margins.bottom - 5) // -5 to ensure descenders are visible
       .style('text-anchor', 'middle')
+      .style('font-family', this.font)
       .text(this.axes.xAxisLabel)
-      .style('display', this.axes.xAxisVisible)
+      .style('display', this.axes.xAxisVisible ? '' : 'none')
   }
 
   setupYAxis () {
     this.wrapper.append('g')
       .attr('class', 'y-axis')
-      .style('display', this.axes.yAxisVisible)
+      .style('font-family', this.font)
+      .style('display', this.axes.yAxisVisible ? '' : 'none')
 
     this.wrapper.append('text')
       .attr('class', 'axis-label y-axis-label')
@@ -151,8 +158,9 @@ class AbstractPlot extends React.Component {
       .attr('x', 0 - this.height / 2)
       .attr('dy', 0)
       .style('text-anchor', 'middle')
+      .style('font-family', this.font)
       .text(this.axes.yAxisLabel)
-      .style('display', this.axes.yAxisVisible)
+      .style('display', this.axes.yAxisVisible ? '' : 'none')
   }
 
   updateVizComponents () {
