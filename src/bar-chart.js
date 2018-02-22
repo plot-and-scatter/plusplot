@@ -20,6 +20,12 @@ class BarChart extends AbstractPlot {
     super(props)
     this.setBarSizes = this.setBarSizes.bind(this)
     this.setInitialBarSizes = this.setInitialBarSizes.bind(this)
+    this.setYLines = this.setYLines.bind(this)
+    this.setYLineLabels = this.setYLineLabels.bind(this)
+  }
+
+  initialSetup () {
+    super.initialSetup()
   }
 
   getXScale () {
@@ -63,8 +69,32 @@ class BarChart extends AbstractPlot {
       .attr('fill', (d, i) => d.color || colorCategoryScale(i))
   }
 
+  setYLines (yLines) {
+    yLines
+      .attr('x', 0)
+      .attr('y', d => this.getYScale()(d.value))
+      .attr('width', this.width)
+      .attr('height', d => d.height || 1)
+      .attr('fill', d => d.color)
+  }
+
+  setYLineLabels (yLineLabels) {
+    yLineLabels
+      .attr('x', this.width + 5)
+      .attr('y', d => this.getYScale()(d.value))
+      .attr('width', this.width)
+      .attr('height', d => d.height || 1)
+      .attr('fill', d => d.color)
+      .style('font-family', this.font)
+      .style('text-anchor', 'start')
+      .style('alignment-baseline', 'middle')
+      .text(d => d.label)
+  }
+
   updateVizComponents () {
     super.updateVizComponents()
+    this.svg.selectAll('.yLine').transition().duration(500).call(this.setYLines)
+    this.svg.selectAll('.yLineLabel').transition().duration(500).call(this.setYLineLabels)
     if (this.state.initialUpdate) {
       // Initial update? No animation
       this.svg.selectAll('.bar').call(this.setInitialBarSizes)
@@ -78,11 +108,22 @@ class BarChart extends AbstractPlot {
   updateGraphicContents () {
     const bars = this.wrapper.selectAll('.bar')
       .data(this.props.data, d => d.category)
-
     bars.enter().append('rect')
       .attr('class', 'bar')
-
     bars.exit().remove()
+
+    const yLines = this.wrapper.selectAll('.yLine')
+      .data(this.props.yLines)
+    yLines.enter().append('rect')
+      .attr('class', 'yLine')
+    yLines.exit().remove()
+
+    const yLineLabels = this.wrapper.selectAll('.yLineLabel')
+      .data(this.props.yLines)
+    yLineLabels.enter().append('text')
+      .attr('class', 'yLineLabel')
+      .style('font-size', '0.8rem')
+    yLineLabels.exit().remove()
 
     this.updateVizComponents()
   }
