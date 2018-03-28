@@ -22,6 +22,7 @@ class BarChart extends AbstractPlot {
     this.setInitialBarSizes = this.setInitialBarSizes.bind(this)
     this.setYLines = this.setYLines.bind(this)
     this.setYLineLabels = this.setYLineLabels.bind(this)
+    this.getYOrigin = this.getYOrigin.bind(this)
   }
 
   initialSetup () {
@@ -38,10 +39,20 @@ class BarChart extends AbstractPlot {
       .padding(0.2)
   }
 
+  getYOrigin () {
+    return (
+      this.props.yOrigin === 'min'
+        ? d3.min(this.props.data.map(d => d.count)) - 1
+        : this.props.yOrigin
+          ? this.props.yOrigin
+          : 0
+    )
+  }
+
   getYScale () {
     const minRange = 0
     const maxRange = this.height
-    const minDomain = 0
+    const minDomain = this.getYOrigin()
     const maxDomain = d3.max(this.props.data.map(d => d.count))
     return d3.scaleLinear()
       .range([maxRange, minRange]) // Yes, we need to swap these

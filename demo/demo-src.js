@@ -173,7 +173,8 @@ class App extends React.Component {
         <PlusPlot.BarChart
           data={this.state.barChartData}
           options={{ margins: { right: 50 }, axes: { xAxisRotateTickLabels: -15 } }}
-          yLines={[{ value: 3, label: 'Now', color: 'grey' }]}
+          yLines={[{ value: 5, label: 'Now', color: 'grey' }]}
+          yOrigin='min'
         />
         <h3>Data</h3>
         <div className='data'>
