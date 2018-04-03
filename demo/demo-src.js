@@ -32,6 +32,23 @@ class Utils {
     }
     return array
   }
+
+  static getArrayOfDates (length = 5) {
+    const array = []
+    for (let i = 0; i < length; i++) {
+      array.push(new Date(2018, i, 1))
+    }
+    return array
+  }
+
+  static getArrayOfDateY (length = 5, min = 1, max = 5) {
+    const array = []
+    const dates = Utils.getArrayOfDates(length)
+    for (let i = 0; i < length; i++) {
+      array.push({ x: dates[i], y: Utils.getRandomInt(min, max) })
+    }
+    return array
+  }
 }
 
 class DataGenerator {
@@ -80,6 +97,15 @@ class DataGenerator {
     return lineChartData
   }
 
+  static generateLineChartDateData () {
+    const lineChartDateData = [
+      { color: 'blue', values: Utils.getArrayOfDateY() },
+      { color: 'red', values: Utils.getArrayOfDateY() },
+      { color: 'green', values: Utils.getArrayOfDateY() }
+    ]
+    return lineChartDateData
+  }
+
   static generateSlopeGraphData () {
     const slopeGraphData = [
       { category: 'China', values: Utils.getArrayOfRandomInts(2, 0, 2000) },
@@ -101,6 +127,7 @@ class App extends React.Component {
       histogramData: [],
       scatterPlotData: [],
       lineChartData: [],
+      lineChartDateData: [],
       slopeGraphData: []
     }
     this.refreshData = this.refreshData.bind(this)
@@ -117,6 +144,7 @@ class App extends React.Component {
       histogramData: DataGenerator.generateHistogramData(),
       scatterPlotData: DataGenerator.generateScatterPlotData(),
       lineChartData: DataGenerator.generateLineChartData(),
+      lineChartDateData: DataGenerator.generateLineChartDateData(),
       slopeGraphData: DataGenerator.generateSlopeGraphData()
     })
   }
@@ -154,6 +182,12 @@ class App extends React.Component {
     })
 
     const lineChartDataForDisplay = this.state.lineChartData.map((item, index) => {
+      return (
+        <span key={index}>&nbsp;&nbsp;{JSON.stringify(item, null, 1)}<br /></span>
+      )
+    })
+
+    const lineChartDateDataForDisplay = this.state.lineChartDateData.map((item, index) => {
       return (
         <span key={index}>&nbsp;&nbsp;{JSON.stringify(item, null, 1)}<br /></span>
       )
@@ -222,6 +256,16 @@ class App extends React.Component {
         <h3>Data</h3>
         <div className='data'>
           [<br />{lineChartDataForDisplay}]
+        </div>
+
+        <h2>PlusPlot.LineChart (Dates) {refreshAllDataButton}</h2>
+        <PlusPlot.LineChart
+          data={this.state.lineChartDateData}
+          dates={Utils.getArrayOfDates()}
+        />
+        <h3>Data</h3>
+        <div className='data'>
+          [<br />{lineChartDateDataForDisplay}]
         </div>
       </div>
     )

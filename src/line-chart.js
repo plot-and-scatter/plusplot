@@ -14,8 +14,18 @@ class LineChart extends AbstractPlot {
   getXScale () {
     const minRange = 0
     const maxRange = this.width
-    const minDomain = 0
-    const maxDomain = d3.max(this._accumulatedValues(), d => d.x)
+    let minDomain = 0
+    let maxDomain = d3.max(this._accumulatedValues(), d => d.x)
+
+    if (this.props.dates) {
+      minDomain = d3.min(this.props.dates)
+      maxDomain = d3.max(this.props.dates)
+
+      return d3.scaleTime()
+        .range([minRange, maxRange])
+        .domain([minDomain, maxDomain])
+    }
+
     return d3.scaleLinear()
       .range([minRange, maxRange])
       .domain([minDomain, maxDomain])
@@ -33,7 +43,7 @@ class LineChart extends AbstractPlot {
 
   drawLines (lines) {
     const lineFunction = d3.line()
-      .curve(d3.curveBasis)
+      .curve(this.props.curve || d3.curveMonotoneX)
       .x(d => this.getXScale()(d.x))
       .y(d => this.getYScale()(d.y))
 
