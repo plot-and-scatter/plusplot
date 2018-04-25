@@ -59,6 +59,15 @@ class GroupedBarChart extends AbstractPlot {
   }
 
   setBarSizes (barGroups) {
+    const barDomainExtent = d3.extent(this.getInnerXScale().domain())
+
+    const colorCategoryScale = this.props.colors
+    ? (this.props.colors.length === 2
+        ? d3.scaleLinear().domain(barDomainExtent).range(this.props.colors)
+        : d3.scaleOrdinal(this.props.colors)
+      )
+    : d3.scaleOrdinal(d3.schemeCategory20)
+
     barGroups
       .attr('transform', d => `translate(${this.getXScale()(d.category)},0)`)
 
@@ -67,6 +76,7 @@ class GroupedBarChart extends AbstractPlot {
       .attr('y', d => this.getYScale()(d))
       .attr('width', this.getInnerXScale().bandwidth())
       .attr('height', d => this.height - this.getYScale()(d))
+      .attr('fill', (d, i) => d.color || colorCategoryScale(i))
   }
 
   // When we initially set the bar locations, we want the x-values to be

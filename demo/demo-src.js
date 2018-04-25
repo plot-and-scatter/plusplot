@@ -65,13 +65,18 @@ class DataGenerator {
   }
 
   static generateGroupedBarChartData () {
-    const groupedBarChartData = [
+    const delAtIndex = Utils.getRandomInt(0, 3)
+
+    let groupedBarChartData = [
       { category: 'BC', values: Utils.getArrayOfRandomInts() },
       { category: 'AB', values: Utils.getArrayOfRandomInts() },
       { category: 'SK', values: Utils.getArrayOfRandomInts() },
       { category: 'MB', values: Utils.getArrayOfRandomInts() },
       { category: 'ON', values: Utils.getArrayOfRandomInts() }
     ]
+
+    groupedBarChartData.splice(delAtIndex, 1)
+
     return groupedBarChartData
   }
 
