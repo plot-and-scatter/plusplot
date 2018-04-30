@@ -106,8 +106,9 @@ class AbstractPlot extends React.Component {
     // being hidden (e.g. if display is set to none and then to block).
     window.addEventListener('shown', () => {
       // console.log('AbstractPlot.shown listener')
+      const duration = 0 // Duration in milliseconds. Don't animate
       this.updateGraphicDimensions()
-      this.updateVizComponents()
+      this.updateVizComponents(duration)
     })
   }
 
@@ -171,18 +172,18 @@ class AbstractPlot extends React.Component {
       .style('display', this.axes.yAxisVisible ? '' : 'none')
   }
 
-  updateVizComponents () {
+  updateVizComponents (duration = 500) {
     // console.log('AbstractPlot.updateVizComponents')
 
     const yAxis = this.svg.select('.y-axis')
     const xAxis = this.svg.select('.x-axis')
 
     yAxis.transition()
-      .duration(500)
+      .duration(duration)
       .call(d3.axisLeft(this.getYScale()))
 
     xAxis.transition()
-      .duration(500)
+      .duration(duration)
       .call(d3.axisBottom(this.getXScale()))
 
     const rotation = this.axes.xAxisRotateTickLabels
