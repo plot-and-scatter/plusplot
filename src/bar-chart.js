@@ -20,18 +20,18 @@ class BarChart extends AbstractPlot {
     super(props)
     this.setBarSizes = this.setBarSizes.bind(this)
     this.setInitialBarSizes = this.setInitialBarSizes.bind(this)
-    this.setYLines = this.setYLines.bind(this)
-    this.setYLineLabels = this.setYLineLabels.bind(this)
-    this.getYOrigin = this.getYOrigin.bind(this)
+    this.setXLines = this.setXLines.bind(this)
+    this.setXLineLabels = this.setXLineLabels.bind(this)
+    this.getXOrigin = this.getXOrigin.bind(this)
   }
 
   initialSetup () {
     super.initialSetup()
   }
 
-  getXScale () {
+  getYScale () {
     const minRange = 0
-    const maxRange = this.width
+    const maxRange = this.height
     const domain = this.props.data.map(d => d.category)
     return d3.scaleBand()
       .range([minRange, maxRange])
@@ -39,23 +39,23 @@ class BarChart extends AbstractPlot {
       .padding(0.2)
   }
 
-  getYOrigin () {
+  getXOrigin () {
     return (
-      this.props.yOrigin === 'min'
+      this.props.xOrigin === 'min'
         ? d3.min(this.props.data.map(d => d.count)) - 1
-        : this.props.yOrigin
-          ? this.props.yOrigin
+        : this.props.xOrigin
+          ? this.props.xOrigin
           : 0
     )
   }
 
-  getYScale () {
+  getXScale () {
     const minRange = 0
     const maxRange = this.height
-    const minDomain = this.getYOrigin()
+    const minDomain = this.getXOrigin()
     const maxDomain = d3.max(this.props.data.map(d => d.count))
     return d3.scaleLinear()
-      .range([maxRange, minRange]) // Yes, we need to swap these
+      .range([minRange, maxRange]) // Yes, we need to swap these
       .domain([minDomain, maxDomain])
   }
 
@@ -80,21 +80,21 @@ class BarChart extends AbstractPlot {
       .attr('fill', (d, i) => d.color || colorCategoryScale(i))
   }
 
-  setYLines (yLines) {
-    yLines
-      .attr('x', 0)
-      .attr('y', d => this.getYScale()(d.value))
-      .attr('width', this.width)
-      .attr('height', d => d.height || 1)
+  setXLines (xLines) {
+    xLines
+      .attr('y', 0)
+      .attr('x', d => this.getXScale()(d.value))
+      .attr('height', this.height)
+      .attr('width', d => d.width || 1)
       .attr('fill', d => d.color)
   }
 
-  setYLineLabels (yLineLabels) {
-    yLineLabels
-      .attr('x', this.width + 5)
-      .attr('y', d => this.getYScale()(d.value))
-      .attr('width', this.width)
-      .attr('height', d => d.height || 1)
+  setXLineLabels (xLineLabels) {
+    xLineLabels
+      .attr('y', 10)
+      .attr('x', d => this.getXScale()(d.value) + 5)
+      .attr('height', this.height)
+      .attr('width', d => d.width || 1)
       .attr('fill', d => d.color)
       .style('font-family', this.font)
       .style('text-anchor', 'start')
@@ -104,8 +104,8 @@ class BarChart extends AbstractPlot {
 
   updateVizComponents () {
     super.updateVizComponents()
-    this.svg.selectAll('.yLine').transition().duration(500).call(this.setYLines)
-    this.svg.selectAll('.yLineLabel').transition().duration(500).call(this.setYLineLabels)
+    this.svg.selectAll('.xLine').transition().duration(500).call(this.setXLines)
+    this.svg.selectAll('.xLineLabel').transition().duration(500).call(this.setXLineLabels)
     if (this.state.initialUpdate) {
       // Initial update? No animation
       this.svg.selectAll('.bar').call(this.setInitialBarSizes)
@@ -123,17 +123,17 @@ class BarChart extends AbstractPlot {
       .attr('class', 'bar')
     bars.exit().remove()
 
-    const yLines = this.wrapper.selectAll('.yLine')
-      .data(this.props.yLines)
-    yLines.enter().append('rect')
-      .attr('class', 'yLine')
-    yLines.exit().remove()
+    const xLines = this.wrapper.selectAll('.xLine')
+      .data(this.props.xLines)
+    xLines.enter().append('rect')
+      .attr('class', 'xLine')
+    xLines.exit().remove()
 
-    const yLineLabels = this.wrapper.selectAll('.yLineLabel')
-      .data(this.props.yLines)
-    yLineLabels.enter().append('text')
-      .attr('class', 'yLineLabel')
-    yLineLabels.exit().remove()
+    const xLineLabels = this.wrapper.selectAll('.xLineLabel')
+      .data(this.props.xLines)
+    xLineLabels.enter().append('text')
+      .attr('class', 'xLineLabel')
+    xLineLabels.exit().remove()
 
     this.updateVizComponents()
   }
