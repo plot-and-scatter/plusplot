@@ -45,7 +45,7 @@ class BarChart extends AbstractPlot {
 
   getXScale () {
     const minRange = 0
-    const maxRange = this.height
+    const maxRange = this.width
     const minDomain = this.getXOrigin()
     const maxDomain = d3.max(this.props.data.map(d => d.count))
     return d3.scaleLinear()
