@@ -101,6 +101,14 @@ class AbstractPlot extends React.Component {
       this.updateGraphicDimensions()
       this.updateVizComponents()
     })
+
+    // Some other components might tell this one that it has been shown after
+    // being hidden (e.g. if display is set to none and then to block).
+    window.addEventListener('shown', () => {
+      // console.log('AbstractPlot.shown listener')
+      this.updateGraphicDimensions()
+      this.updateVizComponents()
+    })
   }
 
   updateGraphicDimensions () {
