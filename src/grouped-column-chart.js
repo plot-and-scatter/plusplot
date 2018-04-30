@@ -103,7 +103,7 @@ class GroupedBarChart extends AbstractPlot {
       .attr('fill', (d, i) => d.color || colorCategoryScale(i))
   }
 
-  updateVizComponents () {
+  updateVizComponents (duration = 500) {
     super.updateVizComponents()
     if (this.state.initialUpdate) {
       // Initial update? No animation
@@ -112,7 +112,7 @@ class GroupedBarChart extends AbstractPlot {
       // which in turn will actually animate the height of the bars.
       this.setState({ initialUpdate: false })
     }
-    this.svg.selectAll('.barGroup').transition().duration(500).call(this.setBarSizes)
+    this.svg.selectAll('.barGroup').transition().duration(duration).call(this.setBarSizes)
   }
 
   updateGraphicContents () {

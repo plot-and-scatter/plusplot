@@ -103,7 +103,7 @@ class Histogram extends AbstractPlot {
       .attr('transform', d => `translate(${x(d.x0)}, 0)`)
   }
 
-  updateVizComponents () {
+  updateVizComponents (duration = 500) {
     super.updateVizComponents()
     if (this.state.initialUpdate) {
       // Initial update? No animation
@@ -112,7 +112,7 @@ class Histogram extends AbstractPlot {
       // which in turn will actually animate the height of the bars.
       this.setState({ initialUpdate: false })
     }
-    this.svg.selectAll('.bar').transition().duration(500).call(this.setBarSizes)
+    this.svg.selectAll('.bar').transition().duration(duration).call(this.setBarSizes)
   }
 
   updateGraphicContents () {

@@ -54,9 +54,9 @@ class LineChart extends AbstractPlot {
       .attr('stroke', (d, i) => d.color || colorCategoryScale(i))
   }
 
-  updateVizComponents () {
+  updateVizComponents (duration = 500) {
     super.updateVizComponents()
-    this.svg.selectAll('.line').transition().duration(500).call(this.drawLines)
+    this.svg.selectAll('.line').transition().duration(duration).call(this.drawLines)
   }
 
   updateGraphicContents () {

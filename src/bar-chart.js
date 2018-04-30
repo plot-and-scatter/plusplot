@@ -96,10 +96,10 @@ class BarChart extends AbstractPlot {
       .text(d => d.label)
   }
 
-  updateVizComponents () {
+  updateVizComponents (duration = 500) {
     super.updateVizComponents()
-    this.svg.selectAll('.xLine').transition().duration(500).call(this.setXLines)
-    this.svg.selectAll('.xLineLabel').transition().duration(500).call(this.setXLineLabels)
+    this.svg.selectAll('.xLine').transition().duration(duration).call(this.setXLines)
+    this.svg.selectAll('.xLineLabel').transition().duration(duration).call(this.setXLineLabels)
     if (this.state.initialUpdate) {
       // Initial update? No animation
       this.svg.selectAll('.bar').call(this.setInitialBarSizes)
@@ -107,7 +107,7 @@ class BarChart extends AbstractPlot {
       // which in turn will actually animate the height of the bars.
       this.setState({ initialUpdate: false })
     }
-    this.svg.selectAll('.bar').transition().duration(500).call(this.setBarSizes)
+    this.svg.selectAll('.bar').transition().duration(duration).call(this.setBarSizes)
   }
 
   updateGraphicContents () {

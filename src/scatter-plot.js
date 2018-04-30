@@ -44,7 +44,7 @@ class ScatterPlot extends AbstractPlot {
       .attr('fill', (d, i) => d.color || colorCategoryScale(i))
   }
 
-  updateVizComponents () {
+  updateVizComponents (duration = 500) {
     super.updateVizComponents()
     if (this.state.initialUpdate) {
       // Initial update? No animation
@@ -53,7 +53,7 @@ class ScatterPlot extends AbstractPlot {
       // which in turn will actually animate the height of the points.
       this.setState({ initialUpdate: false })
     }
-    this.svg.selectAll('.point').transition().duration(500).call(this.setPointPositions)
+    this.svg.selectAll('.point').transition().duration(duration).call(this.setPointPositions)
   }
 
   updateGraphicContents () {
