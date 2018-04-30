@@ -50,7 +50,7 @@ class GroupedBarChart extends AbstractPlot {
 
   getXScale () {
     const minRange = 0
-    const maxRange = this.width
+    const maxRange = Math.max(1, this.width)
     const minDomain = 0
     const maxDomain = d3.max(this.props.data.map(d => d3.max(d.values)))
     return d3.scaleLinear()
