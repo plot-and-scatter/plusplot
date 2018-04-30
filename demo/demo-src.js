@@ -208,6 +208,18 @@ class App extends React.Component {
 
     return (
       <div>
+        <h2>PlusPlot.ColumnChart {refreshAllDataButton}</h2>
+        <PlusPlot.ColumnChart
+          data={this.state.barChartData}
+          options={{ margins: { right: 50 }, axes: { xAxisRotateTickLabels: -15 } }}
+          yLines={[{ value: 5, label: 'Now', color: 'grey' }]}
+          yOrigin='min'
+        />
+        <h3>Data</h3>
+        <div className='data'>
+          [<br />{barChartDataForDisplay}]
+        </div>
+
         <h2>PlusPlot.BarChart {refreshAllDataButton}</h2>
         <PlusPlot.BarChart
           data={this.state.barChartData}
@@ -218,6 +230,17 @@ class App extends React.Component {
         <h3>Data</h3>
         <div className='data'>
           [<br />{barChartDataForDisplay}]
+        </div>
+
+        <h2>PlusPlot.GroupedColumnChart {refreshAllDataButton}</h2>
+        <PlusPlot.GroupedColumnChart
+          data={this.state.groupedBarChartData}
+          colors={['red', 'blue']}
+          options={{ axes: { xAxisRotateTickLabels: -15 } }}
+        />
+        <h3>Data</h3>
+        <div className='data'>
+          [<br />{groupedBarChartDataForDisplay}]
         </div>
 
         <h2>PlusPlot.GroupedBarChart {refreshAllDataButton}</h2>

@@ -1,3 +1,4 @@
 /node_modules/
 /lib/
 /demo/demo.js
+.DS_Store
