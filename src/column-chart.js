@@ -40,13 +40,7 @@ class BarChart extends AbstractPlot {
   }
 
   getYOrigin () {
-    return (
-      this.props.yOrigin === 'min'
-        ? d3.min(this.props.data.map(d => d.count)) - 1
-        : this.props.yOrigin
-          ? this.props.yOrigin
-          : 0
-    )
+    return 0
   }
 
   getYScale () {

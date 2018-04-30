@@ -213,7 +213,6 @@ class App extends React.Component {
           data={this.state.barChartData}
           options={{ margins: { right: 50 }, axes: { xAxisRotateTickLabels: -15 } }}
           yLines={[{ value: 5, label: 'Now', color: 'grey' }]}
-          yOrigin='min'
         />
         <h3>Data</h3>
         <div className='data'>
@@ -225,7 +224,6 @@ class App extends React.Component {
           data={this.state.barChartData}
           options={{ margins: { right: 50 }, axes: { xAxisRotateTickLabels: -15 } }}
           xLines={[{ value: 5, label: 'Now', color: 'grey' }]}
-          xOrigin='min'
         />
         <h3>Data</h3>
         <div className='data'>
