@@ -97,7 +97,7 @@ class AbstractPlot extends React.Component {
     }
 
     window.addEventListener('resize', () => {
-      // console.log('AbstractPlot.resize listener')
+      console.log('AbstractPlot.resize listener')
       this.updateGraphicDimensions()
       this.updateVizComponents()
     })
@@ -105,7 +105,7 @@ class AbstractPlot extends React.Component {
     // Some other components might tell this one that it has been shown after
     // being hidden (e.g. if display is set to none and then to block).
     window.addEventListener('shown', () => {
-      // console.log('AbstractPlot.shown listener')
+      console.log('AbstractPlot.shown listener')
       const duration = 0 // Duration in milliseconds. Don't animate
       this.updateGraphicDimensions()
       this.updateVizComponents(duration)

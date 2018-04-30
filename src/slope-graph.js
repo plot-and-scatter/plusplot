@@ -111,7 +111,7 @@ class SlopeGraph extends AbstractPlot {
   }
 
   updateVizComponents (duration = 500) {
-    super.updateVizComponents()
+    super.updateVizComponents(duration)
     this.svg.selectAll('.line').transition().duration(duration).call(this.drawSlopes)
     if (this.state.initialUpdate) {
       // Initial update? No animation

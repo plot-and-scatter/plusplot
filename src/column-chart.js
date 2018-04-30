@@ -97,7 +97,7 @@ class BarChart extends AbstractPlot {
   }
 
   updateVizComponents (duration = 500) {
-    super.updateVizComponents()
+    super.updateVizComponents(duration)
     this.svg.selectAll('.yLine').transition().duration(duration).call(this.setYLines)
     this.svg.selectAll('.yLineLabel').transition().duration(duration).call(this.setYLineLabels)
     if (this.state.initialUpdate) {

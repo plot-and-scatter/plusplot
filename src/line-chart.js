@@ -55,7 +55,7 @@ class LineChart extends AbstractPlot {
   }
 
   updateVizComponents (duration = 500) {
-    super.updateVizComponents()
+    super.updateVizComponents(duration)
     this.svg.selectAll('.line').transition().duration(duration).call(this.drawLines)
   }
 

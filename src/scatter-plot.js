@@ -45,7 +45,7 @@ class ScatterPlot extends AbstractPlot {
   }
 
   updateVizComponents (duration = 500) {
-    super.updateVizComponents()
+    super.updateVizComponents(duration)
     if (this.state.initialUpdate) {
       // Initial update? No animation
       this.svg.selectAll('.point').call(this.setInitialPointPositions)
