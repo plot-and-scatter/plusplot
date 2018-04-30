@@ -26,9 +26,9 @@ class GroupedBarChart extends AbstractPlot {
     this.setInitialBarSizes = this.setInitialBarSizes.bind(this)
   }
 
-  getXScale () {
+  getYScale () {
     const minRange = 0
-    const maxRange = this.width
+    const maxRange = this.height
     const domain = this.props.data.map(d => d.category)
     return d3.scaleBand()
       .range([minRange, maxRange])
@@ -36,9 +36,9 @@ class GroupedBarChart extends AbstractPlot {
       .padding(0.2)
   }
 
-  getInnerXScale () {
+  getInnerYScale () {
     const minRange = 0
-    const maxRange = this.getXScale().bandwidth()
+    const maxRange = this.getYScale().bandwidth()
     const maxDomain = d3.max(this.props.data.map(d => d.values.length))
     const domain = []
     for (let i = 0; i < maxDomain; i++) { domain.push(i) }
@@ -48,18 +48,18 @@ class GroupedBarChart extends AbstractPlot {
       .padding(0.05)
   }
 
-  getYScale () {
+  getXScale () {
     const minRange = 0
-    const maxRange = this.height
+    const maxRange = this.width
     const minDomain = 0
     const maxDomain = d3.max(this.props.data.map(d => d3.max(d.values)))
     return d3.scaleLinear()
-      .range([maxRange, minRange]) // Yes, we need to swap these
+      .range([minRange, maxRange])
       .domain([minDomain, maxDomain])
   }
 
   setBarSizes (barGroups) {
-    const barDomainExtent = d3.extent(this.getInnerXScale().domain())
+    const barDomainExtent = d3.extent(this.getInnerYScale().domain())
 
     const colorCategoryScale = this.props.colors
     ? (this.props.colors.length === 2
@@ -69,13 +69,13 @@ class GroupedBarChart extends AbstractPlot {
     : d3.scaleOrdinal(d3.schemeCategory20)
 
     barGroups
-      .attr('transform', d => `translate(${this.getXScale()(d.category)},0)`)
+      .attr('transform', d => `translate(0,${this.getYScale()(d.category)})`)
 
     barGroups.selectAll('rect')
-      .attr('x', (d, i) => this.getInnerXScale()(i))
-      .attr('y', d => this.getYScale()(d))
-      .attr('width', this.getInnerXScale().bandwidth())
-      .attr('height', d => this.height - this.getYScale()(d))
+      .attr('y', (d, i) => this.getInnerYScale()(i))
+      .attr('x', 1)
+      .attr('height', this.getInnerYScale().bandwidth())
+      .attr('width', d => this.getXScale()(d))
       .attr('fill', (d, i) => d.color || colorCategoryScale(i))
   }
 
@@ -83,7 +83,7 @@ class GroupedBarChart extends AbstractPlot {
   // correct, but not the y-values -- that way we can animate the height of the
   // bar changing
   setInitialBarSizes (barGroups) {
-    const barDomainExtent = d3.extent(this.getInnerXScale().domain())
+    const barDomainExtent = d3.extent(this.getInnerYScale().domain())
 
     const colorCategoryScale = this.props.colors
       ? (this.props.colors.length === 2
@@ -93,13 +93,13 @@ class GroupedBarChart extends AbstractPlot {
       : d3.scaleOrdinal(d3.schemeCategory20)
 
     barGroups
-      .attr('transform', d => `translate(${this.getXScale()(d.category)},0)`)
+      .attr('transform', d => `translate(0, ${this.getYScale()(d.category)})`)
 
     barGroups.selectAll('rect')
-      .attr('x', (d, i) => this.getInnerXScale()(i))
-      .attr('y', d => this.height)
-      .attr('width', this.getInnerXScale().bandwidth())
-      .attr('height', 0)
+      .attr('y', (d, i) => this.getInnerYScale()(i))
+      .attr('x', 1)
+      .attr('height', this.getInnerYScale().bandwidth())
+      .attr('width', 0)
       .attr('fill', (d, i) => d.color || colorCategoryScale(i))
   }
 

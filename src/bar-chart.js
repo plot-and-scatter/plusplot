@@ -49,7 +49,7 @@ class BarChart extends AbstractPlot {
     const minDomain = this.getXOrigin()
     const maxDomain = d3.max(this.props.data.map(d => d.count))
     return d3.scaleLinear()
-      .range([minRange, maxRange]) // Yes, we need to swap these
+      .range([minRange, maxRange])
       .domain([minDomain, maxDomain])
   }
 
