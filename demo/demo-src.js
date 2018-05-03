@@ -211,7 +211,15 @@ class App extends React.Component {
         <h2>PlusPlot.ColumnChart {refreshAllDataButton}</h2>
         <PlusPlot.ColumnChart
           data={this.state.barChartData}
-          options={{ margins: { right: 50 }, axes: { xAxisRotateTickLabels: -15 } }}
+          options={{
+            dataLabels: {
+              position: 20,
+              color: '#ffffff',
+              formatter: (d) => '$' + d
+            },
+            margins: { right: 50 },
+            axes: { xAxisRotateTickLabels: -15 }
+          }}
           yLines={[{ value: 5, label: 'Now', color: 'grey' }]}
         />
         <h3>Data</h3>
@@ -222,7 +230,14 @@ class App extends React.Component {
         <h2>PlusPlot.BarChart {refreshAllDataButton}</h2>
         <PlusPlot.BarChart
           data={this.state.barChartData}
-          options={{ margins: { left: 100 } }}
+          options={{
+            dataLabels: {
+              position: -20,
+              color: '#ffffff',
+              formatter: (d) => '$' + d
+            },
+            margins: { left: 100 }
+          }}
           xLines={[{ value: 5, label: 'Now', color: 'grey' }]}
         />
         <h3>Data</h3>

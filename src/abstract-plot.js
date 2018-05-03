@@ -11,6 +11,7 @@ class AbstractPlot extends React.Component {
       width: 600,
       widthByParent: true,
       font: 'Avenir',
+      dataLabels: false,
       margins: {
         top: 5,
         right: 15,
@@ -58,6 +59,8 @@ class AbstractPlot extends React.Component {
     this.width = mergedOptions.width
     this.widthByParent = mergedOptions.widthByParent
     this.font = mergedOptions.font
+
+    this.dataLabels = mergedOptions.dataLabels
 
     this.updateGraphicDimensions = this.updateGraphicDimensions.bind(this)
     this.getXScale = this.getXScale.bind(this)

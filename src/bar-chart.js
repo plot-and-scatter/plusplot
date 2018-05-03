@@ -20,6 +20,8 @@ class BarChart extends AbstractPlot {
     super(props)
     this.setBarSizes = this.setBarSizes.bind(this)
     this.setInitialBarSizes = this.setInitialBarSizes.bind(this)
+    this.setDataLabels = this.setDataLabels.bind(this)
+    this.setInitialDataLabels = this.setInitialDataLabels.bind(this)
     this.setXLines = this.setXLines.bind(this)
     this.setXLineLabels = this.setXLineLabels.bind(this)
     this.getXOrigin = this.getXOrigin.bind(this)
@@ -74,6 +76,21 @@ class BarChart extends AbstractPlot {
       .attr('fill', (d, i) => d.color || colorCategoryScale(i))
   }
 
+  setDataLabels (dataLabels) {
+    const positionAdjustment = this.dataLabels.position
+    dataLabels.attr('x', d => this.getXScale()(d.count) + positionAdjustment)
+      .text(d => this.dataLabels.formatter ? this.dataLabels.formatter(d.count) : d.count)
+  }
+
+  setInitialDataLabels (dataLabels) {
+    dataLabels.attr('y', d => this.getYScale()(d.category) + 0.5 * this.getYScale().bandwidth())
+      .attr('x', 0)
+      .style('font-family', this.font)
+      .style('text-anchor', 'middle')
+      .style('alignment-baseline', 'middle')
+      .style('fill', this.dataLabels.color)
+  }
+
   setXLines (xLines) {
     xLines
       .attr('y', 0)
@@ -103,11 +120,13 @@ class BarChart extends AbstractPlot {
     if (this.state.initialUpdate) {
       // Initial update? No animation
       this.svg.selectAll('.bar').call(this.setInitialBarSizes)
+      this.svg.selectAll('.dataLabel').call(this.setInitialDataLabels)
       // The next line will, conveniently, re-trigger updateVizComponents(),
       // which in turn will actually animate the height of the bars.
       this.setState({ initialUpdate: false })
     }
     this.svg.selectAll('.bar').transition().duration(duration).call(this.setBarSizes)
+    this.svg.selectAll('.dataLabel').transition().duration(duration).call(this.setDataLabels)
   }
 
   updateGraphicContents () {
@@ -116,6 +135,14 @@ class BarChart extends AbstractPlot {
     bars.enter().append('rect')
       .attr('class', 'bar')
     bars.exit().remove()
+
+    if (this.dataLabels) {
+      const dataLabels = this.wrapper.selectAll('.dataLabel')
+        .data(this.props.data, d => d.category)
+      dataLabels.enter().append('text')
+        .attr('class', 'dataLabel')
+      dataLabels.exit().remove()
+    }
 
     const xLines = this.wrapper.selectAll('.xLine')
       .data(this.props.xLines)
