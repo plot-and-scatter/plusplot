@@ -77,13 +77,15 @@ class BarChart extends AbstractPlot {
   }
 
   setDataLabels (dataLabels) {
-    const positionAdjustment = this.dataLabels.position
-    dataLabels.attr('y', d => this.getYScale()(d.count) + positionAdjustment)
+    const positionAdjustment = this.dataLabels.position || 0
+    dataLabels
+      .attr('y', d => this.getYScale()(d.count) + positionAdjustment)
       .text(d => this.dataLabels.formatter ? this.dataLabels.formatter(d.count) : d.count)
   }
 
   setInitialDataLabels (dataLabels) {
-    dataLabels.attr('x', d => this.getXScale()(d.category) + 0.5 * this.getXScale().bandwidth())
+    dataLabels
+      .attr('x', d => this.getXScale()(d.category) + 0.5 * this.getXScale().bandwidth())
       .attr('y', this.height)
       .style('font-family', this.font)
       .style('text-anchor', 'middle')
