@@ -24,6 +24,8 @@ class GroupedBarChart extends AbstractPlot {
     super(props)
     this.setBarSizes = this.setBarSizes.bind(this)
     this.setInitialBarSizes = this.setInitialBarSizes.bind(this)
+    this.setDataLabels = this.setDataLabels.bind(this)
+    this.setInitialDataLabels = this.setInitialDataLabels.bind(this)
   }
 
   getXScale () {
@@ -103,16 +105,47 @@ class GroupedBarChart extends AbstractPlot {
       .attr('fill', (d, i) => d.color || colorCategoryScale(i))
   }
 
+  setDataLabels (barGroups) {
+    const positionAdjustment = this.dataLabels.position || 0
+
+    barGroups
+      .attr('transform', d => `translate(${this.getXScale()(d.category)},0)`)
+
+    barGroups.selectAll('text')
+      .attr('x', (d, i) => this.getInnerXScale()(i) + 0.5 * this.getInnerXScale().bandwidth())
+      .attr('y', d => this.getYScale()(d) + positionAdjustment)
+      .style('font-family', this.font)
+      .style('text-anchor', 'middle')
+      .style('alignment-baseline', 'middle')
+      .attr('fill', this.dataLabels.color)
+      .text(d => this.dataLabels.formatter ? this.dataLabels.formatter(d) : d)
+  }
+
+  setInitialDataLabels (dataLabelGroups) {
+    dataLabelGroups
+      .attr('transform', d => `translate(${this.getXScale()(d.category)},0)`)
+
+    dataLabelGroups.selectAll('text')
+      .attr('x', (d, i) => this.getInnerXScale()(i) + 0.5 * this.getInnerXScale().bandwidth())
+      .attr('y', d => this.height)
+      .style('font-family', this.font)
+      .style('text-anchor', 'middle')
+      .style('alignment-baseline', 'middle')
+      .attr('fill', this.dataLabels.color)
+  }
+
   updateVizComponents (duration = 500) {
     super.updateVizComponents(duration)
     if (this.state.initialUpdate) {
       // Initial update? No animation
       this.svg.selectAll('.barGroup').call(this.setInitialBarSizes)
+      this.svg.selectAll('.dataLabelGroup').call(this.setInitialDataLabels)
       // The next line will, conveniently, re-trigger updateVizComponents(),
       // which in turn will actually animate the height of the bars.
       this.setState({ initialUpdate: false })
     }
     this.svg.selectAll('.barGroup').transition().duration(duration).call(this.setBarSizes)
+    this.svg.selectAll('.dataLabelGroup').transition().duration(duration).call(this.setDataLabels)
   }
 
   updateGraphicContents () {
@@ -133,6 +166,26 @@ class GroupedBarChart extends AbstractPlot {
         .attr('class', 'bar')
 
     bars.exit().remove()
+
+    if (this.dataLabels) {
+      // The bar groups are the groupings of bars
+      const dataLabelGroups = this.wrapper.selectAll('.dataLabelGroup')
+        .data(this.props.data, d => d.category)
+
+      dataLabelGroups.enter().append('g')
+        .attr('class', 'dataLabelGroup')
+
+      dataLabelGroups.exit().remove()
+
+      // The dataLabels are the dataLabels within each group
+      const dataLabels = this.wrapper.selectAll('.dataLabelGroup').selectAll('.dataLabel')
+        .data(d => d.values, (d, i) => i)
+
+      dataLabels.enter().append('text')
+        .attr('class', 'dataLabel')
+
+      dataLabels.exit().remove()
+    }
 
     this.updateVizComponents()
   }

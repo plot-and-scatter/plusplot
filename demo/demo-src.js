@@ -249,7 +249,14 @@ class App extends React.Component {
         <PlusPlot.GroupedColumnChart
           data={this.state.groupedBarChartData}
           colors={['red', 'blue']}
-          options={{ axes: { xAxisRotateTickLabels: -15 } }}
+          options={{
+            dataLabels: {
+              position: 20,
+              color: '#fff',
+              formatter: (d) => '$' + d
+            },
+            axes: { xAxisRotateTickLabels: -15 }
+          }}
         />
         <h3>Data</h3>
         <div className='data'>
