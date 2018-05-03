@@ -270,9 +270,10 @@ class App extends React.Component {
           options={{
             dataLabels: {
               position: -20,
-              color: '#000',
+              color: '#fff',
               formatter: (d) => '$' + d
             },
+            height: 800,
             axes: { xAxisRotateTickLabels: -15 }
           }}
         />
