@@ -58,6 +58,7 @@ class GroupedBarChart extends AbstractPlot {
     return d3.scaleLinear()
       .range([minRange, maxRange])
       .domain([minDomain, maxDomain])
+      .nice()
   }
 
   setBarSizes (barGroups) {
