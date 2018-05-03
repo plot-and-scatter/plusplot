@@ -106,13 +106,13 @@ class GroupedBarChart extends AbstractPlot {
       .attr('fill', (d, i) => d.color || colorCategoryScale(i))
   }
 
-  setDataLabels (barGroups) {
+  setDataLabels (dataLabelGroups) {
     const positionAdjustment = this.dataLabels.position || 0
 
-    barGroups
+    dataLabelGroups
       .attr('transform', d => `translate(${this.getXScale()(d.category)},0)`)
 
-    barGroups.selectAll('text')
+    dataLabelGroups.selectAll('text')
       .attr('x', (d, i) => this.getInnerXScale()(i) + 0.5 * this.getInnerXScale().bandwidth())
       .attr('y', d => this.getYScale()(d) + positionAdjustment)
       .style('font-family', this.font)

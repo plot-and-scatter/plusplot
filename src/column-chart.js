@@ -80,6 +80,7 @@ class BarChart extends AbstractPlot {
   setDataLabels (dataLabels) {
     const positionAdjustment = this.dataLabels.position || 0
     dataLabels
+      .attr('x', d => this.getXScale()(d.category) + 0.5 * this.getXScale().bandwidth())
       .attr('y', d => this.getYScale()(d.count) + positionAdjustment)
       .text(d => this.dataLabels.formatter ? this.dataLabels.formatter(d.count) : d.count)
   }
