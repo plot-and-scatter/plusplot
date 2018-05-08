@@ -24,6 +24,8 @@ class BulletBarChart extends AbstractPlot {
     this.setInitialBulletBarSizes = this.setInitialBulletBarSizes.bind(this)
     this.setDataLabels = this.setDataLabels.bind(this)
     this.setInitialDataLabels = this.setInitialDataLabels.bind(this)
+    this.setBulletBarLabels = this.setBulletBarLabels.bind(this)
+    this.setInitialBulletBarLabels = this.setInitialBulletBarLabels.bind(this)
     this.setXLines = this.setXLines.bind(this)
     this.setXLineLabels = this.setXLineLabels.bind(this)
     this.getXOrigin = this.getXOrigin.bind(this)
@@ -40,7 +42,7 @@ class BulletBarChart extends AbstractPlot {
     return d3.scaleBand()
       .range([minRange, maxRange])
       .domain(domain)
-      .padding(0.7)
+      .padding(0.75)
   }
 
   getXOrigin () {
@@ -124,6 +126,27 @@ class BulletBarChart extends AbstractPlot {
       .style('fill', this.dataLabels.color)
   }
 
+  setBulletBarLabels (bulletBarLabels) {
+    bulletBarLabels
+      .attr('y', d => this.getYScale()(d.category) - this.getYScale().bandwidth())
+      .attr('x', d => this.getXScale()(d.value))
+      .text(d => this.dataLabels.formatter ? this.dataLabels.formatter(d.value) : d.value)
+      .style('font-family', this.font)
+      .style('text-anchor', 'middle')
+      .style('alignment-baseline', 'middle')
+      .style('fill', this.dataLabels.bulletLabelColor || this.dataLabels.color)
+  }
+
+  setInitialBulletBarLabels (bulletBarLabels) {
+    bulletBarLabels
+      .attr('y', d => this.getYScale()(d.category) + 0.5 * this.getYScale().bandwidth())
+      .attr('x', 0)
+      .style('font-family', this.font)
+      .style('text-anchor', 'middle')
+      .style('alignment-baseline', 'middle')
+      .style('fill', this.dataLabels.bulletLabelColor || this.dataLabels.color)
+  }
+
   setXLines (xLines) {
     xLines
       .attr('y', 0)
@@ -155,6 +178,7 @@ class BulletBarChart extends AbstractPlot {
       this.svg.selectAll('.bulletBar').call(this.setInitialBulletBarSizes)
       this.svg.selectAll('.bar').call(this.setInitialBarSizes)
       this.svg.selectAll('.dataLabel').call(this.setInitialDataLabels)
+      this.svg.selectAll('.bulletBarLabel').call(this.setInitialBulletBarLabels)
       // The next line will, conveniently, re-trigger updateVizComponents(),
       // which in turn will actually animate the height of the bars.
       this.setState({ initialUpdate: false })
@@ -162,6 +186,7 @@ class BulletBarChart extends AbstractPlot {
     this.svg.selectAll('.bulletBar').transition().duration(duration).call(this.setBulletBarSizes)
     this.svg.selectAll('.bar').transition().duration(duration).call(this.setBarSizes)
     this.svg.selectAll('.dataLabel').transition().duration(duration).call(this.setDataLabels)
+    this.svg.selectAll('.bulletBarLabel').transition().duration(duration).call(this.setBulletBarLabels)
   }
 
   updateGraphicContents () {
@@ -202,6 +227,12 @@ class BulletBarChart extends AbstractPlot {
       dataLabels.enter().append('text')
         .attr('class', 'dataLabel')
       dataLabels.exit().remove()
+
+      const bulletBarLabels = this.wrapper.selectAll('.bulletBarLabel')
+        .data(comparators, d => `${d.category}-${d.color}`)
+      bulletBarLabels.enter().append('text')
+        .attr('class', 'bulletBarLabel')
+      bulletBarLabels.exit().remove()
     }
 
     const xLines = this.wrapper.selectAll('.xLine')

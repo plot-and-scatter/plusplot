@@ -90,7 +90,7 @@ class DataGenerator {
         color: '#70ccdb',
         comparators: [
           { value: Utils.getRandomInt(1, 3), color: '#6b747c', showMark: true },
-          { value: Utils.getRandomInt(4, 6), color: '#d3e2ef', showMark: true }
+          { value: Utils.getRandomInt(4, 6), color: '#d3e2ef' }
         ]
       },
       {
@@ -279,6 +279,7 @@ class App extends React.Component {
             dataLabels: {
               position: -20,
               color: '#fff',
+              bulletLabelColor: '#333',
               formatter: (d) => '$' + d
             },
             height: 400,
