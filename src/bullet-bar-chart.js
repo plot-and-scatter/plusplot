@@ -86,9 +86,9 @@ class BulletBarChart extends AbstractPlot {
     const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory20)
     bars
       .attr('y', d => this.getYScale()(d.category) - this.getYScale().bandwidth() * 0.5)
-      .attr('x', 1)
+      .attr('x', d => d.showMark ? this.getXScale()(d.value) - 5 : 1)
       .attr('height', this.getYScale().bandwidth() * 2)
-      .attr('width', d => this.getXScale()(d.value))
+      .attr('width', d => d.showMark ? 5 : this.getXScale()(d.value))
       .attr('fill', (d, i) => d.color || colorCategoryScale(i))
   }
 
@@ -98,7 +98,7 @@ class BulletBarChart extends AbstractPlot {
       .attr('y', d => this.getYScale()(d.category) - this.getYScale().bandwidth() * 0.5)
       .attr('x', 0)
       .attr('height', this.getYScale().bandwidth() * 2)
-      .attr('width', 0)
+      .attr('width', d => d.showMark ? 5 : 0)
       .attr('fill', (d, i) => d.color || colorCategoryScale(i))
   }
 
@@ -176,7 +176,9 @@ class BulletBarChart extends AbstractPlot {
 
     this.props.data.forEach(d => {
       d.comparators.forEach(c => {
-        comparators.push({ category: d.category, value: c.value, color: c.color })
+        const value = Object.assign({}, c)
+        value.category = d.category
+        comparators.push(value)
       })
     })
 

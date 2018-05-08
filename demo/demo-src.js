@@ -89,8 +89,8 @@ class DataGenerator {
         count: Utils.getRandomInt(),
         color: '#70ccdb',
         comparators: [
-          { value: Utils.getRandomInt(1, 3), color: '#6b747c' },
-          { value: Utils.getRandomInt(4, 6), color: '#d3e2ef' }
+          { value: Utils.getRandomInt(1, 3), color: '#6b747c', showMark: true },
+          { value: Utils.getRandomInt(4, 6), color: '#d3e2ef', showMark: true }
         ]
       },
       {
