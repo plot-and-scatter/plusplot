@@ -2,6 +2,7 @@ import BarChart from './bar-chart'
 import ColumnChart from './column-chart'
 import GroupedBarChart from './grouped-bar-chart'
 import GroupedColumnChart from './grouped-column-chart'
+import BulletBarChart from './bullet-bar-chart'
 import Histogram from './histogram'
 import LineChart from './line-chart'
 import ScatterPlot from './scatter-plot'
@@ -12,6 +13,7 @@ module.exports = {
   ColumnChart,
   GroupedBarChart,
   GroupedColumnChart,
+  BulletBarChart,
   Histogram,
   LineChart,
   ScatterPlot,

@@ -80,6 +80,56 @@ class DataGenerator {
     return groupedBarChartData
   }
 
+  static generateBulletBarChartData () {
+    return [
+      {
+        category: 'BC',
+        count: Utils.getRandomInt(),
+        color: '#70ccdb',
+        comparators: [
+          { value: Utils.getRandomInt(1, 3), color: '#6b747c' },
+          { value: Utils.getRandomInt(4, 6), color: '#d3e2ef' }
+        ]
+      },
+      {
+        category: 'AB',
+        count: Utils.getRandomInt(),
+        color: '#70ccdb',
+        comparators: [
+          { value: Utils.getRandomInt(1, 3), color: '#6b747c' },
+          { value: Utils.getRandomInt(4, 6), color: '#d3e2ef' }
+        ]
+      },
+      {
+        category: 'SK',
+        count: Utils.getRandomInt(),
+        color: '#70ccdb',
+        comparators: [
+          { value: Utils.getRandomInt(1, 3), color: '#6b747c' },
+          { value: Utils.getRandomInt(4, 6), color: '#d3e2ef' }
+        ]
+      },
+      {
+        category: 'MB',
+        count: Utils.getRandomInt(),
+        color: '#70ccdb',
+        comparators: [
+          { value: Utils.getRandomInt(1, 3), color: '#6b747c' },
+          { value: Utils.getRandomInt(4, 6), color: '#d3e2ef' }
+        ]
+      },
+      {
+        category: 'ON',
+        count: Utils.getRandomInt(),
+        color: '#70ccdb',
+        comparators: [
+          { value: Utils.getRandomInt(1, 3), color: '#6b747c' },
+          { value: Utils.getRandomInt(4, 6), color: '#d3e2ef' }
+        ]
+      }
+    ]
+  }
+
   static generateHistogramData () {
     let histogramData = []
     for (let i = 0; i < 100; i++) { histogramData.push(Utils.getRandomInt(1, 9)) }
@@ -127,6 +177,7 @@ class App extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
+      bulletBarChartData: [],
       barChartData: [],
       groupedBarChartData: [],
       histogramData: [],
@@ -144,6 +195,7 @@ class App extends React.Component {
 
   refreshData () {
     this.setState({
+      bulletBarChartData: DataGenerator.generateBulletBarChartData(),
       barChartData: DataGenerator.generateBarChartData(),
       groupedBarChartData: DataGenerator.generateGroupedBarChartData(),
       histogramData: DataGenerator.generateHistogramData(),
@@ -156,6 +208,12 @@ class App extends React.Component {
 
   render () {
     const barChartDataForDisplay = this.state.barChartData.map((item, index) => {
+      return (
+        <span key={index}>&nbsp;&nbsp;{JSON.stringify(item, null, 1)}<br /></span>
+      )
+    })
+
+    const bulletBarChartDataForDisplay = this.state.bulletBarChartData.map((item, index) => {
       return (
         <span key={index}>&nbsp;&nbsp;{JSON.stringify(item, null, 1)}<br /></span>
       )
@@ -208,6 +266,25 @@ class App extends React.Component {
 
     return (
       <div>
+        <h2>PlusPlot.BulletBarChart {refreshAllDataButton}</h2>
+        <PlusPlot.BulletBarChart
+          data={this.state.bulletBarChartData}
+          options={{
+            dataLabels: {
+              position: -20,
+              color: '#fff',
+              formatter: (d) => '$' + d
+            },
+            height: 400,
+            axes: { xAxisRotateTickLabels: -15 }
+          }}
+          xLines={[]}
+        />
+        <h3>Data</h3>
+        <div className='data'>
+          [<br />{bulletBarChartDataForDisplay}]
+        </div>
+
         <h2>PlusPlot.ColumnChart {refreshAllDataButton}</h2>
         <PlusPlot.ColumnChart
           data={this.state.barChartData}
