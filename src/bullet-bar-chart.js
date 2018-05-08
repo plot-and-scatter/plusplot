@@ -51,7 +51,10 @@ class BulletBarChart extends AbstractPlot {
     const minRange = 0
     const maxRange = Math.max(this.width, 1)
     const minDomain = this.getXOrigin()
-    const maxDomain = d3.max(this.props.data.map(d => d.count))
+    const maxDomain = d3.max(this.props.data.map(d =>
+      Math.max(d.count, d3.max(d.comparators.map(c => c.value))))
+    )
+    console.log('maxDomain', maxDomain)
     return d3.scaleLinear()
       .range([minRange, maxRange])
       .domain([minDomain, maxDomain])
