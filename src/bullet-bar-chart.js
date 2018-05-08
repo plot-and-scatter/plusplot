@@ -105,8 +105,13 @@ class BulletBarChart extends AbstractPlot {
   setDataLabels (dataLabels) {
     const positionAdjustment = this.dataLabels.position || 0
     dataLabels
+      .attr('y', d => this.getYScale()(d.category) + 0.5 * this.getYScale().bandwidth())
       .attr('x', d => this.getXScale()(d.count) + positionAdjustment)
       .text(d => this.dataLabels.formatter ? this.dataLabels.formatter(d.count) : d.count)
+      .style('font-family', this.font)
+      .style('text-anchor', 'middle')
+      .style('alignment-baseline', 'middle')
+      .style('fill', this.dataLabels.color)
   }
 
   setInitialDataLabels (dataLabels) {

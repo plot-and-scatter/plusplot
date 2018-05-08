@@ -81,7 +81,9 @@ class DataGenerator {
   }
 
   static generateBulletBarChartData () {
-    return [
+    const delAtIndex = Utils.getRandomInt(0, 3)
+
+    const bulletBarChartData = [
       {
         category: 'BC',
         count: Utils.getRandomInt(),
@@ -128,6 +130,10 @@ class DataGenerator {
         ]
       }
     ]
+
+    bulletBarChartData.splice(delAtIndex, 1)
+
+    return bulletBarChartData
   }
 
   static generateHistogramData () {
