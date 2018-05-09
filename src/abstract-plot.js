@@ -175,18 +175,18 @@ class AbstractPlot extends React.Component {
       .style('display', this.axes.yAxisVisible ? '' : 'none')
   }
 
-  updateVizComponents (duration = 500) {
+  updateVizComponents (duration = 500, delay = 0) {
     // console.log('AbstractPlot.updateVizComponents')
 
     const yAxis = this.svg.select('.y-axis')
     const xAxis = this.svg.select('.x-axis')
 
     yAxis.transition()
-      .duration(duration)
+      .duration(duration).delay(delay)
       .call(d3.axisLeft(this.getYScale()))
 
     xAxis.transition()
-      .duration(duration)
+      .duration(duration).delay(delay)
       .call(d3.axisBottom(this.getXScale()))
 
     const rotation = this.axes.xAxisRotateTickLabels

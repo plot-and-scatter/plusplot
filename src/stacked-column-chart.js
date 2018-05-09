@@ -102,28 +102,8 @@ class StackedColumnChart extends AbstractPlot {
       .attr('fill', this.dataLabels.color)
   }
 
-  updateVizComponents (duration = 500) {
-    super.updateVizComponents(duration)
-    if (this.state.initialUpdate) {
-      // Initial update? No animation
-      this.svg.selectAll('.bar').call(this.setInitialBarSizes)
-      this.svg.selectAll('.dataLabelGroup').call(this.setInitialDataLabels)
-      // The next line will, conveniently, re-trigger updateVizComponents(),
-      // which in turn will actually animate the height of the bars.
-      this.setState({ initialUpdate: false })
-    }
-    this.svg.selectAll('.bar').transition().duration(duration).call(this.setBarSizes)
-    this.svg.selectAll('.dataLabelGroup').transition().duration(duration).call(this.setDataLabels)
-  }
-
   updateGraphicContents () {
-    const stack = d3.stack()
-      .keys(this.props.stackKeys)
-
-    console.log('- - -')
-
-    // console.log('this.props.data', this.props.data)
-    // console.log('stacked', stack(this.props.data))
+    const stack = d3.stack().keys(this.props.stackKeys)
 
     // The bars are the bars within each group
     const barGroups = this.wrapper
@@ -140,10 +120,21 @@ class StackedColumnChart extends AbstractPlot {
         .selectAll('.bar')
         .data(d => d, d => d.data.category)
 
+    const duration = 300
+
+    const exit = bars.exit()
+          .transition().duration(duration).attr('height', 0).attr('y', this.height)
+          .remove()
+
+    const delay = exit.size() ? duration : 0
+
+    bars.transition().delay(delay).duration(duration).call(this.setBarSizes)
+
     bars.enter().append('rect')
         .attr('class', 'bar')
-
-    bars.exit().remove()
+        .call(this.setInitialBarSizes)
+        .transition().delay(delay * 2).duration(duration)
+        .call(this.setBarSizes)
 
     if (this.dataLabels) {
       // The dataLabels are the dataLabels within each group
@@ -156,7 +147,7 @@ class StackedColumnChart extends AbstractPlot {
       // dataLabels.exit().remove()
     }
 
-    this.updateVizComponents()
+    this.updateVizComponents(duration, delay)
   }
 
   render () {
