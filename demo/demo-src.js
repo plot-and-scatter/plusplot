@@ -296,7 +296,7 @@ class App extends React.Component {
 
     return (
       <div>
-        <h2>PlusPlot.BulletBarChart {refreshAllDataButton}</h2>
+        {/* <h2>PlusPlot.BulletBarChart {refreshAllDataButton}</h2>
         <PlusPlot.BulletBarChart
           data={this.state.bulletBarChartData}
           options={{
@@ -351,13 +351,13 @@ class App extends React.Component {
         <h3>Data</h3>
         <div className='data'>
           [<br />{barChartDataForDisplay}]
-        </div>
+        </div> */}
 
         <h2>PlusPlot.StackedColumnChart {refreshAllDataButton}</h2>
         <PlusPlot.StackedColumnChart
           data={this.state.stackedColumnChartData}
           stackKeys={['apples', 'bananas', 'oranges']}
-          colors={['green', 'yellow', 'orange']}
+          colors={['#1b9194', '#1b6c94', '#1b4e94']}
           options={{
             dataLabels: {
               position: 20,
@@ -372,7 +372,7 @@ class App extends React.Component {
           [<br />{stackedColumnChartDataForDisplay}]
         </div>
 
-        <h2>PlusPlot.GroupedColumnChart {refreshAllDataButton}</h2>
+        {/* <h2>PlusPlot.GroupedColumnChart {refreshAllDataButton}</h2>
         <PlusPlot.GroupedColumnChart
           data={this.state.groupedBarChartData}
           colors={['red', 'blue']}
@@ -449,7 +449,7 @@ class App extends React.Component {
         <h3>Data</h3>
         <div className='data'>
           [<br />{lineChartDateDataForDisplay}]
-        </div>
+        </div> */}
       </div>
     )
   }
