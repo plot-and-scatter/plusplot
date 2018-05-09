@@ -107,34 +107,38 @@ class StackedColumnChart extends AbstractPlot {
 
     // The bars are the bars within each group
     const barGroups = this.wrapper
-        .selectAll('.barGroup')
-        .data(stack(this.props.data), (d, i) => i)
+      .selectAll('.barGroup')
+      .data(stack(this.props.data), (d, i) => i)
 
     barGroups.enter().append('g')
-        .attr('class', 'barGroup')
-        .attr('fill', d => this.getColorScale()(d.key))
+      .attr('class', 'barGroup')
+      .attr('fill', d => this.getColorScale()(d.key))
 
     barGroups.exit().remove()
 
     const bars = this.wrapper.selectAll('.barGroup')
-        .selectAll('.bar')
-        .data(d => d, d => d.data.category)
+      .selectAll('.bar')
+      .data(d => d, d => d.data.category)
 
     const duration = 300
 
     const exit = bars.exit()
-          .transition().duration(duration).attr('height', 0).attr('y', this.height)
-          .remove()
+        .transition().duration(duration)
+        .attr('height', 0)
+        .attr('y', this.height)
+        .remove()
 
     const delay = exit.size() ? duration : 0
 
-    bars.transition().delay(delay).duration(duration).call(this.setBarSizes)
+    bars
+      .transition().delay(delay).duration(duration)
+      .call(this.setBarSizes)
 
     bars.enter().append('rect')
-        .attr('class', 'bar')
-        .call(this.setInitialBarSizes)
-        .transition().delay(delay * 2).duration(duration)
-        .call(this.setBarSizes)
+      .attr('class', 'bar')
+      .call(this.setInitialBarSizes)
+      .transition().delay(delay).duration(duration)
+      .call(this.setBarSizes)
 
     if (this.dataLabels) {
       // The dataLabels are the dataLabels within each group
