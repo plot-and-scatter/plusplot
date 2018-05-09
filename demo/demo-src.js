@@ -372,7 +372,7 @@ class App extends React.Component {
           [<br />{stackedColumnChartDataForDisplay}]
         </div>
 
-        {/* <h2>PlusPlot.GroupedColumnChart {refreshAllDataButton}</h2>
+        <h2>PlusPlot.GroupedColumnChart {refreshAllDataButton}</h2>
         <PlusPlot.GroupedColumnChart
           data={this.state.groupedBarChartData}
           colors={['red', 'blue']}
@@ -409,7 +409,7 @@ class App extends React.Component {
           [<br />{groupedBarChartDataForDisplay}]
         </div>
 
-        <h2>PlusPlot.Histogram {refreshAllDataButton}</h2>
+        {/* <h2>PlusPlot.Histogram {refreshAllDataButton}</h2>
         <PlusPlot.Histogram data={this.state.histogramData} />
         <h3>Data</h3>
         <div className='data'>

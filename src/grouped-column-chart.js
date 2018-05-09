@@ -26,6 +26,7 @@ class GroupedBarChart extends AbstractPlot {
     this.setInitialBarSizes = this.setInitialBarSizes.bind(this)
     this.setDataLabels = this.setDataLabels.bind(this)
     this.setInitialDataLabels = this.setInitialDataLabels.bind(this)
+    this.updateGraphicContents = this.updateGraphicContents.bind(this)
   }
 
   getXScale () {
@@ -61,7 +62,7 @@ class GroupedBarChart extends AbstractPlot {
       .nice()
   }
 
-  setBarSizes (barGroups) {
+  setBarSizes (bars) {
     const barDomainExtent = d3.extent(this.getInnerXScale().domain())
 
     const colorCategoryScale = this.props.colors
@@ -71,10 +72,7 @@ class GroupedBarChart extends AbstractPlot {
       )
     : d3.scaleOrdinal(d3.schemeCategory20)
 
-    barGroups
-      .attr('transform', d => `translate(${this.getXScale()(d.category)},0)`)
-
-    barGroups.selectAll('rect')
+    bars
       .attr('x', (d, i) => this.getInnerXScale()(i))
       .attr('y', d => this.getYScale()(d))
       .attr('width', this.getInnerXScale().bandwidth())
@@ -85,7 +83,7 @@ class GroupedBarChart extends AbstractPlot {
   // When we initially set the bar locations, we want the x-values to be
   // correct, but not the y-values -- that way we can animate the height of the
   // bar changing
-  setInitialBarSizes (barGroups) {
+  setInitialBarSizes (bars) {
     const barDomainExtent = d3.extent(this.getInnerXScale().domain())
 
     const colorCategoryScale = this.props.colors
@@ -95,10 +93,7 @@ class GroupedBarChart extends AbstractPlot {
         )
       : d3.scaleOrdinal(d3.schemeCategory20)
 
-    barGroups
-      .attr('transform', d => `translate(${this.getXScale()(d.category)},0)`)
-
-    barGroups.selectAll('rect')
+    bars
       .attr('x', (d, i) => this.getInnerXScale()(i))
       .attr('y', d => this.height)
       .attr('width', this.getInnerXScale().bandwidth())
@@ -106,13 +101,10 @@ class GroupedBarChart extends AbstractPlot {
       .attr('fill', (d, i) => d.color || colorCategoryScale(i))
   }
 
-  setDataLabels (dataLabelGroups) {
+  setDataLabels (dataLabels) {
     const positionAdjustment = this.dataLabels.position || 0
 
-    dataLabelGroups
-      .attr('transform', d => `translate(${this.getXScale()(d.category)},0)`)
-
-    dataLabelGroups.selectAll('text')
+    dataLabels
       .attr('x', (d, i) => this.getInnerXScale()(i) + 0.5 * this.getInnerXScale().bandwidth())
       .attr('y', d => this.getYScale()(d) + positionAdjustment)
       .style('font-family', this.font)
@@ -122,11 +114,8 @@ class GroupedBarChart extends AbstractPlot {
       .text(d => this.dataLabels.formatter ? this.dataLabels.formatter(d) : d)
   }
 
-  setInitialDataLabels (dataLabelGroups) {
-    dataLabelGroups
-      .attr('transform', d => `translate(${this.getXScale()(d.category)},0)`)
-
-    dataLabelGroups.selectAll('text')
+  setInitialDataLabels (dataLabels) {
+    dataLabels
       .attr('x', (d, i) => this.getInnerXScale()(i) + 0.5 * this.getInnerXScale().bandwidth())
       .attr('y', d => this.height)
       .style('font-family', this.font)
@@ -135,60 +124,70 @@ class GroupedBarChart extends AbstractPlot {
       .attr('fill', this.dataLabels.color)
   }
 
-  updateVizComponents (duration = 500) {
-    super.updateVizComponents(duration)
-    if (this.state.initialUpdate) {
-      // Initial update? No animation
-      this.svg.selectAll('.barGroup').call(this.setInitialBarSizes)
-      this.svg.selectAll('.dataLabelGroup').call(this.setInitialDataLabels)
-      // The next line will, conveniently, re-trigger updateVizComponents(),
-      // which in turn will actually animate the height of the bars.
-      this.setState({ initialUpdate: false })
-    }
-    this.svg.selectAll('.barGroup').transition().duration(duration).call(this.setBarSizes)
-    this.svg.selectAll('.dataLabelGroup').transition().duration(duration).call(this.setDataLabels)
-  }
-
   updateGraphicContents () {
+    const DURATION = 300
+
     // The bar groups are the groupings of bars
-    const barGroups = this.wrapper.selectAll('.barGroup')
+    const barGroups = this.wrapper
+      .selectAll('.barGroup')
       .data(this.props.data, d => d.category)
 
+    // EXITING
+
+    // First, reduce height of the exiting bars
+    barGroups.exit().selectAll('.bar')
+      .transition().duration(DURATION).on('end', () => barGroups.exit().remove())
+        .call(this.setInitialBarSizes)
+
+    barGroups.exit().selectAll('.dataLabel')
+      .transition().duration(DURATION)
+        .call(this.setInitialDataLabels)
+
+    const delay = barGroups.exit().size() ? DURATION : 0
+
+    // Now move the bar groups
+    barGroups
+      .transition().delay(delay).duration(DURATION)
+      .attr('transform', d => `translate(${this.getXScale()(d.category)},0)`)
+
+    // Finally, add the bar groups and bars
     barGroups.enter().append('g')
-        .attr('class', 'barGroup')
+      .attr('class', 'barGroup')
+      .attr('data-category', d => d.category)
+      .attr('transform', d => `translate(${this.getXScale()(d.category)},0)`)
 
-    barGroups.exit().remove()
-
-    // The bars are the bars within each group
-    const bars = this.wrapper.selectAll('.barGroup').selectAll('.bar')
-        .data(d => d.values, (d, i) => i)
+    const bars = this.wrapper.selectAll('.barGroup')
+      .selectAll('.bar')
+      .data(d => d.values, (d, i) => i)
 
     bars.enter().append('rect')
-        .attr('class', 'bar')
+      .attr('class', 'bar')
+      .call(this.setInitialBarSizes)
+      .transition().delay(delay).duration(DURATION)
+      .call(this.setBarSizes)
 
-    bars.exit().remove()
+    bars
+      .transition().delay(delay).duration(DURATION)
+      .call(this.setBarSizes)
 
     if (this.dataLabels) {
-      // The bar groups are the groupings of bars
-      const dataLabelGroups = this.wrapper.selectAll('.dataLabelGroup')
-        .data(this.props.data, d => d.category)
-
-      dataLabelGroups.enter().append('g')
-        .attr('class', 'dataLabelGroup')
-
-      dataLabelGroups.exit().remove()
-
       // The dataLabels are the dataLabels within each group
-      const dataLabels = this.wrapper.selectAll('.dataLabelGroup').selectAll('.dataLabel')
+      const dataLabels = this.wrapper.selectAll('.barGroup')
+        .selectAll('.dataLabel')
         .data(d => d.values, (d, i) => i)
 
       dataLabels.enter().append('text')
         .attr('class', 'dataLabel')
+        .call(this.setInitialDataLabels)
+        .transition().delay(delay).duration(DURATION)
+        .call(this.setDataLabels)
 
-      dataLabels.exit().remove()
+      dataLabels
+        .transition().delay(delay).duration(DURATION)
+        .call(this.setDataLabels)
     }
 
-    this.updateVizComponents()
+    this.updateVizComponents(DURATION, delay)
   }
 
   render () {
