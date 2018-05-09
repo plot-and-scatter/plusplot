@@ -80,6 +80,22 @@ class DataGenerator {
     return groupedBarChartData
   }
 
+  static generateStackedColumnChartData () {
+    const delAtIndex = Utils.getRandomInt(0, 3)
+
+    let stackedColumnChartData = [
+      { category: 'BC', apples: Utils.getRandomInt(), bananas: Utils.getRandomInt(), oranges: Utils.getRandomInt() },
+      { category: 'AB', apples: Utils.getRandomInt(), bananas: Utils.getRandomInt(), oranges: Utils.getRandomInt() },
+      { category: 'SK', apples: Utils.getRandomInt(), bananas: Utils.getRandomInt(), oranges: Utils.getRandomInt() },
+      { category: 'MB', apples: Utils.getRandomInt(), bananas: Utils.getRandomInt(), oranges: Utils.getRandomInt() },
+      { category: 'ON', apples: Utils.getRandomInt(), bananas: Utils.getRandomInt(), oranges: Utils.getRandomInt() }
+    ]
+
+    stackedColumnChartData.splice(delAtIndex, 1)
+
+    return stackedColumnChartData
+  }
+
   static generateBulletBarChartData () {
     const delAtIndex = Utils.getRandomInt(0, 3)
 
@@ -186,6 +202,7 @@ class App extends React.Component {
       bulletBarChartData: [],
       barChartData: [],
       groupedBarChartData: [],
+      stackedColumnChartData: [],
       histogramData: [],
       scatterPlotData: [],
       lineChartData: [],
@@ -204,6 +221,7 @@ class App extends React.Component {
       bulletBarChartData: DataGenerator.generateBulletBarChartData(),
       barChartData: DataGenerator.generateBarChartData(),
       groupedBarChartData: DataGenerator.generateGroupedBarChartData(),
+      stackedColumnChartData: DataGenerator.generateStackedColumnChartData(),
       histogramData: DataGenerator.generateHistogramData(),
       scatterPlotData: DataGenerator.generateScatterPlotData(),
       lineChartData: DataGenerator.generateLineChartData(),
@@ -226,6 +244,12 @@ class App extends React.Component {
     })
 
     const groupedBarChartDataForDisplay = this.state.groupedBarChartData.map((item, index) => {
+      return (
+        <span key={index}>&nbsp;&nbsp;{JSON.stringify(item, null, 1)}<br /></span>
+      )
+    })
+
+    const stackedColumnChartDataForDisplay = this.state.stackedColumnChartData.map((item, index) => {
       return (
         <span key={index}>&nbsp;&nbsp;{JSON.stringify(item, null, 1)}<br /></span>
       )
@@ -327,6 +351,25 @@ class App extends React.Component {
         <h3>Data</h3>
         <div className='data'>
           [<br />{barChartDataForDisplay}]
+        </div>
+
+        <h2>PlusPlot.StackedColumnChart {refreshAllDataButton}</h2>
+        <PlusPlot.StackedColumnChart
+          data={this.state.stackedColumnChartData}
+          stackKeys={['apples', 'bananas', 'oranges']}
+          colors={['green', 'yellow', 'orange']}
+          options={{
+            dataLabels: {
+              position: 20,
+              color: '#fff',
+              formatter: (d) => '$' + d
+            },
+            axes: { xAxisRotateTickLabels: -15 }
+          }}
+        />
+        <h3>Data</h3>
+        <div className='data'>
+          [<br />{stackedColumnChartDataForDisplay}]
         </div>
 
         <h2>PlusPlot.GroupedColumnChart {refreshAllDataButton}</h2>

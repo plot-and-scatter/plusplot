@@ -56,7 +56,6 @@ class BulletBarChart extends AbstractPlot {
     const maxDomain = d3.max(this.props.data.map(d =>
       Math.max(d.count, d3.max(d.comparators.map(c => c.value))))
     )
-    console.log('maxDomain', maxDomain)
     return d3.scaleLinear()
       .range([minRange, maxRange])
       .domain([minDomain, maxDomain])
@@ -195,8 +194,6 @@ class BulletBarChart extends AbstractPlot {
       d.comparators.sort((a, b) => a.value < b.value ? 1 : a.value > b.value ? -1 : 0)
     })
 
-    console.log('comparators post-sort', this.props.data)
-
     const comparators = []
 
     this.props.data.forEach(d => {
@@ -206,8 +203,6 @@ class BulletBarChart extends AbstractPlot {
         comparators.push(value)
       })
     })
-
-    console.log('comparators', comparators)
 
     const bulletBars = this.wrapper.selectAll('.bulletBar')
       .data(comparators, d => `${d.category}-${d.color}`)
