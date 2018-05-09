@@ -120,13 +120,15 @@ class StackedColumnChart extends AbstractPlot {
     const stack = d3.stack()
       .keys(this.props.stackKeys)
 
-    console.log('this.props.data', this.props.data)
-    console.log('stacked', stack(this.props.data))
+    console.log('- - -')
+
+    // console.log('this.props.data', this.props.data)
+    // console.log('stacked', stack(this.props.data))
 
     // The bars are the bars within each group
     const barGroups = this.wrapper
         .selectAll('.barGroup')
-        .data(stack(this.props.data))
+        .data(stack(this.props.data), (d, i) => i)
 
     barGroups.enter().append('g')
         .attr('class', 'barGroup')
@@ -136,7 +138,7 @@ class StackedColumnChart extends AbstractPlot {
 
     const bars = this.wrapper.selectAll('.barGroup')
         .selectAll('.bar')
-        .data(d => d, (d, i) => i)
+        .data(d => d, d => d.data.category)
 
     bars.enter().append('rect')
         .attr('class', 'bar')
