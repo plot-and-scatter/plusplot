@@ -110,7 +110,7 @@ class AbstractPlot extends React.Component {
     window.addEventListener('shown', () => {
       console.log('AbstractPlot.shown listener')
       const duration = 0 // Duration in milliseconds. Don't animate
-      this.updateGraphicDimensions()
+      this.updateGraphicContents()
       this.updateVizComponents(duration)
     })
   }
