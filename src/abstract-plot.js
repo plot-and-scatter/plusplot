@@ -122,8 +122,13 @@ class AbstractPlot extends React.Component {
     // Use the parent's bounding rectangle for the width, if the option
     // has been set
     if (this.widthByParent) {
-      const width = this.svgRef.parentNode.getBoundingClientRect().width
-      this.width = width - this.margins.left - this.margins.right
+      try {
+        const width = this.svgRef.parentNode.getBoundingClientRect().width
+        this.width = width - this.margins.left - this.margins.right
+      } catch (e) {
+        // Might happen if parentNode goes missing. Just log a warning
+        console.warn('AbstractPlot.updateGraphicDimensions(): widthByParent failure')
+      }
     }
 
     this.svg.attr('width', this.width + this.margins.left + this.margins.right)
