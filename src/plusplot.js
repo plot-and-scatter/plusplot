@@ -1,3 +1,4 @@
+import AbstractPlot from './abstract-plot'
 import BarChart from './bar-chart'
 import ColumnChart from './column-chart'
 import GroupedBarChart from './grouped-bar-chart'
@@ -10,6 +11,7 @@ import ScatterPlot from './scatter-plot'
 import SlopeGraph from './slope-graph'
 
 module.exports = {
+  AbstractPlot,
   BarChart,
   ColumnChart,
   GroupedBarChart,
