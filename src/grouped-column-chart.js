@@ -19,7 +19,7 @@ import * as d3 from 'd3'
  * bands. If, however, `colors` is an array of only two elements, its two colors
  * will be used as an interpolation range to color the bars in each group.
  */
-class GroupedBarChart extends AbstractPlot {
+class GroupedColumnChart extends AbstractPlot {
   constructor (props) {
     super(props)
     this.setBarSizes = this.setBarSizes.bind(this)
@@ -195,11 +195,11 @@ class GroupedBarChart extends AbstractPlot {
   }
 }
 
-GroupedBarChart.propTypes = {
+GroupedColumnChart.propTypes = {
   data: PropTypes.arrayOf(PropTypes.shape({
     category: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     values: PropTypes.array.isRequired
   })).isRequired
 }
 
-module.exports = GroupedBarChart
+module.exports = GroupedColumnChart
