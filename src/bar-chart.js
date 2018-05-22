@@ -165,17 +165,17 @@ class BarChart extends AbstractPlot {
       .transition().delay(delay).duration(DURATION)
         .call(this.setDataLabels)
 
-    // const xLines = this.wrapper.selectAll('.xLine')
-    //   .data(this.props.xLines)
-    // xLines.enter().append('rect')
-    //   .attr('class', 'xLine')
-    // xLines.exit().remove()
+    const xLines = this.wrapper.selectAll('.xLine')
+      .data(this.props.xLines)
+    xLines.enter().append('rect')
+      .attr('class', 'xLine')
+    xLines.exit().remove()
 
-    // const xLineLabels = this.wrapper.selectAll('.xLineLabel')
-    //   .data(this.props.xLines)
-    // xLineLabels.enter().append('text')
-    //   .attr('class', 'xLineLabel')
-    // xLineLabels.exit().remove()
+    const xLineLabels = this.wrapper.selectAll('.xLineLabel')
+      .data(this.props.xLines)
+    xLineLabels.enter().append('text')
+      .attr('class', 'xLineLabel')
+    xLineLabels.exit().remove()
 
     this.updateVizComponents(DURATION, delay)
   }
