@@ -53,6 +53,8 @@ class Utils {
 
 class DataGenerator {
   static generateBarChartData () {
+    const delAtIndex = Utils.getRandomInt(0, 3)
+
     const barChartData = [
       { category: 'Apples', count: Utils.getRandomInt(), color: 'rgba(0, 150, 0, 0.5)' },
       { category: 'Bananas', count: Utils.getRandomInt(), color: '#fe0' },
@@ -61,6 +63,9 @@ class DataGenerator {
       { category: 'Strawberries', count: Utils.getRandomInt(), color: 'rgb(255, 0, 0)' },
       { category: 'Watermelons', count: Utils.getRandomInt(), color: 'green' }
     ]
+
+    barChartData.splice(delAtIndex, 1)
+
     return barChartData
   }
 
@@ -161,7 +166,9 @@ class DataGenerator {
   }
 
   static generateScatterPlotData () {
+    const delAtIndex = Utils.getRandomInt(0, 3)
     const scatterPlotData = Utils.getArrayOfRandomXY(20, 1, 9)
+    scatterPlotData.splice(delAtIndex, 1)
     return scatterPlotData
   }
 
