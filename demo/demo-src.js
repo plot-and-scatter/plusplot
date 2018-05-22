@@ -296,7 +296,7 @@ class App extends React.Component {
 
     return (
       <div>
-        {/* <h2>PlusPlot.BulletBarChart {refreshAllDataButton}</h2>
+        <h2>PlusPlot.BulletBarChart {refreshAllDataButton}</h2>
         <PlusPlot.BulletBarChart
           data={this.state.bulletBarChartData}
           options={{
@@ -351,7 +351,7 @@ class App extends React.Component {
         <h3>Data</h3>
         <div className='data'>
           [<br />{barChartDataForDisplay}]
-        </div> */}
+        </div>
 
         <h2>PlusPlot.StackedColumnChart {refreshAllDataButton}</h2>
         <PlusPlot.StackedColumnChart
@@ -409,7 +409,7 @@ class App extends React.Component {
           [<br />{groupedBarChartDataForDisplay}]
         </div>
 
-        {/* <h2>PlusPlot.Histogram {refreshAllDataButton}</h2>
+        <h2>PlusPlot.Histogram {refreshAllDataButton}</h2>
         <PlusPlot.Histogram data={this.state.histogramData} />
         <h3>Data</h3>
         <div className='data'>
@@ -449,7 +449,7 @@ class App extends React.Component {
         <h3>Data</h3>
         <div className='data'>
           [<br />{lineChartDateDataForDisplay}]
-        </div> */}
+        </div>
       </div>
     )
   }
