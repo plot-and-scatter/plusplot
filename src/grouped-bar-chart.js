@@ -123,6 +123,17 @@ class GroupedBarChart extends AbstractPlot {
       .attr('fill', this.dataLabels.color)
   }
 
+  updateVizComponents (duration = 500, delay = 0) {
+    super.updateVizComponents(duration, delay)
+    this.svg.selectAll('.barGroup')
+      .transition().duration(duration).delay(delay)
+      .attr('transform', d => `translate(0,${this.getYScale()(d.category)})`)
+    this.svg.selectAll('.barGroup').selectAll('.bar')
+      .transition().duration(duration).delay(delay).call(this.setBarSizes)
+    this.svg.selectAll('.barGroup').selectAll('.dataLabel')
+      .transition().duration(duration).delay(delay).call(this.setDataLabels)
+  }
+
   updateGraphicContents () {
     const DURATION = 300
 
