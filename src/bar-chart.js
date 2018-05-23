@@ -79,6 +79,18 @@ class BarChart extends AbstractPlot {
     bars.attr('x', 0)
   }
 
+  updateVizComponents (duration = 500, delay = 0) {
+    super.updateVizComponents(duration, delay)
+    this.svg.selectAll('.xLine')
+      .transition().duration(duration).delay(delay).call(this.setXLines)
+    this.svg.selectAll('.xLineLabel')
+      .transition().duration(duration).delay(delay).call(this.setXLineLabels)
+    this.svg.selectAll('.bar')
+      .transition().duration(duration).delay(delay).call(this.setBarSizes)
+    this.svg.selectAll('.dataLabel')
+      .transition().duration(duration).delay(delay).call(this.setDataLabels)
+  }
+
   setDataLabels (dataLabels) {
     const positionAdjustment = this.dataLabels.position || 0
     dataLabels

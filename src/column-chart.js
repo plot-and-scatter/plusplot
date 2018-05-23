@@ -125,13 +125,17 @@ class ColumnChart extends AbstractPlot {
       .text(d => d.label)
   }
 
-  // updateVizComponents (duration = 500) {
-  //   super.updateVizComponents(duration)
-  //   this.svg.selectAll('.yLine').transition().duration(duration).call(this.setYLines)
-  //   this.svg.selectAll('.yLineLabel').transition().duration(duration).call(this.setYLineLabels)
-  //   this.svg.selectAll('.bar').transition().duration(duration).call(this.setBarSizes)
-  //   this.svg.selectAll('.dataLabel').transition().duration(duration).call(this.setDataLabels)
-  // }
+  updateVizComponents (duration = 500, delay = 0) {
+    super.updateVizComponents(duration, delay)
+    this.svg.selectAll('.yLine')
+      .transition().duration(duration).delay(delay).call(this.setYLines)
+    this.svg.selectAll('.yLineLabel')
+      .transition().duration(duration).delay(delay).call(this.setYLineLabels)
+    this.svg.selectAll('.bar')
+      .transition().duration(duration).delay(delay).call(this.setBarSizes)
+    this.svg.selectAll('.dataLabel')
+      .transition().duration(duration).delay(delay).call(this.setDataLabels)
+  }
 
   updateGraphicContents () {
     const DURATION = 300
