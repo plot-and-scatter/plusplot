@@ -15,7 +15,7 @@ import * as d3 from 'd3'
  * e.g. `[{ category: 'A', count: 10}, { category: 'B', count: 15}]`
  *
  */
-class BarChart extends AbstractPlot {
+class ColumnChart extends AbstractPlot {
   constructor (props) {
     super(props)
     this.setBarSizes = this.setBarSizes.bind(this)
@@ -168,7 +168,7 @@ class BarChart extends AbstractPlot {
   }
 }
 
-BarChart.propTypes = {
+ColumnChart.propTypes = {
   data: PropTypes.arrayOf(PropTypes.shape({
     category: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     count: PropTypes.number.isRequired,
@@ -176,4 +176,4 @@ BarChart.propTypes = {
   })).isRequired
 }
 
-module.exports = BarChart
+module.exports = ColumnChart
