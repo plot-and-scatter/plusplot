@@ -45,6 +45,9 @@ class GroupedColumnChart extends AbstractPlot {
     const maxDomain = d3.max(this.props.data.map(d => d.values.length))
     const domain = []
     for (let i = 0; i < maxDomain; i++) { domain.push(i) }
+    // console.log('* * *')
+    // console.log('maxRange', maxRange)
+    // console.log('domain', domain)
     return d3.scaleBand()
       .rangeRound([minRange, maxRange])
       .domain(domain)
@@ -124,6 +127,17 @@ class GroupedColumnChart extends AbstractPlot {
       .attr('fill', this.dataLabels.color)
   }
 
+  updateVizComponents (duration = 500, delay = 0) {
+    super.updateVizComponents(duration, delay)
+    this.svg.selectAll('.barGroup')
+      .transition().duration(duration).delay(delay)
+      .attr('transform', d => `translate(${this.getXScale()(d.category)},0)`)
+    this.svg.selectAll('.barGroup').selectAll('.bar')
+      .transition().duration(duration).delay(delay).call(this.setBarSizes)
+    this.svg.selectAll('.barGroup').selectAll('.dataLabel')
+      .transition().duration(duration).delay(delay).call(this.setDataLabels)
+  }
+
   updateGraphicContents () {
     const DURATION = 300
 
@@ -136,8 +150,9 @@ class GroupedColumnChart extends AbstractPlot {
 
     // First, reduce height of the exiting bars
     barGroups.exit().selectAll('.bar')
-      .transition().duration(DURATION).on('end', () => barGroups.exit().remove())
+      .transition().duration(DURATION)
         .call(this.setInitialBarSizes)
+        .on('end', () => barGroups.exit().remove())
 
     barGroups.exit().selectAll('.dataLabel')
       .transition().duration(DURATION)
