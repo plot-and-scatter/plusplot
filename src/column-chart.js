@@ -24,6 +24,7 @@ class ColumnChart extends AbstractPlot {
     this.setInitialDataLabels = this.setInitialDataLabels.bind(this)
     this.setYLines = this.setYLines.bind(this)
     this.setYLineLabels = this.setYLineLabels.bind(this)
+    this.setExitingBarSizes = this.setExitingBarSizes.bind(this)
   }
 
   initialSetup () {
@@ -53,23 +54,31 @@ class ColumnChart extends AbstractPlot {
 
   setBarSizes (bars) {
     const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory20)
-    bars.attr('x', d => this.getXScale()(d.category))
+    bars
+      .attr('x', d => this.getXScale()(d.category))
       .attr('y', d => this.getYScale()(d.count))
       .attr('width', this.getXScale().bandwidth())
       .attr('height', d => this.height - this.getYScale()(d.count))
       .attr('fill', (d, i) => d.color || colorCategoryScale(i))
   }
 
-  // When we initially set the bar locations, we want the x-values to be
-  // correct, but not the y-values -- that way we can animate the height of the
-  // bar changing
   setInitialBarSizes (bars) {
     const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory20)
-    bars.attr('x', d => this.getXScale()(d.category))
+    bars
+      .attr('x', d => this.getXScale()(d.category))
       .attr('y', this.height)
       .attr('width', this.getXScale().bandwidth())
       .attr('height', 0)
       .attr('fill', (d, i) => d.color || colorCategoryScale(i))
+  }
+
+  setExitingBarSizes (bars) {
+    bars.attr('height', 0)
+    bars.attr('y', this.height)
+  }
+
+  setExitingDataLabels (bars) {
+    bars.attr('y', 0)
   }
 
   setDataLabels (dataLabels) {
@@ -77,6 +86,10 @@ class ColumnChart extends AbstractPlot {
     dataLabels
       .attr('x', d => this.getXScale()(d.category) + 0.5 * this.getXScale().bandwidth())
       .attr('y', d => this.getYScale()(d.count) + positionAdjustment)
+      .style('font-family', this.font)
+      .style('text-anchor', 'middle')
+      .style('alignment-baseline', 'middle')
+      .style('fill', this.dataLabels.color)
       .text(d => this.dataLabels.formatter ? this.dataLabels.formatter(d.count) : d.count)
   }
 
@@ -112,36 +125,56 @@ class ColumnChart extends AbstractPlot {
       .text(d => d.label)
   }
 
-  updateVizComponents (duration = 500) {
-    super.updateVizComponents(duration)
-    this.svg.selectAll('.yLine').transition().duration(duration).call(this.setYLines)
-    this.svg.selectAll('.yLineLabel').transition().duration(duration).call(this.setYLineLabels)
-    if (this.state.initialUpdate) {
-      // Initial update? No animation
-      this.svg.selectAll('.bar').call(this.setInitialBarSizes)
-      this.svg.selectAll('.dataLabel').call(this.setInitialDataLabels)
-      // The next line will, conveniently, re-trigger updateVizComponents(),
-      // which in turn will actually animate the height of the bars.
-      this.setState({ initialUpdate: false })
-    }
-    this.svg.selectAll('.bar').transition().duration(duration).call(this.setBarSizes)
-    this.svg.selectAll('.dataLabel').transition().duration(duration).call(this.setDataLabels)
-  }
+  // updateVizComponents (duration = 500) {
+  //   super.updateVizComponents(duration)
+  //   this.svg.selectAll('.yLine').transition().duration(duration).call(this.setYLines)
+  //   this.svg.selectAll('.yLineLabel').transition().duration(duration).call(this.setYLineLabels)
+  //   this.svg.selectAll('.bar').transition().duration(duration).call(this.setBarSizes)
+  //   this.svg.selectAll('.dataLabel').transition().duration(duration).call(this.setDataLabels)
+  // }
 
   updateGraphicContents () {
+    const DURATION = 300
+
+    // Link data
     const bars = this.wrapper.selectAll('.bar')
       .data(this.props.data, d => d.category)
+
+    const dataLabels = this.wrapper.selectAll('.dataLabel')
+      .data(this.props.data, d => d.category)
+
+    // Exit
+    bars.exit()
+      .transition().duration(DURATION).on('end', () => bars.exit().remove())
+        .call(this.setExitingBarSizes)
+
+    dataLabels.exit()
+      .transition().duration(DURATION).on('end', () => dataLabels.exit().remove())
+        .call(this.setExitingDataLabels)
+
+    console.log('bars.exit()', bars.exit(), bars.exit().size())
+
+    const delay = bars.exit().size() ? DURATION : 0
+
     bars.enter().append('rect')
       .attr('class', 'bar')
-    bars.exit().remove()
+      .call(this.setInitialBarSizes)
+      .transition().delay(delay).duration(DURATION)
+        .call(this.setBarSizes)
 
-    if (this.dataLabels) {
-      const dataLabels = this.wrapper.selectAll('.dataLabel')
-        .data(this.props.data, d => d.category)
-      dataLabels.enter().append('text')
-        .attr('class', 'dataLabel')
-      dataLabels.exit().remove()
-    }
+    dataLabels.enter().append('text')
+      .attr('class', 'dataLabel')
+      .call(this.setInitialDataLabels)
+      .transition().delay(delay).duration(DURATION)
+        .call(this.setDataLabels)
+
+    bars
+      .transition().delay(delay).duration(DURATION)
+        .call(this.setBarSizes)
+
+    dataLabels
+      .transition().delay(delay).duration(DURATION)
+        .call(this.setDataLabels)
 
     const yLines = this.wrapper.selectAll('.yLine')
       .data(this.props.yLines)
@@ -155,7 +188,7 @@ class ColumnChart extends AbstractPlot {
       .attr('class', 'yLineLabel')
     yLineLabels.exit().remove()
 
-    this.updateVizComponents()
+    this.updateVizComponents(DURATION, delay)
   }
 
   render () {

@@ -61,9 +61,6 @@ class BarChart extends AbstractPlot {
       .attr('fill', (d, i) => d.color || colorCategoryScale(i))
   }
 
-  // When we initially set the bar locations, we want the x-values to be
-  // correct, but not the y-values -- that way we can animate the height of the
-  // bar changing
   setInitialBarSizes (bars) {
     const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory20)
     bars
@@ -87,6 +84,10 @@ class BarChart extends AbstractPlot {
     dataLabels
       .attr('y', d => this.getYScale()(d.category) + 0.5 * this.getYScale().bandwidth())
       .attr('x', d => this.getXScale()(d.count) + positionAdjustment)
+      .style('font-family', this.font)
+      .style('text-anchor', 'middle')
+      .style('alignment-baseline', 'middle')
+      .style('fill', this.dataLabels.color)
       .text(d => this.dataLabels.formatter ? this.dataLabels.formatter(d.count) : d.count)
   }
 
