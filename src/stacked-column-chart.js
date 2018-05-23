@@ -102,6 +102,12 @@ class StackedColumnChart extends AbstractPlot {
       .attr('fill', this.dataLabels.color)
   }
 
+  updateVizComponents (duration = 500, delay = 0) {
+    super.updateVizComponents(duration, delay)
+    this.svg.selectAll('.bar')
+      .transition().duration(duration).delay(delay).call(this.setBarSizes)
+  }
+
   updateGraphicContents () {
     const stack = d3.stack().keys(this.props.stackKeys)
 
@@ -126,7 +132,7 @@ class StackedColumnChart extends AbstractPlot {
         .transition().duration(duration)
         .attr('height', 0)
         .attr('y', this.height)
-        .remove()
+        .on('end', () => bars.exit().remove())
 
     const delay = exit.size() ? duration : 0
 
