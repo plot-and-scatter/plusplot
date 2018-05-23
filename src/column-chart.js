@@ -24,7 +24,6 @@ class ColumnChart extends AbstractPlot {
     this.setInitialDataLabels = this.setInitialDataLabels.bind(this)
     this.setYLines = this.setYLines.bind(this)
     this.setYLineLabels = this.setYLineLabels.bind(this)
-    this.getYOrigin = this.getYOrigin.bind(this)
   }
 
   initialSetup () {
@@ -41,14 +40,10 @@ class ColumnChart extends AbstractPlot {
       .padding(0.2)
   }
 
-  getYOrigin () {
-    return 0
-  }
-
   getYScale () {
     const minRange = 0
     const maxRange = this.height
-    const minDomain = this.getYOrigin()
+    const minDomain = 0
     const maxDomain = d3.max(this.props.data.map(d => d.count))
     return d3.scaleLinear()
       .range([maxRange, minRange]) // Yes, we need to swap these
