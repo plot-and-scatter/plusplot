@@ -33,8 +33,8 @@ class GroupedColumnChart extends AbstractPlot {
     const minRange = 0
     const maxRange = this.width || 1
     const domain = this.props.data.map(d => d.category)
-    console.log('minRange', minRange, 'maxRange', maxRange)
-    console.log('domain', domain)
+    // console.log('minRange', minRange, 'maxRange', maxRange)
+    // console.log('domain', domain)
     return d3.scaleBand()
       .range([minRange, maxRange])
       .domain(domain)
@@ -165,7 +165,7 @@ class GroupedColumnChart extends AbstractPlot {
       .transition().duration(DURATION)
         .call(this.setInitialDataLabels)
 
-    const delay = barGroups.exit().size() ? DURATION : 0
+    const delay = barGroups.exit().size() ? DURATION + 50 : 0
 
     // Now move the bar groups
     barGroups
