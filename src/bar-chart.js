@@ -82,13 +82,13 @@ class BarChart extends AbstractPlot {
   updateVizComponents (duration = 500, delay = 0) {
     super.updateVizComponents(duration, delay)
     this.svg.selectAll('.xLine')
-      .transition().duration(duration).delay(delay).call(this.setXLines)
+      .transition(this.transitionID()).duration(duration).delay(delay).call(this.setXLines)
     this.svg.selectAll('.xLineLabel')
-      .transition().duration(duration).delay(delay).call(this.setXLineLabels)
+      .transition(this.transitionID()).duration(duration).delay(delay).call(this.setXLineLabels)
     this.svg.selectAll('.bar')
-      .transition().duration(duration).delay(delay).call(this.setBarSizes)
+      .transition(this.transitionID()).duration(duration).delay(delay).call(this.setBarSizes)
     this.svg.selectAll('.dataLabel')
-      .transition().duration(duration).delay(delay).call(this.setDataLabels)
+      .transition(this.transitionID()).duration(duration).delay(delay).call(this.setDataLabels)
   }
 
   setDataLabels (dataLabels) {
@@ -147,11 +147,11 @@ class BarChart extends AbstractPlot {
 
     // Exit
     bars.exit()
-      .transition().duration(DURATION).on('end', () => bars.exit().remove())
+      .transition(this.transitionID()).duration(DURATION).on('end', () => bars.exit().remove())
         .call(this.setExitingBarSizes)
 
     dataLabels.exit()
-      .transition().duration(DURATION).on('end', () => dataLabels.exit().remove())
+      .transition(this.transitionID()).duration(DURATION).on('end', () => dataLabels.exit().remove())
         .call(this.setExitingDataLabels)
 
     console.log('bars.exit()', bars.exit(), bars.exit().size())
@@ -161,21 +161,21 @@ class BarChart extends AbstractPlot {
     bars.enter().append('rect')
       .attr('class', 'bar')
       .call(this.setInitialBarSizes)
-      .transition().delay(delay).duration(DURATION)
+      .transition(this.transitionID()).delay(delay).duration(DURATION)
         .call(this.setBarSizes)
 
     dataLabels.enter().append('text')
       .attr('class', 'dataLabel')
       .call(this.setInitialDataLabels)
-      .transition().delay(delay).duration(DURATION)
+      .transition(this.transitionID()).delay(delay).duration(DURATION)
         .call(this.setDataLabels)
 
     bars
-      .transition().delay(delay).duration(DURATION)
+      .transition(this.transitionID()).delay(delay).duration(DURATION)
         .call(this.setBarSizes)
 
     dataLabels
-      .transition().delay(delay).duration(DURATION)
+      .transition(this.transitionID()).delay(delay).duration(DURATION)
         .call(this.setDataLabels)
 
     const xLines = this.wrapper.selectAll('.xLine')

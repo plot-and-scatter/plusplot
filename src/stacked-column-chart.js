@@ -105,7 +105,7 @@ class StackedColumnChart extends AbstractPlot {
   updateVizComponents (duration = 500, delay = 0) {
     super.updateVizComponents(duration, delay)
     this.svg.selectAll('.bar')
-      .transition().duration(duration).delay(delay).call(this.setBarSizes)
+      .transition(this.transitionID()).duration(duration).delay(delay).call(this.setBarSizes)
   }
 
   updateGraphicContents () {
@@ -129,7 +129,7 @@ class StackedColumnChart extends AbstractPlot {
     const duration = 300
 
     const exit = bars.exit()
-        .transition().duration(duration)
+        .transition(this.transitionID()).duration(duration)
         .attr('height', 0)
         .attr('y', this.height)
         .on('end', () => bars.exit().remove())
@@ -137,13 +137,13 @@ class StackedColumnChart extends AbstractPlot {
     const delay = exit.size() ? duration : 0
 
     bars
-      .transition().delay(delay).duration(duration)
+      .transition(this.transitionID()).delay(delay).duration(duration)
       .call(this.setBarSizes)
 
     bars.enter().append('rect')
       .attr('class', 'bar')
       .call(this.setInitialBarSizes)
-      .transition().delay(delay).duration(duration)
+      .transition(this.transitionID()).delay(delay).duration(duration)
       .call(this.setBarSizes)
 
     if (this.dataLabels) {

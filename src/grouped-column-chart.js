@@ -130,12 +130,14 @@ class GroupedColumnChart extends AbstractPlot {
   updateVizComponents (duration = 500, delay = 0) {
     super.updateVizComponents(duration, delay)
     this.svg.selectAll('.barGroup')
-      .transition().duration(duration).delay(delay)
+      .transition(this.transitionID()).duration(duration).delay(delay)
       .attr('transform', d => `translate(${this.getXScale()(d.category)},0)`)
     this.svg.selectAll('.barGroup').selectAll('.bar')
-      .transition().duration(duration).delay(delay).call(this.setBarSizes)
+      .transition(this.transitionID()).duration(duration).delay(delay)
+      .call(this.setBarSizes)
     this.svg.selectAll('.barGroup').selectAll('.dataLabel')
-      .transition().duration(duration).delay(delay).call(this.setDataLabels)
+      .transition(this.transitionID()).duration(duration).delay(delay)
+      .call(this.setDataLabels)
   }
 
   updateGraphicContents () {
@@ -150,19 +152,19 @@ class GroupedColumnChart extends AbstractPlot {
 
     // First, reduce height of the exiting bars
     barGroups.exit().selectAll('.bar')
-      .transition().duration(DURATION)
+      .transition(this.transitionID()).duration(DURATION)
         .call(this.setInitialBarSizes)
         .on('end', () => barGroups.exit().remove())
 
     barGroups.exit().selectAll('.dataLabel')
-      .transition().duration(DURATION)
+      .transition(this.transitionID()).duration(DURATION)
         .call(this.setInitialDataLabels)
 
     const delay = barGroups.exit().size() ? DURATION : 0
 
     // Now move the bar groups
     barGroups
-      .transition().delay(delay).duration(DURATION)
+      .transition(this.transitionID()).delay(delay).duration(DURATION)
       .attr('transform', d => `translate(${this.getXScale()(d.category)},0)`)
 
     // Finally, add the bar groups and bars
@@ -178,11 +180,11 @@ class GroupedColumnChart extends AbstractPlot {
     bars.enter().append('rect')
       .attr('class', 'bar')
       .call(this.setInitialBarSizes)
-      .transition().delay(delay).duration(DURATION)
+      .transition(this.transitionID()).delay(delay).duration(DURATION)
       .call(this.setBarSizes)
 
     bars
-      .transition().delay(delay).duration(DURATION)
+      .transition(this.transitionID()).delay(delay).duration(DURATION)
       .call(this.setBarSizes)
 
     if (this.dataLabels) {
@@ -194,11 +196,11 @@ class GroupedColumnChart extends AbstractPlot {
       dataLabels.enter().append('text')
         .attr('class', 'dataLabel')
         .call(this.setInitialDataLabels)
-        .transition().delay(delay).duration(DURATION)
+        .transition(this.transitionID()).delay(delay).duration(DURATION)
         .call(this.setDataLabels)
 
       dataLabels
-        .transition().delay(delay).duration(DURATION)
+        .transition(this.transitionID()).delay(delay).duration(DURATION)
         .call(this.setDataLabels)
     }
 

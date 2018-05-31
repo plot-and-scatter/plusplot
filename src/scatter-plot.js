@@ -53,7 +53,7 @@ class ScatterPlot extends AbstractPlot {
       // which in turn will actually animate the height of the points.
       this.setState({ initialUpdate: false })
     }
-    this.svg.selectAll('.point').transition().duration(duration).call(this.setPointPositions)
+    this.svg.selectAll('.point').transition(this.transitionID()).duration(duration).call(this.setPointPositions)
   }
 
   updateGraphicContents () {
