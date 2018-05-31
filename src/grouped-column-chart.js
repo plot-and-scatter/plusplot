@@ -129,9 +129,10 @@ class GroupedColumnChart extends AbstractPlot {
 
   updateVizComponents (duration = 500, delay = 0) {
     super.updateVizComponents(duration, delay)
+    const translateX = this.getXScale()(d.category) || 0
     this.svg.selectAll('.barGroup')
       .transition().duration(duration).delay(delay)
-      .attr('transform', d => `translate(${this.getXScale()(d.category)},0)`)
+      .attr('transform', d => `translate(${translateX},0)`)
     this.svg.selectAll('.barGroup').selectAll('.bar')
       .transition().duration(duration).delay(delay).call(this.setBarSizes)
     this.svg.selectAll('.barGroup').selectAll('.dataLabel')
