@@ -25,6 +25,7 @@ class ColumnChart extends AbstractPlot {
     this.setYLines = this.setYLines.bind(this)
     this.setYLineLabels = this.setYLineLabels.bind(this)
     this.setExitingBarSizes = this.setExitingBarSizes.bind(this)
+    this.setExitingDataLabels = this.setExitingDataLabels.bind(this)
   }
 
   initialSetup () {
@@ -78,7 +79,7 @@ class ColumnChart extends AbstractPlot {
   }
 
   setExitingDataLabels (bars) {
-    bars.attr('y', 0)
+    bars.attr('y', this.height)
   }
 
   setDataLabels (dataLabels) {
