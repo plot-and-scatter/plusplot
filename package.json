@@ -46,6 +46,7 @@
     "eslint-plugin-react": "^7.1.0",
     "mocha": "^3.4.2",
     "prop-types": "^15.5.10",
+    "standard": "^11.0.1",
     "watchify": "^3.9.0"
   },
   "dependencies": {
