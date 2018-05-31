@@ -31,8 +31,10 @@ class GroupedColumnChart extends AbstractPlot {
 
   getXScale () {
     const minRange = 0
-    const maxRange = this.width
+    const maxRange = this.width || 1
     const domain = this.props.data.map(d => d.category)
+    console.log('minRange', minRange, 'maxRange', maxRange)
+    console.log('domain', domain)
     return d3.scaleBand()
       .range([minRange, maxRange])
       .domain(domain)
@@ -134,6 +136,7 @@ class GroupedColumnChart extends AbstractPlot {
       .attr('transform', d => {
         console.log('d', d)
         console.log(this.getXScale()(d.category))
+        console.log('---')
         return `translate(${this.getXScale()(d.category) || 0},0)`
       })
     this.svg.selectAll('.barGroup').selectAll('.bar')
