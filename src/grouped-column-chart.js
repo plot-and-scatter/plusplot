@@ -163,13 +163,13 @@ class GroupedColumnChart extends AbstractPlot {
     // Now move the bar groups
     barGroups
       .transition().delay(delay).duration(DURATION)
-      .attr('transform', d => `translate(${this.getXScale()(d.category)},0)`)
+      .attr('transform', d => `translate(${this.getXScale()(d.category) || 0},0)`)
 
     // Finally, add the bar groups and bars
     barGroups.enter().append('g')
       .attr('class', 'barGroup')
       .attr('data-category', d => d.category)
-      .attr('transform', d => `translate(${this.getXScale()(d.category)},0)`)
+      .attr('transform', d => `translate(${this.getXScale()(d.category) || 0},0)`)
 
     const bars = this.wrapper.selectAll('.barGroup')
       .selectAll('.bar')
