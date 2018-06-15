@@ -157,7 +157,7 @@ class ColumnChart extends AbstractPlot {
       .transition(this.transitionID()).duration(DURATION).on('end', () => dataLabels.exit().remove())
         .call(this.setExitingDataLabels)
 
-    console.log('bars.exit()', bars.exit(), bars.exit().size())
+    // console.log('bars.exit()', bars.exit(), bars.exit().size())
 
     const delay = bars.exit().size() ? DURATION : 0
 
