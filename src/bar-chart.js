@@ -124,10 +124,13 @@ class BarChart extends AbstractPlot {
 
   setXLineLabels (xLineLabels) {
     xLineLabels
-      .attr('y', 10)
+      .attr('y', d => {
+        console.log('d.yPosition', d.yPosition)
+        return d.yPosition
+          ? (d.yPosition < 0 ? this.height + d.yPosition : d.yPosition)
+          : 0
+      })
       .attr('x', d => this.getXScale()(d.value) + 5)
-      .attr('height', this.height)
-      .attr('width', d => d.width || 1)
       .attr('fill', d => d.color)
       .style('font-family', this.font)
       .style('text-anchor', 'start')

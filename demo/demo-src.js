@@ -353,7 +353,7 @@ class App extends React.Component {
             },
             margins: { left: 100 }
           }}
-          xLines={[{ value: 5, label: 'Now', color: 'grey' }]}
+          xLines={[{ value: 5, label: 'Now', color: 'grey', yPosition: 15 }]}
         />
         <h3>Data</h3>
         <div className='data'>
