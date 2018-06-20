@@ -125,7 +125,6 @@ class BarChart extends AbstractPlot {
   setXLineLabels (xLineLabels) {
     xLineLabels
       .attr('y', d => {
-        console.log('d.yPosition', d.yPosition)
         return d.yPosition
           ? (d.yPosition < 0 ? this.height + d.yPosition : d.yPosition)
           : 0
