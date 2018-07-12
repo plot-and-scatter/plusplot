@@ -59,7 +59,7 @@ class ColumnChart extends AbstractPlot {
       .attr('x', d => this.getXScale()(d.category))
       .attr('y', d => this.getYScale()(d.count))
       .attr('width', this.getXScale().bandwidth())
-      .attr('height', d => this.height - this.getYScale()(d.count))
+      .attr('height', d => this.height - this.getYScale()(d.count || 0))
       .attr('fill', (d, i) => d.color || colorCategoryScale(i))
   }
 
