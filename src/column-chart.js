@@ -201,12 +201,4 @@ class ColumnChart extends AbstractPlot {
   }
 }
 
-ColumnChart.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.shape({
-    category: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-    count: PropTypes.number.isRequired,
-    color: PropTypes.string
-  })).isRequired
-}
-
 module.exports = ColumnChart
