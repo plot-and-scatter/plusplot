@@ -112,7 +112,7 @@ class SlopeGraph extends AbstractPlot {
 
   updateVizComponents (duration = 500) {
     super.updateVizComponents(duration)
-    this.svg.selectAll('.line').transition().duration(duration).call(this.drawSlopes)
+    this.svg.selectAll('.line').transition(this.transitionID()).duration(duration).call(this.drawSlopes)
     if (this.state.initialUpdate) {
       // Initial update? No animation
       this.svg.selectAll('g.left-label').call(this.drawInitialLabels, 'left')
@@ -121,8 +121,8 @@ class SlopeGraph extends AbstractPlot {
       // which in turn will actually animate the height of the bars.
       this.setState({ initialUpdate: false })
     }
-    this.svg.selectAll('g.left-label').transition().duration(duration).call(this.drawLabels, 'left')
-    this.svg.selectAll('g.right-label').transition().duration(duration).call(this.drawLabels, 'right')
+    this.svg.selectAll('g.left-label').transition(this.transitionID()).duration(duration).call(this.drawLabels, 'left')
+    this.svg.selectAll('g.right-label').transition(this.transitionID()).duration(duration).call(this.drawLabels, 'right')
   }
 
   updateGraphicContents () {

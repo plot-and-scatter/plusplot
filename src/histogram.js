@@ -112,7 +112,7 @@ class Histogram extends AbstractPlot {
       // which in turn will actually animate the height of the bars.
       this.setState({ initialUpdate: false })
     }
-    this.svg.selectAll('.bar').transition().duration(duration).call(this.setBarSizes)
+    this.svg.selectAll('.bar').transition(this.transitionID()).duration(duration).call(this.setBarSizes)
   }
 
   updateGraphicContents () {

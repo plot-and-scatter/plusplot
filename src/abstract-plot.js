@@ -100,7 +100,7 @@ class AbstractPlot extends React.Component {
     }
 
     window.addEventListener('resize', () => {
-      console.log('AbstractPlot.resize listener')
+      // console.log('AbstractPlot.resize listener')
       this.updateGraphicDimensions()
       this.updateVizComponents()
     })
@@ -108,7 +108,7 @@ class AbstractPlot extends React.Component {
     // Some other components might tell this one that it has been shown after
     // being hidden (e.g. if display is set to none and then to block).
     window.addEventListener('shown', () => {
-      console.log('AbstractPlot.shown listener')
+      // console.log('AbstractPlot.shown listener')
       const duration = 0 // Duration in milliseconds. Don't animate
       this.updateGraphicDimensions()
       this.updateGraphicContents(duration)
@@ -186,11 +186,11 @@ class AbstractPlot extends React.Component {
     const yAxis = this.svg.select('.y-axis')
     const xAxis = this.svg.select('.x-axis')
 
-    yAxis.transition()
+    yAxis.transition(this.transitionID())
       .duration(duration).delay(delay)
       .call(d3.axisLeft(this.getYScale()))
 
-    xAxis.transition()
+    xAxis.transition(this.transitionID())
       .duration(duration).delay(delay)
       .call(d3.axisBottom(this.getXScale()))
 
@@ -213,6 +213,16 @@ class AbstractPlot extends React.Component {
   }
 
   resetGraphic () {
+  }
+
+  transitionID () {
+    // Generate a UUID for a unique transition ID, so transitions don't cancel
+    // each other. Adapted from https://stackoverflow.com/a/2117523.
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+      const r = Math.random() * 16 | 0
+      const v = c === 'x' ? r : (r & 0x3 | 0x8)
+      return v.toString(16)
+    })
   }
 
   render () {

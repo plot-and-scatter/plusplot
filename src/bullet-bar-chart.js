@@ -170,8 +170,8 @@ class BulletBarChart extends AbstractPlot {
 
   updateVizComponents (duration = 500) {
     super.updateVizComponents(duration)
-    this.svg.selectAll('.xLine').transition().duration(duration).call(this.setXLines)
-    this.svg.selectAll('.xLineLabel').transition().duration(duration).call(this.setXLineLabels)
+    this.svg.selectAll('.xLine').transition(this.transitionID()).duration(duration).call(this.setXLines)
+    this.svg.selectAll('.xLineLabel').transition(this.transitionID()).duration(duration).call(this.setXLineLabels)
     if (this.state.initialUpdate) {
       // Initial update? No animation
       this.svg.selectAll('.bulletBar').call(this.setInitialBulletBarSizes)
@@ -182,10 +182,10 @@ class BulletBarChart extends AbstractPlot {
       // which in turn will actually animate the height of the bars.
       this.setState({ initialUpdate: false })
     }
-    this.svg.selectAll('.bulletBar').transition().duration(duration).call(this.setBulletBarSizes)
-    this.svg.selectAll('.bar').transition().duration(duration).call(this.setBarSizes)
-    this.svg.selectAll('.dataLabel').transition().duration(duration).call(this.setDataLabels)
-    this.svg.selectAll('.bulletBarLabel').transition().duration(duration).call(this.setBulletBarLabels)
+    this.svg.selectAll('.bulletBar').transition(this.transitionID()).duration(duration).call(this.setBulletBarSizes)
+    this.svg.selectAll('.bar').transition(this.transitionID()).duration(duration).call(this.setBarSizes)
+    this.svg.selectAll('.dataLabel').transition(this.transitionID()).duration(duration).call(this.setDataLabels)
+    this.svg.selectAll('.bulletBarLabel').transition(this.transitionID()).duration(duration).call(this.setBulletBarLabels)
   }
 
   updateGraphicContents () {

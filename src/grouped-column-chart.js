@@ -71,11 +71,11 @@ class GroupedColumnChart extends AbstractPlot {
     const barDomainExtent = d3.extent(this.getInnerXScale().domain())
 
     const colorCategoryScale = this.props.colors
-    ? (this.props.colors.length === 2
+      ? (this.props.colors.length === 2
         ? d3.scaleLinear().domain(barDomainExtent).range(this.props.colors)
         : d3.scaleOrdinal(this.props.colors)
       )
-    : d3.scaleOrdinal(d3.schemeCategory20)
+      : d3.scaleOrdinal(d3.schemeCategory20)
 
     bars
       .attr('x', (d, i) => this.getInnerXScale()(i))
@@ -93,9 +93,9 @@ class GroupedColumnChart extends AbstractPlot {
 
     const colorCategoryScale = this.props.colors
       ? (this.props.colors.length === 2
-          ? d3.scaleLinear().domain(barDomainExtent).range(this.props.colors)
-          : d3.scaleOrdinal(this.props.colors)
-        )
+        ? d3.scaleLinear().domain(barDomainExtent).range(this.props.colors)
+        : d3.scaleOrdinal(this.props.colors)
+      )
       : d3.scaleOrdinal(d3.schemeCategory20)
 
     bars
@@ -132,17 +132,14 @@ class GroupedColumnChart extends AbstractPlot {
   updateVizComponents (duration = 500, delay = 0) {
     super.updateVizComponents(duration, delay)
     this.svg.selectAll('.barGroup')
-      .transition().duration(duration).delay(delay)
-      .attr('transform', d => {
-        console.log('d', d)
-        console.log(this.getXScale()(d.category))
-        console.log('---')
-        return `translate(${this.getXScale()(d.category) || 0},0)`
-      })
+      .transition(this.transitionID()).duration(duration).delay(delay)
+      .attr('transform', d => `translate(${this.getXScale()(d.category)},0)`)
     this.svg.selectAll('.barGroup').selectAll('.bar')
-      .transition().duration(duration).delay(delay).call(this.setBarSizes)
+      .transition(this.transitionID()).duration(duration).delay(delay)
+      .call(this.setBarSizes)
     this.svg.selectAll('.barGroup').selectAll('.dataLabel')
-      .transition().duration(duration).delay(delay).call(this.setDataLabels)
+      .transition(this.transitionID()).duration(duration).delay(delay)
+      .call(this.setDataLabels)
   }
 
   updateGraphicContents () {
@@ -157,20 +154,20 @@ class GroupedColumnChart extends AbstractPlot {
 
     // First, reduce height of the exiting bars
     barGroups.exit().selectAll('.bar')
-      .transition().duration(DURATION)
-        .call(this.setInitialBarSizes)
-        .on('end', () => barGroups.exit().remove())
+      .transition(this.transitionID()).duration(DURATION)
+      .call(this.setInitialBarSizes)
+      .on('end', () => barGroups.exit().remove())
 
     barGroups.exit().selectAll('.dataLabel')
-      .transition().duration(DURATION)
-        .call(this.setInitialDataLabels)
+      .transition(this.transitionID()).duration(DURATION)
+      .call(this.setInitialDataLabels)
 
     const delay = barGroups.exit().size() ? DURATION + 50 : 0
 
     // Now move the bar groups
     barGroups
-      .transition().delay(delay).duration(DURATION)
-      .attr('transform', d => `translate(${this.getXScale()(d.category) || 0},0)`)
+      .transition(this.transitionID()).delay(delay).duration(DURATION)
+      .attr('transform', d => `translate(${this.getXScale()(d.category)},0)`)
 
     // Finally, add the bar groups and bars
     barGroups.enter().append('g')
@@ -185,11 +182,11 @@ class GroupedColumnChart extends AbstractPlot {
     bars.enter().append('rect')
       .attr('class', 'bar')
       .call(this.setInitialBarSizes)
-      .transition().delay(delay).duration(DURATION)
+      .transition(this.transitionID()).delay(delay).duration(DURATION)
       .call(this.setBarSizes)
 
     bars
-      .transition().delay(delay).duration(DURATION)
+      .transition(this.transitionID()).delay(delay).duration(DURATION)
       .call(this.setBarSizes)
 
     if (this.dataLabels) {
@@ -201,11 +198,11 @@ class GroupedColumnChart extends AbstractPlot {
       dataLabels.enter().append('text')
         .attr('class', 'dataLabel')
         .call(this.setInitialDataLabels)
-        .transition().delay(delay).duration(DURATION)
+        .transition(this.transitionID()).delay(delay).duration(DURATION)
         .call(this.setDataLabels)
 
       dataLabels
-        .transition().delay(delay).duration(DURATION)
+        .transition(this.transitionID()).delay(delay).duration(DURATION)
         .call(this.setDataLabels)
     }
 
