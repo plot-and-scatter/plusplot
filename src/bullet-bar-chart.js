@@ -1,5 +1,4 @@
 import AbstractPlot from './abstract-plot'
-import PropTypes from 'prop-types'
 import * as d3 from 'd3'
 
 /**
@@ -54,7 +53,7 @@ class BulletBarChart extends AbstractPlot {
     const maxRange = Math.max(this.width, 1)
     const minDomain = this.getXOrigin()
     const maxDomain = d3.max(this.props.data.map(d =>
-      Math.max(d.count, d3.max(d.comparators.map(c => c.value))))
+      Math.max(d.count, d3.max(d.comparators.map(c => +c.value || 0))))
     )
     return d3.scaleLinear()
       .range([minRange, maxRange])
@@ -67,7 +66,10 @@ class BulletBarChart extends AbstractPlot {
     bars.attr('y', d => this.getYScale()(d.category))
       .attr('x', 1)
       .attr('height', this.getYScale().bandwidth())
-      .attr('width', d => this.getXScale()(d.count))
+      .attr('width', d => {
+        const xValue = this.getXScale()(d.count)
+        return isNaN(xValue) ? 0 : xValue
+      })
       .attr('fill', (d, i) => d.color || colorCategoryScale(i))
   }
 
@@ -107,7 +109,10 @@ class BulletBarChart extends AbstractPlot {
     const positionAdjustment = this.dataLabels.position || 0
     dataLabels
       .attr('y', d => this.getYScale()(d.category) + 0.5 * this.getYScale().bandwidth())
-      .attr('x', d => this.getXScale()(d.count) + positionAdjustment)
+      .attr('x', d => {
+        const xValue = this.getXScale()(d.count)
+        return (isNaN(xValue) ? 0 : xValue) + positionAdjustment
+      })
       .text(d => this.dataLabels.formatter ? this.dataLabels.formatter(d.count) : d.count)
       .style('font-family', this.font)
       .style('text-anchor', 'middle')
@@ -248,14 +253,6 @@ class BulletBarChart extends AbstractPlot {
   render () {
     return super.render()
   }
-}
-
-BulletBarChart.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.shape({
-    category: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-    count: PropTypes.number.isRequired,
-    color: PropTypes.string
-  })).isRequired
 }
 
 module.exports = BulletBarChart

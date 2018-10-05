@@ -54,7 +54,7 @@ class GroupedBarChart extends AbstractPlot {
     const minRange = 0
     const maxRange = Math.max(1, this.width)
     const minDomain = 0
-    const maxDomain = d3.max(this.props.data.map(d => d3.max(d.values)))
+    const maxDomain = 1.1 * d3.max(this.props.data.map(d => d3.max(d.values.map(v => +v || 0))))
     return d3.scaleLinear()
       .range([minRange, maxRange])
       .domain([minDomain, maxDomain])
@@ -75,7 +75,10 @@ class GroupedBarChart extends AbstractPlot {
       .attr('y', (d, i) => this.getInnerYScale()(i))
       .attr('x', 1)
       .attr('height', this.getInnerYScale().bandwidth())
-      .attr('width', d => this.getXScale()(d))
+      .attr('width', d => {
+        const xValue = this.getXScale()(d)
+        return isNaN(xValue) ? 0 : xValue
+      })
       .attr('fill', (d, i) => d.color || colorCategoryScale(i))
   }
 
@@ -105,7 +108,10 @@ class GroupedBarChart extends AbstractPlot {
 
     dataLabels
       .attr('y', (d, i) => this.getInnerYScale()(i) + 0.5 * this.getInnerYScale().bandwidth())
-      .attr('x', d => this.getXScale()(d) + positionAdjustment)
+      .attr('x', d => {
+        const xValue = this.getXScale()(d)
+        return (isNaN(xValue) ? 0 : xValue) + positionAdjustment
+      })
       .style('font-family', this.font)
       .style('text-anchor', 'middle')
       .style('alignment-baseline', 'middle')
