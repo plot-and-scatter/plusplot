@@ -46,7 +46,7 @@ class ColumnChart extends AbstractPlot {
     const minRange = 0
     const maxRange = this.height
     const minDomain = 0
-    const maxDomain = d3.max(this.props.data.map(d => d.count))
+    const maxDomain = d3.max(this.props.data.map(d => +d.count || 0))
     return d3.scaleLinear()
       .range([maxRange, minRange]) // Yes, we need to swap these
       .domain([minDomain, maxDomain])
@@ -57,9 +57,15 @@ class ColumnChart extends AbstractPlot {
     const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory20)
     bars
       .attr('x', d => this.getXScale()(d.category))
-      .attr('y', d => this.getYScale()(d.count))
+      .attr('y', d => {
+        const yValue = this.getYScale()(d.count)
+        return isNaN(yValue) ? this.height : yValue
+      })
       .attr('width', this.getXScale().bandwidth())
-      .attr('height', d => this.height - this.getYScale()(d.count || 0))
+      .attr('height', d => {
+        const yValue = this.getYScale()(d.count || 0)
+        return isNaN(yValue) ? 0 : this.height - yValue
+      })
       .attr('fill', (d, i) => d.color || colorCategoryScale(i))
   }
 
@@ -86,7 +92,10 @@ class ColumnChart extends AbstractPlot {
     const positionAdjustment = this.dataLabels.position || 0
     dataLabels
       .attr('x', d => this.getXScale()(d.category) + 0.5 * this.getXScale().bandwidth())
-      .attr('y', d => this.getYScale()(d.count) + positionAdjustment)
+      .attr('y', d => {
+        const yValue = this.getYScale()(d.count)
+        return (isNaN(yValue) ? this.height : yValue) + positionAdjustment
+      })
       .style('font-family', this.font)
       .style('text-anchor', 'middle')
       .style('alignment-baseline', 'middle')

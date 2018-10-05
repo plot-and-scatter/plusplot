@@ -60,7 +60,7 @@ class GroupedColumnChart extends AbstractPlot {
     const minRange = 0
     const maxRange = this.height
     const minDomain = 0
-    const maxDomain = d3.max(this.props.data.map(d => d3.max(d.values)))
+    const maxDomain = d3.max(this.props.data.map(d => d3.max(d.values.map(v => +v || 0))))
     return d3.scaleLinear()
       .range([maxRange, minRange]) // Yes, we need to swap these
       .domain([minDomain, maxDomain])
@@ -79,9 +79,15 @@ class GroupedColumnChart extends AbstractPlot {
 
     bars
       .attr('x', (d, i) => this.getInnerXScale()(i))
-      .attr('y', d => this.getYScale()(d))
+      .attr('y', d => { 
+        const yValue = this.getYScale()(d)
+        return isNaN(yValue) ? this.height: yValue
+      })
       .attr('width', this.getInnerXScale().bandwidth())
-      .attr('height', d => this.height - this.getYScale()(d))
+      .attr('height', d => {
+        const yValue = this.getYScale()(d)
+        return isNaN(yValue) ? 0 : (this.height - yValue)
+      })
       .attr('fill', (d, i) => d.color || colorCategoryScale(i))
   }
 
@@ -111,7 +117,10 @@ class GroupedColumnChart extends AbstractPlot {
 
     dataLabels
       .attr('x', (d, i) => this.getInnerXScale()(i) + 0.5 * this.getInnerXScale().bandwidth())
-      .attr('y', d => this.getYScale()(d) + positionAdjustment)
+      .attr('y', d => { 
+        const yValue = this.getYScale()(d)
+        return (isNaN(yValue) ? this.height : yValue) + positionAdjustment
+      })
       .style('font-family', this.font)
       .style('text-anchor', 'middle')
       .style('alignment-baseline', 'middle')
