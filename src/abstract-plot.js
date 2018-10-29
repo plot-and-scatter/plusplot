@@ -25,7 +25,9 @@ class AbstractPlot extends React.Component {
         yAxisVisible: true,
         xAxisTicksVisible: true,
         yAxisTicksVisible: true,
-        xAxisRotateTickLabels: 0
+        xAxisRotateTickLabels: 0,
+        yAxisTicks: 5,
+        xAxisTicks: 5
       }
     }
 
@@ -188,19 +190,19 @@ class AbstractPlot extends React.Component {
 
     yAxis.transition(this.transitionID())
       .duration(duration).delay(delay)
-      .call(d3.axisLeft(this.getYScale()))
+      .call(d3.axisLeft(this.getYScale()).ticks(this.axes.yAxisTicks))
 
     xAxis.transition(this.transitionID())
       .duration(duration).delay(delay)
-      .call(d3.axisBottom(this.getXScale()))
+      .call(d3.axisBottom(this.getXScale()).ticks(this.axes.xAxisTicks))
 
     const rotation = this.axes.xAxisRotateTickLabels
     const textAnchor =
             rotation < 0
-            ? 'end'
-            : rotation > 0
-            ? 'start'
-            : 'middle'
+              ? 'end'
+              : rotation > 0
+                ? 'start'
+                : 'middle'
 
     this.wrapper.selectAll('.x-axis .tick text')
       .attr('transform', `rotate(${rotation})`)

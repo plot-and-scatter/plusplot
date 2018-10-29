@@ -1,5 +1,4 @@
 import AbstractPlot from './abstract-plot'
-import PropTypes from 'prop-types'
 import * as d3 from 'd3'
 
 /**
@@ -160,11 +159,11 @@ class ColumnChart extends AbstractPlot {
     // Exit
     bars.exit()
       .transition(this.transitionID()).duration(DURATION).on('end', () => bars.exit().remove())
-        .call(this.setExitingBarSizes)
+      .call(this.setExitingBarSizes)
 
     dataLabels.exit()
       .transition(this.transitionID()).duration(DURATION).on('end', () => dataLabels.exit().remove())
-        .call(this.setExitingDataLabels)
+      .call(this.setExitingDataLabels)
 
     // console.log('bars.exit()', bars.exit(), bars.exit().size())
 
@@ -174,21 +173,21 @@ class ColumnChart extends AbstractPlot {
       .attr('class', 'bar')
       .call(this.setInitialBarSizes)
       .transition(this.transitionID()).delay(delay).duration(DURATION)
-        .call(this.setBarSizes)
+      .call(this.setBarSizes)
 
     dataLabels.enter().append('text')
       .attr('class', 'dataLabel')
       .call(this.setInitialDataLabels)
       .transition(this.transitionID()).delay(delay).duration(DURATION)
-        .call(this.setDataLabels)
+      .call(this.setDataLabels)
 
     bars
       .transition(this.transitionID()).delay(delay).duration(DURATION)
-        .call(this.setBarSizes)
+      .call(this.setBarSizes)
 
     dataLabels
       .transition(this.transitionID()).delay(delay).duration(DURATION)
-        .call(this.setDataLabels)
+      .call(this.setDataLabels)
 
     const yLines = this.wrapper.selectAll('.yLine')
       .data(this.props.yLines)
