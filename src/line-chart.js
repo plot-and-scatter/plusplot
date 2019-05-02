@@ -47,7 +47,7 @@ class LineChart extends AbstractPlot {
       .x(d => this.getXScale()(d.x))
       .y(d => this.getYScale()(d.y))
 
-    const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory20)
+    const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory10)
 
     lines.attr('d', d => lineFunction(d.values))
       .attr('fill', 'none')
