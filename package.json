@@ -1,6 +1,6 @@
 {
   "name": "@plot-and-scatter/plusplot",
-  "version": "0.25.1",
+  "version": "0.26.0",
   "description": "A small graphing library for React built in D3",
   "main": "lib/plusplot.js",
   "scripts": {
