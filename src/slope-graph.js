@@ -68,7 +68,7 @@ class SlopeGraph extends AbstractPlot {
       .x((d, i) => this.getXScale()(i))
       .y((d, i) => this.getYScale()(d))
 
-    const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory20)
+    const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory10)
 
     slopes.attr('d', d => lineFunction(d.values))
       .attr('fill', 'none')
@@ -89,7 +89,7 @@ class SlopeGraph extends AbstractPlot {
   }
 
   drawInitialLabels (gElements, side) {
-    const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory20)
+    const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory10)
 
     const index = side === 'left' ? 0 : 1
 

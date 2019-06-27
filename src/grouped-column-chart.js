@@ -75,7 +75,7 @@ class GroupedColumnChart extends AbstractPlot {
         ? d3.scaleLinear().domain(barDomainExtent).range(this.props.colors)
         : d3.scaleOrdinal(this.props.colors)
       )
-      : d3.scaleOrdinal(d3.schemeCategory20)
+      : d3.scaleOrdinal(d3.schemeCategory10)
 
     bars
       .attr('x', (d, i) => this.getInnerXScale()(i))
@@ -102,7 +102,7 @@ class GroupedColumnChart extends AbstractPlot {
         ? d3.scaleLinear().domain(barDomainExtent).range(this.props.colors)
         : d3.scaleOrdinal(this.props.colors)
       )
-      : d3.scaleOrdinal(d3.schemeCategory20)
+      : d3.scaleOrdinal(d3.schemeCategory10)
 
     bars
       .attr('x', (d, i) => this.getInnerXScale()(i))

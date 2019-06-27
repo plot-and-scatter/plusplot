@@ -88,7 +88,7 @@ class Histogram extends AbstractPlot {
 
   setInitialBarSizes (bars) {
     const x = this.getXScale()
-    const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory20)
+    const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory10)
     const histogramColor = this.props.data.color || colorCategoryScale(0)
 
     // Calculate the standard width, which will be of the first bin.

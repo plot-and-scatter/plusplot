@@ -62,7 +62,7 @@ class BulletBarChart extends AbstractPlot {
   }
 
   setBarSizes (bars) {
-    const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory20)
+    const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory10)
     bars.attr('y', d => this.getYScale()(d.category))
       .attr('x', 1)
       .attr('height', this.getYScale().bandwidth())
@@ -77,7 +77,7 @@ class BulletBarChart extends AbstractPlot {
   // correct, but not the y-values -- that way we can animate the height of the
   // bar changing
   setInitialBarSizes (bars) {
-    const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory20)
+    const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory10)
     bars.attr('y', d => this.getYScale()(d.category))
       .attr('x', 0)
       .attr('height', this.getYScale().bandwidth())
@@ -86,7 +86,7 @@ class BulletBarChart extends AbstractPlot {
   }
 
   setBulletBarSizes (bars) {
-    const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory20)
+    const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory10)
     bars
       .attr('y', d => this.getYScale()(d.category) - this.getYScale().bandwidth() * 0.5)
       .attr('x', d => d.showMark ? this.getXScale()(d.value) - 5 : 1)
@@ -96,7 +96,7 @@ class BulletBarChart extends AbstractPlot {
   }
 
   setInitialBulletBarSizes (bars) {
-    const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory20)
+    const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory10)
     bars
       .attr('y', d => this.getYScale()(d.category) - this.getYScale().bandwidth() * 0.5)
       .attr('x', 0)

@@ -53,7 +53,7 @@ class ColumnChart extends AbstractPlot {
   }
 
   setBarSizes (bars) {
-    const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory20)
+    const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory10)
     bars
       .attr('x', d => this.getXScale()(d.category))
       .attr('y', d => {
@@ -69,7 +69,7 @@ class ColumnChart extends AbstractPlot {
   }
 
   setInitialBarSizes (bars) {
-    const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory20)
+    const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory10)
     bars
       .attr('x', d => this.getXScale()(d.category))
       .attr('y', this.height)

@@ -3,8 +3,8 @@ const React = require('react')
 const ReactDOM = require('react-dom')
 
 class Utils {
-    // Get an integer in the range of min, max, inclusive.
-    // From https://stackoverflow.com/a/1527820
+  // Get an integer in the range of min, max, inclusive.
+  // From https://stackoverflow.com/a/1527820
   static getRandomInt (min = 1, max = 9) {
     return Math.floor(Math.random() * (max - min + 1)) + min
   }

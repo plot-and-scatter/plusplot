@@ -35,7 +35,7 @@ class ScatterPlot extends AbstractPlot {
   }
 
   setInitialPointPositions (points) {
-    const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory20)
+    const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory10)
 
     // Start the points in the middle, then 'burst' them out.
     points.attr('r', 5)
