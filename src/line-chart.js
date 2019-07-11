@@ -84,9 +84,7 @@ class LineChart extends AbstractPlot {
             .select('text')
             .text((d, i, n) => {
               console.log('d', d)
-              return this.getYScale()
-                .invert(pos.y)
-                .toFixed(2)
+              return d3.format('.0%')(this.getYScale().invert(pos.y))
             })
 
           return 'translate(' + mouse[0] + ',' + pos.y + ')'
