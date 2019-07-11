@@ -16,8 +16,14 @@ class LineChart extends AbstractPlot {
 
   initialSetupHook () {
     super.initialSetupHook()
-    this.mouseG = this.wrapper.append('g').attr('class', 'mouse-over-effects')
-    this.mouseG
+    this.mouseG = this.svg
+      .append('g')
+      .attr('class', 'mouse-over-effects')
+      .attr(
+        'transform',
+        'translate(' + this.margins.left + ',' + this.margins.top + ')'
+      )
+    this.wrapper
       .append('path') // this is the black vertical line to follow mouse
       .attr('class', 'mouse-line')
       .style('stroke', 'black')
@@ -41,6 +47,50 @@ class LineChart extends AbstractPlot {
         d3.select('.mouse-line').style('opacity', '1')
         d3.selectAll('.mouse-per-line circle').style('opacity', '1')
         d3.selectAll('.mouse-per-line text').style('opacity', '1')
+      })
+      .on('mousemove', (d, i, nodes) => {
+        const lines = document.getElementsByClassName('line')
+        const rectElement = nodes[i]
+        // mouse moving over canvas
+        var mouse = d3.mouse(rectElement)
+        d3.select('.mouse-line').attr('d', () => {
+          var d = 'M' + mouse[0] + ',' + this.height
+          d += ' ' + mouse[0] + ',' + 0
+          return d
+        })
+
+        d3.selectAll('.mouse-per-line').attr('transform', (d, i, nodes) => {
+          const mousePerLineElement = nodes[i]
+          var beginning = 0
+          var end = lines[i].getTotalLength()
+          var target = null
+          let pos
+
+          while (true) {
+            target = Math.floor((beginning + end) / 2)
+            pos = lines[i].getPointAtLength(target)
+            if (
+              (target === end || target === beginning) &&
+              pos.x !== mouse[0]
+            ) {
+              break
+            }
+            if (pos.x > mouse[0]) end = target
+            else if (pos.x < mouse[0]) beginning = target
+            else break // position found
+          }
+
+          d3.select(mousePerLineElement)
+            .select('text')
+            .text((d, i, n) => {
+              console.log('d', d)
+              return this.getYScale()
+                .invert(pos.y)
+                .toFixed(2)
+            })
+
+          return 'translate(' + mouse[0] + ',' + pos.y + ')'
+        })
       })
   }
 
@@ -91,72 +141,9 @@ class LineChart extends AbstractPlot {
   }
 
   buildMouseCatcher () {
-    // const mousePerLine = this.mouseG
-    //   .selectAll('.mouse-per-line')
-    //   .data(this.props.data, d => d.id || d.key)
-    //   .enter()
-    //   .append('g')
-    //   .attr('class', 'mouse-per-line')
-
-    // mousePerLine
-    //   .append('circle')
-    //   .attr('r', 5)
-    //   .style(
-    //     'stroke',
-    //     (d, i) => d.color || d3.scaleOrdinal(d3.schemeCategory10)(i)
-    //   )
-    //   .style(
-    //     'fill',
-    //     (d, i) => d.color || d3.scaleOrdinal(d3.schemeCategory10)(i)
-    //   )
-    //   .style('stroke-width', '1px')
-    //   .style('opacity', '0')
-
-    // mousePerLine.append('text').attr('transform', 'translate(10,3)')
-
-    const lines = document.getElementsByClassName('line')
-
     this.rect
       .attr('width', this.width) // can't catch mouse events on a g element
       .attr('height', this.height)
-
-    this.rect.on('mousemove', (d, i, nodes) => {
-      // mouse moving over canvas
-      var mouse = d3.mouse(nodes[i])
-      d3.select('.mouse-line').attr('d', () => {
-        var d = 'M' + mouse[0] + ',' + this.height
-        d += ' ' + mouse[0] + ',' + 0
-        return d
-      })
-
-      d3.selectAll('.mouse-per-line').attr('transform', (d, i) => {
-        var beginning = 0
-        var end = lines[i].getTotalLength()
-        var target = null
-        let pos
-
-        while (true) {
-          target = Math.floor((beginning + end) / 2)
-          pos = lines[i].getPointAtLength(target)
-          if ((target === end || target === beginning) && pos.x !== mouse[0]) {
-            break
-          }
-          if (pos.x > mouse[0]) end = target
-          else if (pos.x < mouse[0]) beginning = target
-          else break // position found
-        }
-
-        // d3.select(this)
-        //   .select('text')
-        //   .text(
-        //     this.getYScale()
-        //       .invert(pos.y)
-        //       .toFixed(2)
-        //   )
-
-        return 'translate(' + mouse[0] + ',' + pos.y + ')'
-      })
-    })
   }
 
   updateVizComponents (duration = 500) {
@@ -185,7 +172,7 @@ class LineChart extends AbstractPlot {
 
     lines.exit().remove()
 
-    const mousePerLine = this.mouseG
+    const mousePerLine = this.wrapper
       .selectAll('.mouse-per-line')
       .data(this.props.data, d => d.id || d.key)
 
@@ -202,7 +189,10 @@ class LineChart extends AbstractPlot {
       .style('stroke-width', '1px')
       .style('opacity', '0')
 
-    mousePerLineGs.append('text').attr('transform', 'translate(10,3)')
+    mousePerLineGs
+      .append('text')
+      .attr('transform', 'translate(10,3)')
+      .attr('fill', colorFunc)
 
     mousePerLine.exit().remove()
 
