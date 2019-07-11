@@ -27,7 +27,9 @@ class AbstractPlot extends React.Component {
         yAxisTicksVisible: true,
         xAxisRotateTickLabels: 0,
         yAxisTicks: 5,
-        xAxisTicks: 5
+        xAxisTicks: 5,
+        yAxisTickFormat: null,
+        xAxisTickFormat: null
       }
     }
 
@@ -39,9 +41,15 @@ class AbstractPlot extends React.Component {
     // options object; then reassign all merged sub-objects to the merged
     // options object. TODO: clean this up a little
     const propOptions = this.props.options || {}
-    const mergedMargins = Object.assign(defaultOptions.margins, (propOptions.margins || {}))
+    const mergedMargins = Object.assign(
+      defaultOptions.margins,
+      propOptions.margins || {}
+    )
 
-    const mergedAxes = Object.assign(defaultOptions.axes, (propOptions.axes || {}))
+    const mergedAxes = Object.assign(
+      defaultOptions.axes,
+      propOptions.axes || {}
+    )
 
     // const mergedAxisLabels = Object.assign(defaultOptions.axisLabels, (propOptions.axisLabels || {}));
     // const mergedAxisVisible = Object.assign(defaultOptions.axisVisible, (propOptions.axisVisible || {}));
@@ -76,7 +84,9 @@ class AbstractPlot extends React.Component {
 
   componentDidUpdate () {
     // console.log('AbstractPlot.componentDidUpdate')
-    if (this.props.data.length === 0) { this.resetGraphic() }
+    if (this.props.data.length === 0) {
+      this.resetGraphic()
+    }
     this.updateGraphicDimensions()
     this.updateGraphicContents()
   }
@@ -88,9 +98,13 @@ class AbstractPlot extends React.Component {
     // const yAxisLabel = 'Y Axis Label';
     this.svg = d3.select(this.svgRef)
 
-    this.wrapper = this.svg.append('g')
+    this.wrapper = this.svg
+      .append('g')
       .attr('class', 'wrapper')
-      .attr('transform', 'translate(' + this.margins.left + ',' + this.margins.top + ')')
+      .attr(
+        'transform',
+        'translate(' + this.margins.left + ',' + this.margins.top + ')'
+      )
 
     this.setupXAxis()
     this.setupYAxis()
@@ -129,15 +143,17 @@ class AbstractPlot extends React.Component {
         this.width = width - this.margins.left - this.margins.right
       } catch (e) {
         // Might happen if parentNode goes missing. Just log a warning
-        console.warn('AbstractPlot.updateGraphicDimensions(): widthByParent failure')
+        console.warn(
+          'AbstractPlot.updateGraphicDimensions(): widthByParent failure'
+        )
       }
     }
 
-    this.svg.attr('width', this.width + this.margins.left + this.margins.right)
+    this.svg
+      .attr('width', this.width + this.margins.left + this.margins.right)
       .attr('height', this.height + this.margins.top + this.margins.bottom)
 
-    this.wrapper.select('.x-axis-label')
-      .attr('x', this.width / 2)
+    this.wrapper.select('.x-axis-label').attr('x', this.width / 2)
   }
 
   getXScale () {
@@ -149,13 +165,15 @@ class AbstractPlot extends React.Component {
   }
 
   setupXAxis () {
-    this.wrapper.append('g')
+    this.wrapper
+      .append('g')
       .attr('class', 'x-axis')
       .attr('transform', 'translate(0,' + this.height + ')')
       .style('font-family', this.font)
       .style('display', this.axes.xAxisVisible ? '' : 'none')
 
-    this.wrapper.append('text')
+    this.wrapper
+      .append('text')
       .attr('class', 'axis-label x-axis-label')
       .attr('y', this.height + this.margins.bottom - 5) // -5 to ensure descenders are visible
       .style('text-anchor', 'middle')
@@ -165,12 +183,14 @@ class AbstractPlot extends React.Component {
   }
 
   setupYAxis () {
-    this.wrapper.append('g')
+    this.wrapper
+      .append('g')
       .attr('class', 'y-axis')
       .style('font-family', this.font)
       .style('display', this.axes.yAxisVisible ? '' : 'none')
 
-    this.wrapper.append('text')
+    this.wrapper
+      .append('text')
       .attr('class', 'axis-label y-axis-label')
       .attr('transform', 'rotate(-90)')
       .attr('y', 0 - this.margins.left + 10)
@@ -188,23 +208,31 @@ class AbstractPlot extends React.Component {
     const yAxis = this.svg.select('.y-axis')
     const xAxis = this.svg.select('.x-axis')
 
-    yAxis.transition(this.transitionID())
-      .duration(duration).delay(delay)
-      .call(d3.axisLeft(this.getYScale()).ticks(this.axes.yAxisTicks))
+    yAxis
+      .transition(this.transitionID())
+      .duration(duration)
+      .delay(delay)
+      .call(
+        d3
+          .axisLeft(this.getYScale())
+          .ticks(this.axes.yAxisTicks, this.axes.yAxisTickFormat)
+      )
 
-    xAxis.transition(this.transitionID())
-      .duration(duration).delay(delay)
-      .call(d3.axisBottom(this.getXScale()).ticks(this.axes.xAxisTicks))
+    xAxis
+      .transition(this.transitionID())
+      .duration(duration)
+      .delay(delay)
+      .call(
+        d3
+          .axisBottom(this.getXScale())
+          .ticks(this.axes.xAxisTicks, this.axes.xAxisTickFormat)
+      )
 
     const rotation = this.axes.xAxisRotateTickLabels
-    const textAnchor =
-            rotation < 0
-              ? 'end'
-              : rotation > 0
-                ? 'start'
-                : 'middle'
+    const textAnchor = rotation < 0 ? 'end' : rotation > 0 ? 'start' : 'middle'
 
-    this.wrapper.selectAll('.x-axis .tick text')
+    this.wrapper
+      .selectAll('.x-axis .tick text')
       .attr('transform', `rotate(${rotation})`)
       .style('text-anchor', textAnchor)
   }
@@ -214,15 +242,14 @@ class AbstractPlot extends React.Component {
     this.updateVizComponents()
   }
 
-  resetGraphic () {
-  }
+  resetGraphic () {}
 
   transitionID () {
     // Generate a UUID for a unique transition ID, so transitions don't cancel
     // each other. Adapted from https://stackoverflow.com/a/2117523.
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-      const r = Math.random() * 16 | 0
-      const v = c === 'x' ? r : (r & 0x3 | 0x8)
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+      const r = (Math.random() * 16) | 0
+      const v = c === 'x' ? r : (r & 0x3) | 0x8
       return v.toString(16)
     })
   }
@@ -230,7 +257,11 @@ class AbstractPlot extends React.Component {
   render () {
     return (
       <div className='ps-AbstractPlot'>
-        <svg ref={(svgRef) => { this.svgRef = svgRef }} />
+        <svg
+          ref={svgRef => {
+            this.svgRef = svgRef
+          }}
+        />
       </div>
     )
   }
