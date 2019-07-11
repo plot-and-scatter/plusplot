@@ -1,6 +1,8 @@
 import AbstractPlot from './abstract-plot'
 import * as d3 from 'd3'
 
+const colorFunc = (d, i) => d.color || d3.scaleOrdinal(d3.schemeCategory10)(i)
+
 class LineChart extends AbstractPlot {
   constructor (props) {
     super(props)
@@ -21,7 +23,6 @@ class LineChart extends AbstractPlot {
       .style('stroke', 'black')
       .style('stroke-width', '1px')
       .style('opacity', '1')
-    console.log('this.mouseG -->', this.mouseG)
 
     this.rect = this.mouseG
       .append('svg:rect') // append a rect to catch mouse movements on canvas
@@ -83,39 +84,37 @@ class LineChart extends AbstractPlot {
       .x(d => this.getXScale()(d.x))
       .y(d => this.getYScale()(d.y))
 
-    const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory10)
-
     lines
       .attr('d', d => lineFunction(d.values))
       .attr('fill', 'none')
-      .attr('stroke', (d, i) => d.color || colorCategoryScale(i))
+      .attr('stroke', colorFunc)
   }
 
   drawMouseCatcher (lines) {}
 
   buildMouseCatcher () {
-    const mousePerLine = this.mouseG
-      .selectAll('.mouse-per-line')
-      .data(this.props.data, d => d.id || d.key)
-      .enter()
-      .append('g')
-      .attr('class', 'mouse-per-line')
+    // const mousePerLine = this.mouseG
+    //   .selectAll('.mouse-per-line')
+    //   .data(this.props.data, d => d.id || d.key)
+    //   .enter()
+    //   .append('g')
+    //   .attr('class', 'mouse-per-line')
 
-    mousePerLine
-      .append('circle')
-      .attr('r', 5)
-      .style(
-        'stroke',
-        (d, i) => d.color || d3.scaleOrdinal(d3.schemeCategory10)(i)
-      )
-      .style(
-        'fill',
-        (d, i) => d.color || d3.scaleOrdinal(d3.schemeCategory10)(i)
-      )
-      .style('stroke-width', '1px')
-      .style('opacity', '0')
+    // mousePerLine
+    //   .append('circle')
+    //   .attr('r', 5)
+    //   .style(
+    //     'stroke',
+    //     (d, i) => d.color || d3.scaleOrdinal(d3.schemeCategory10)(i)
+    //   )
+    //   .style(
+    //     'fill',
+    //     (d, i) => d.color || d3.scaleOrdinal(d3.schemeCategory10)(i)
+    //   )
+    //   .style('stroke-width', '1px')
+    //   .style('opacity', '0')
 
-    mousePerLine.append('text').attr('transform', 'translate(10,3)')
+    // mousePerLine.append('text').attr('transform', 'translate(10,3)')
 
     const lines = document.getElementsByClassName('line')
 
@@ -182,6 +181,25 @@ class LineChart extends AbstractPlot {
       .attr('class', 'line')
 
     lines.exit().remove()
+
+    const mousePerLine = this.mouseG
+      .selectAll('.mouse-per-line')
+      .data(this.props.data, d => d.id || d.key)
+
+    const mousePerLineGs = mousePerLine
+      .enter()
+      .append('g')
+      .attr('class', 'mouse-per-line')
+
+    mousePerLineGs
+      .append('circle')
+      .attr('r', 5)
+      .style('stroke', colorFunc)
+      .style('fill', colorFunc)
+      .style('stroke-width', '1px')
+      .style('opacity', '0')
+
+    mousePerLineGs.append('text').attr('transform', 'translate(10,3)')
 
     this.buildMouseCatcher()
 
