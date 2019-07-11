@@ -90,8 +90,6 @@ class LineChart extends AbstractPlot {
       .attr('stroke', colorFunc)
   }
 
-  drawMouseCatcher (lines) {}
-
   buildMouseCatcher () {
     // const mousePerLine = this.mouseG
     //   .selectAll('.mouse-per-line')
@@ -168,6 +166,11 @@ class LineChart extends AbstractPlot {
       .transition(this.transitionID())
       .duration(duration)
       .call(this.drawLines)
+    this.svg
+      .selectAll('.mouse-per-line')
+      .transition(this.transitionID())
+      .duration(duration)
+      .call(this.buildMouseCatcher)
   }
 
   updateGraphicContents () {
@@ -201,7 +204,7 @@ class LineChart extends AbstractPlot {
 
     mousePerLineGs.append('text').attr('transform', 'translate(10,3)')
 
-    this.buildMouseCatcher()
+    mousePerLine.exit().remove()
 
     this.updateVizComponents()
   }
