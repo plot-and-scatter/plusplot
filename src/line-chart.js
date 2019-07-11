@@ -12,6 +12,18 @@ class LineChart extends AbstractPlot {
     return this.props.data.reduce((acc, d) => acc.concat(d.values), [])
   }
 
+  initialSetupHook () {
+    super.initialSetupHook()
+    this.mouseG = this.wrapper.append('g').attr('class', 'mouse-over-effects')
+    this.mouseG
+      .append('path') // this is the black vertical line to follow mouse
+      .attr('class', 'mouse-line')
+      .style('stroke', 'black')
+      .style('stroke-width', '1px')
+      .style('opacity', '1')
+    console.log('this.mouseG -->', this.mouseG)
+  }
+
   getXScale () {
     const minRange = 0
     const maxRange = this.width
@@ -63,17 +75,11 @@ class LineChart extends AbstractPlot {
   drawMouseCatcher (lines) {}
 
   buildMouseCatcher () {
-    const mouseG = this.wrapper.append('g').attr('class', 'mouse-over-effects')
-    mouseG
-      .append('path') // this is the black vertical line to follow mouse
-      .attr('class', 'mouse-line')
-      .style('stroke', 'black')
-      .style('stroke-width', '1px')
-      .style('opacity', '1')
+    console.log('this.mouseG', this.mouseG)
 
     const lines = document.getElementsByClassName('line')
 
-    const mousePerLine = mouseG
+    const mousePerLine = this.mouseG
       .selectAll('.mouse-per-line')
       .data(this.props.data, d => d.id || d.key)
       .enter()
@@ -96,7 +102,7 @@ class LineChart extends AbstractPlot {
 
     mousePerLine.append('text').attr('transform', 'translate(10,3)')
 
-    const rect = mouseG
+    const rect = this.mouseG
       .append('svg:rect') // append a rect to catch mouse movements on canvas
       .attr('width', this.width) // can't catch mouse events on a g element
       .attr('height', this.height)

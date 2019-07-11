@@ -75,10 +75,11 @@ class AbstractPlot extends React.Component {
     this.updateGraphicDimensions = this.updateGraphicDimensions.bind(this)
     this.getXScale = this.getXScale.bind(this)
     this.getYScale = this.getYScale.bind(this)
+    this.initialSetupHook = this.initialSetupHook.bind(this)
   }
 
   componentDidMount () {
-    // console.log('AbstractPlot.componentDidMount')
+    console.log('AbstractPlot.componentDidMount')
     this.initialSetup()
   }
 
@@ -111,6 +112,8 @@ class AbstractPlot extends React.Component {
 
     this.updateGraphicDimensions()
 
+    this.initialSetupHook()
+
     if (this.props.data && this.props.data.length > 0) {
       this.updateGraphicContents()
     }
@@ -130,6 +133,8 @@ class AbstractPlot extends React.Component {
       this.updateGraphicContents(duration)
     })
   }
+
+  initialSetupHook () {}
 
   updateGraphicDimensions () {
     // console.log('AbstractPlot.updateGraphicDimensions')
