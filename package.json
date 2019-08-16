@@ -10,8 +10,7 @@
     "demo-server": "http-server demo",
     "browserify": "browserify -t [ babelify --presets [ @babel/preset-env @babel/preset-react ] ] demo/demo-src.js -o demo/demo.js",
     "watchify": "watchify -t [ babelify --presets [ @babel/preset-env @babel/preset-react ] ] demo/demo-src.js -o demo/demo.js",
-    "prepublishOnly": "npm test && npm run build",
-    "test": "mocha --compilers js:@babel/register ./test"
+    "prepublishOnly": "npm run build"
   },
   "repository": {
     "type": "git",
