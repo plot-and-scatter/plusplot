@@ -32,7 +32,8 @@ class StackedColumnChart extends AbstractPlot {
     const minRange = 0
     const maxRange = this.width
     const domain = this.props.data.map(d => d.category)
-    return d3.scaleBand()
+    return d3
+      .scaleBand()
       .range([minRange, maxRange])
       .domain(domain)
       .padding(0.2)
@@ -42,24 +43,28 @@ class StackedColumnChart extends AbstractPlot {
     const minRange = 0
     const maxRange = this.height
     const minDomain = 0
-    const maxDomain = d3.max(this.props.data.map(d =>
-      this.props.stackKeys.reduce((acc, k) => acc + d[k], 0)
-    ))
-    return d3.scaleLinear()
+    const maxDomain = d3.max(
+      this.props.data.map(d =>
+        this.props.stackKeys.reduce((acc, k) => acc + d[k], 0)
+      )
+    )
+    return d3
+      .scaleLinear()
       .range([maxRange, minRange]) // Yes, we need to swap these
       .domain([minDomain, maxDomain])
       .nice()
   }
 
   getColorScale () {
-    return d3.scaleOrdinal()
+    return d3
+      .scaleOrdinal()
       .range(this.props.colors)
       .domain(this.props.stackKeys)
   }
 
   setBarSizes (bars) {
     bars
-      .attr('x', (d) => this.getXScale()(d.data.category))
+      .attr('x', d => this.getXScale()(d.data.category))
       .attr('y', d => this.getYScale()(d[1]))
       .attr('width', this.getXScale().bandwidth())
       .attr('height', d => this.getYScale()(d[0]) - this.getYScale()(d[1]))
@@ -67,7 +72,7 @@ class StackedColumnChart extends AbstractPlot {
 
   setInitialBarSizes (bars) {
     bars
-      .attr('x', (d) => this.getXScale()(d.data.category))
+      .attr('x', d => this.getXScale()(d.data.category))
       .attr('y', d => this.height)
       .attr('width', this.getXScale().bandwidth())
       .attr('height', 0)
@@ -76,25 +81,37 @@ class StackedColumnChart extends AbstractPlot {
   setDataLabels (dataLabelGroups) {
     const positionAdjustment = this.dataLabels.position || 0
 
-    dataLabelGroups
-      .attr('transform', d => `translate(${this.getXScale()(d.category)},0)`)
+    dataLabelGroups.attr(
+      'transform',
+      d => `translate(${this.getXScale()(d.category)},0)`
+    )
 
-    dataLabelGroups.selectAll('text')
-      .attr('x', (d, i) => this.getXScale()(i) + 0.5 * this.getXScale().bandwidth())
+    dataLabelGroups
+      .selectAll('text')
+      .attr(
+        'x',
+        (d, i) => this.getXScale()(i) + 0.5 * this.getXScale().bandwidth()
+      )
       .attr('y', d => this.getYScale()(d) + positionAdjustment)
       .style('font-family', this.font)
       .style('text-anchor', 'middle')
       .style('alignment-baseline', 'middle')
       .attr('fill', this.dataLabels.color)
-      .text(d => this.dataLabels.formatter ? this.dataLabels.formatter(d) : d)
+      .text(d => (this.dataLabels.formatter ? this.dataLabels.formatter(d) : d))
   }
 
   setInitialDataLabels (dataLabelGroups) {
-    dataLabelGroups
-      .attr('transform', d => `translate(${this.getXScale()(d.category)},0)`)
+    dataLabelGroups.attr(
+      'transform',
+      d => `translate(${this.getXScale()(d.category)},0)`
+    )
 
-    dataLabelGroups.selectAll('text')
-      .attr('x', (d, i) => this.getXScale()(i) + 0.5 * this.getXScale().bandwidth())
+    dataLabelGroups
+      .selectAll('text')
+      .attr(
+        'x',
+        (d, i) => this.getXScale()(i) + 0.5 * this.getXScale().bandwidth()
+      )
       .attr('y', d => this.height)
       .style('font-family', this.font)
       .style('text-anchor', 'middle')
@@ -104,8 +121,12 @@ class StackedColumnChart extends AbstractPlot {
 
   updateVizComponents (duration = 500, delay = 0) {
     super.updateVizComponents(duration, delay)
-    this.svg.selectAll('.bar')
-      .transition(this.transitionID()).duration(duration).delay(delay).call(this.setBarSizes)
+    this.svg
+      .selectAll('.bar')
+      .transition(this.transitionID())
+      .duration(duration)
+      .delay(delay)
+      .call(this.setBarSizes)
   }
 
   updateGraphicContents () {
@@ -116,44 +137,53 @@ class StackedColumnChart extends AbstractPlot {
       .selectAll('.barGroup')
       .data(stack(this.props.data), (d, i) => i)
 
-    barGroups.enter().append('g')
+    barGroups
+      .enter()
+      .append('g')
       .attr('class', 'barGroup')
       .attr('fill', d => this.getColorScale()(d.key))
 
     barGroups.exit().remove()
 
-    const bars = this.wrapper.selectAll('.barGroup')
+    const bars = this.wrapper
+      .selectAll('.barGroup')
       .selectAll('.bar')
       .data(d => d, d => d.data.category)
 
     const duration = 300
 
-    const exit = bars.exit()
-        .transition(this.transitionID()).duration(duration)
-        .attr('height', 0)
-        .attr('y', this.height)
-        .on('end', () => bars.exit().remove())
+    const exit = bars
+      .exit()
+      .transition(this.transitionID())
+      .duration(duration)
+      .attr('height', 0)
+      .attr('y', this.height)
+      .on('end', () => bars.exit().remove())
 
     const delay = exit.size() ? duration : 0
 
     bars
-      .transition(this.transitionID()).delay(delay).duration(duration)
+      .transition(this.transitionID())
+      .delay(delay)
+      .duration(duration)
       .call(this.setBarSizes)
 
-    bars.enter().append('rect')
+    bars
+      .enter()
+      .append('rect')
       .attr('class', 'bar')
       .call(this.setInitialBarSizes)
-      .transition(this.transitionID()).delay(delay).duration(duration)
+      .transition(this.transitionID())
+      .delay(delay)
+      .duration(duration)
       .call(this.setBarSizes)
 
     if (this.dataLabels) {
       // The dataLabels are the dataLabels within each group
       // const dataLabels = this.wrapper.selectAll('.dataLabelGroup').selectAll('.dataLabel')
       //   .data(d => d.values, (d, i) => i)
-
       // dataLabels.enter().append('text')
       //   .attr('class', 'dataLabel')
-
       // dataLabels.exit().remove()
     }
 
@@ -166,9 +196,12 @@ class StackedColumnChart extends AbstractPlot {
 }
 
 StackedColumnChart.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.shape({
-    category: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired
-  })).isRequired
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      category: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+        .isRequired
+    })
+  ).isRequired
 }
 
 module.exports = StackedColumnChart

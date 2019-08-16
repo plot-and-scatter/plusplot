@@ -35,7 +35,8 @@ class GroupedColumnChart extends AbstractPlot {
     const domain = this.props.data.map(d => d.category)
     // console.log('minRange', minRange, 'maxRange', maxRange)
     // console.log('domain', domain)
-    return d3.scaleBand()
+    return d3
+      .scaleBand()
       .range([minRange, maxRange])
       .domain(domain)
       .padding(0.2)
@@ -46,11 +47,14 @@ class GroupedColumnChart extends AbstractPlot {
     const maxRange = this.getXScale().bandwidth()
     const maxDomain = d3.max(this.props.data.map(d => d.values.length))
     const domain = []
-    for (let i = 0; i < maxDomain; i++) { domain.push(i) }
+    for (let i = 0; i < maxDomain; i++) {
+      domain.push(i)
+    }
     // console.log('* * *')
     // console.log('maxRange', maxRange)
     // console.log('domain', domain)
-    return d3.scaleBand()
+    return d3
+      .scaleBand()
       .rangeRound([minRange, maxRange])
       .domain(domain)
       .padding(0.05)
@@ -60,8 +64,11 @@ class GroupedColumnChart extends AbstractPlot {
     const minRange = 0
     const maxRange = this.height
     const minDomain = 0
-    const maxDomain = d3.max(this.props.data.map(d => d3.max(d.values.map(v => +v || 0))))
-    return d3.scaleLinear()
+    const maxDomain = d3.max(
+      this.props.data.map(d => d3.max(d.values.map(v => +v || 0)))
+    )
+    return d3
+      .scaleLinear()
       .range([maxRange, minRange]) // Yes, we need to swap these
       .domain([minDomain, maxDomain])
       .nice()
@@ -71,22 +78,24 @@ class GroupedColumnChart extends AbstractPlot {
     const barDomainExtent = d3.extent(this.getInnerXScale().domain())
 
     const colorCategoryScale = this.props.colors
-      ? (this.props.colors.length === 2
-        ? d3.scaleLinear().domain(barDomainExtent).range(this.props.colors)
+      ? this.props.colors.length === 2
+        ? d3
+          .scaleLinear()
+          .domain(barDomainExtent)
+          .range(this.props.colors)
         : d3.scaleOrdinal(this.props.colors)
-      )
       : d3.scaleOrdinal(d3.schemeCategory10)
 
     bars
       .attr('x', (d, i) => this.getInnerXScale()(i))
-      .attr('y', d => { 
+      .attr('y', d => {
         const yValue = this.getYScale()(d)
-        return isNaN(yValue) ? this.height: yValue
+        return isNaN(yValue) ? this.height : yValue
       })
       .attr('width', this.getInnerXScale().bandwidth())
       .attr('height', d => {
         const yValue = this.getYScale()(d)
-        return isNaN(yValue) ? 0 : (this.height - yValue)
+        return isNaN(yValue) ? 0 : this.height - yValue
       })
       .attr('fill', (d, i) => d.color || colorCategoryScale(i))
   }
@@ -98,10 +107,12 @@ class GroupedColumnChart extends AbstractPlot {
     const barDomainExtent = d3.extent(this.getInnerXScale().domain())
 
     const colorCategoryScale = this.props.colors
-      ? (this.props.colors.length === 2
-        ? d3.scaleLinear().domain(barDomainExtent).range(this.props.colors)
+      ? this.props.colors.length === 2
+        ? d3
+          .scaleLinear()
+          .domain(barDomainExtent)
+          .range(this.props.colors)
         : d3.scaleOrdinal(this.props.colors)
-      )
       : d3.scaleOrdinal(d3.schemeCategory10)
 
     bars
@@ -116,8 +127,12 @@ class GroupedColumnChart extends AbstractPlot {
     const positionAdjustment = this.dataLabels.position || 0
 
     dataLabels
-      .attr('x', (d, i) => this.getInnerXScale()(i) + 0.5 * this.getInnerXScale().bandwidth())
-      .attr('y', d => { 
+      .attr(
+        'x',
+        (d, i) =>
+          this.getInnerXScale()(i) + 0.5 * this.getInnerXScale().bandwidth()
+      )
+      .attr('y', d => {
         const yValue = this.getYScale()(d)
         return (isNaN(yValue) ? this.height : yValue) + positionAdjustment
       })
@@ -125,12 +140,16 @@ class GroupedColumnChart extends AbstractPlot {
       .style('text-anchor', 'middle')
       .style('alignment-baseline', 'middle')
       .attr('fill', this.dataLabels.color)
-      .text(d => this.dataLabels.formatter ? this.dataLabels.formatter(d) : d)
+      .text(d => (this.dataLabels.formatter ? this.dataLabels.formatter(d) : d))
   }
 
   setInitialDataLabels (dataLabels) {
     dataLabels
-      .attr('x', (d, i) => this.getInnerXScale()(i) + 0.5 * this.getInnerXScale().bandwidth())
+      .attr(
+        'x',
+        (d, i) =>
+          this.getInnerXScale()(i) + 0.5 * this.getInnerXScale().bandwidth()
+      )
       .attr('y', d => this.height)
       .style('font-family', this.font)
       .style('text-anchor', 'middle')
@@ -140,14 +159,25 @@ class GroupedColumnChart extends AbstractPlot {
 
   updateVizComponents (duration = 500, delay = 0) {
     super.updateVizComponents(duration, delay)
-    this.svg.selectAll('.barGroup')
-      .transition(this.transitionID()).duration(duration).delay(delay)
+    this.svg
+      .selectAll('.barGroup')
+      .transition(this.transitionID())
+      .duration(duration)
+      .delay(delay)
       .attr('transform', d => `translate(${this.getXScale()(d.category)},0)`)
-    this.svg.selectAll('.barGroup').selectAll('.bar')
-      .transition(this.transitionID()).duration(duration).delay(delay)
+    this.svg
+      .selectAll('.barGroup')
+      .selectAll('.bar')
+      .transition(this.transitionID())
+      .duration(duration)
+      .delay(delay)
       .call(this.setBarSizes)
-    this.svg.selectAll('.barGroup').selectAll('.dataLabel')
-      .transition(this.transitionID()).duration(duration).delay(delay)
+    this.svg
+      .selectAll('.barGroup')
+      .selectAll('.dataLabel')
+      .transition(this.transitionID())
+      .duration(duration)
+      .delay(delay)
       .call(this.setDataLabels)
   }
 
@@ -162,56 +192,83 @@ class GroupedColumnChart extends AbstractPlot {
     // EXITING
 
     // First, reduce height of the exiting bars
-    barGroups.exit().selectAll('.bar')
-      .transition(this.transitionID()).duration(DURATION)
+    barGroups
+      .exit()
+      .selectAll('.bar')
+      .transition(this.transitionID())
+      .duration(DURATION)
       .call(this.setInitialBarSizes)
       .on('end', () => barGroups.exit().remove())
 
-    barGroups.exit().selectAll('.dataLabel')
-      .transition(this.transitionID()).duration(DURATION)
+    barGroups
+      .exit()
+      .selectAll('.dataLabel')
+      .transition(this.transitionID())
+      .duration(DURATION)
       .call(this.setInitialDataLabels)
 
     const delay = barGroups.exit().size() ? DURATION + 50 : 0
 
     // Now move the bar groups
     barGroups
-      .transition(this.transitionID()).delay(delay).duration(DURATION)
+      .transition(this.transitionID())
+      .delay(delay)
+      .duration(DURATION)
       .attr('transform', d => `translate(${this.getXScale()(d.category)},0)`)
 
     // Finally, add the bar groups and bars
-    barGroups.enter().append('g')
+    barGroups
+      .enter()
+      .append('g')
       .attr('class', 'barGroup')
       .attr('data-category', d => d.category)
-      .attr('transform', d => `translate(${this.getXScale()(d.category) || 0},0)`)
+      .attr(
+        'transform',
+        d => `translate(${this.getXScale()(d.category) || 0},0)`
+      )
 
-    const bars = this.wrapper.selectAll('.barGroup')
+    const bars = this.wrapper
+      .selectAll('.barGroup')
       .selectAll('.bar')
       .data(d => d.values, (d, i) => i)
 
-    bars.enter().append('rect')
+    bars
+      .enter()
+      .append('rect')
       .attr('class', 'bar')
       .call(this.setInitialBarSizes)
-      .transition(this.transitionID()).delay(delay).duration(DURATION)
+      .transition(this.transitionID())
+      .delay(delay)
+      .duration(DURATION)
       .call(this.setBarSizes)
 
     bars
-      .transition(this.transitionID()).delay(delay).duration(DURATION)
+      .transition(this.transitionID())
+      .delay(delay)
+      .duration(DURATION)
       .call(this.setBarSizes)
 
     if (this.dataLabels) {
       // The dataLabels are the dataLabels within each group
-      const dataLabels = this.wrapper.selectAll('.barGroup')
+      const dataLabels = this.wrapper
+        .selectAll('.barGroup')
         .selectAll('.dataLabel')
         .data(d => d.values, (d, i) => i)
 
-      dataLabels.enter().append('text')
+      dataLabels
+        .enter()
+        .append('text')
         .attr('class', 'dataLabel')
         .call(this.setInitialDataLabels)
-        .transition(this.transitionID()).delay(delay).duration(DURATION)
+        .transition(this.transitionID())
+        .delay(delay)
+        .duration(DURATION)
         .call(this.setDataLabels)
 
       dataLabels
-        .transition(this.transitionID()).delay(delay).duration(DURATION)
+        .transition(this.transitionID())
+        .delay(delay)
+        .duration(DURATION)
         .call(this.setDataLabels)
     }
 
@@ -224,10 +281,13 @@ class GroupedColumnChart extends AbstractPlot {
 }
 
 GroupedColumnChart.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.shape({
-    category: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-    values: PropTypes.array.isRequired
-  })).isRequired
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      category: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+        .isRequired,
+      values: PropTypes.array.isRequired
+    })
+  ).isRequired
 }
 
 module.exports = GroupedColumnChart

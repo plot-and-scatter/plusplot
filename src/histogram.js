@@ -18,13 +18,19 @@ class Histogram extends AbstractPlot {
     // scale to build the histogram bins. For more information,
     // see https://github.com/d3/d3-array/issues/46
     const extent = d3.extent(data, d => +d.value || +d)
-    const scale = d3.scaleLinear().domain(extent).nice(numTicks)
-    const bins = d3.histogram()
+    const scale = d3
+      .scaleLinear()
+      .domain(extent)
+      .nice(numTicks)
+    const bins = d3
+      .histogram()
       .domain(scale.domain())
       .thresholds(scale.ticks())
       .value(d => +d.value || +d)(data)
 
-    const filteredBins = bins.filter(bin => (bin.x1 - bin.x0 > 0 || bin.length > 0))
+    const filteredBins = bins.filter(
+      bin => bin.x1 - bin.x0 > 0 || bin.length > 0
+    )
 
     return filteredBins
   }
@@ -49,11 +55,14 @@ class Histogram extends AbstractPlot {
     const lastBinWidth = this.getBinWidth(this.props.data[dataLength - 1])
     let maxDomain = this.props.data[dataLength - 1].x1
     if (lastBinWidth === 0) {
-      const secondLastBinWidth = this.getBinWidth(this.props.data[dataLength - 2])
+      const secondLastBinWidth = this.getBinWidth(
+        this.props.data[dataLength - 2]
+      )
       maxDomain += secondLastBinWidth
     }
 
-    return d3.scaleLinear()
+    return d3
+      .scaleLinear()
       .range([minRange, maxRange])
       .domain([minDomain, maxDomain])
       .nice()
@@ -66,7 +75,8 @@ class Histogram extends AbstractPlot {
     const minDomain = 0
     const maxDomain = d3.max(this.props.data.map(d => d.length))
 
-    return d3.scaleLinear()
+    return d3
+      .scaleLinear()
       .range([maxRange, minRange]) // Yes, we need to swap these
       .domain([minDomain, maxDomain])
   }
@@ -79,7 +89,8 @@ class Histogram extends AbstractPlot {
     const firstBin = this.props.data[0]
     const width = x(firstBin.x1) - x(firstBin.x0) - 1
 
-    bars.attr('x', 1)
+    bars
+      .attr('x', 1)
       .attr('y', d => y(d.length))
       .attr('width', width)
       .attr('height', d => this.height - y(d.length))
@@ -95,7 +106,8 @@ class Histogram extends AbstractPlot {
     const firstBin = this.props.data[0]
     const width = x(firstBin.x1) - x(firstBin.x0) - 1
 
-    bars.attr('x', 1)
+    bars
+      .attr('x', 1)
       .attr('y', this.height)
       .attr('width', width)
       .attr('height', 0)
@@ -112,14 +124,19 @@ class Histogram extends AbstractPlot {
       // which in turn will actually animate the height of the bars.
       this.setState({ initialUpdate: false })
     }
-    this.svg.selectAll('.bar').transition(this.transitionID()).duration(duration).call(this.setBarSizes)
+    this.svg
+      .selectAll('.bar')
+      .transition(this.transitionID())
+      .duration(duration)
+      .call(this.setBarSizes)
   }
 
   updateGraphicContents () {
-    const bars = this.wrapper.selectAll('.bar')
-      .data(this.props.data)
+    const bars = this.wrapper.selectAll('.bar').data(this.props.data)
 
-    bars.enter().append('rect')
+    bars
+      .enter()
+      .append('rect')
       .attr('class', 'bar')
 
     bars.exit().remove()

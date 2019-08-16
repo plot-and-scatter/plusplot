@@ -13,7 +13,8 @@ class ScatterPlot extends AbstractPlot {
     const maxRange = this.width
     const minDomain = 0
     const maxDomain = d3.max(this.props.data.map(d => d.x))
-    return d3.scaleLinear()
+    return d3
+      .scaleLinear()
       .range([minRange, maxRange])
       .domain([minDomain, maxDomain])
   }
@@ -23,13 +24,15 @@ class ScatterPlot extends AbstractPlot {
     const maxRange = this.height
     const minDomain = 0
     const maxDomain = d3.max(this.props.data.map(d => d.y))
-    return d3.scaleLinear()
+    return d3
+      .scaleLinear()
       .range([maxRange, minRange]) // Yes, we need to swap these
       .domain([minDomain, maxDomain])
   }
 
   setPointPositions (points) {
-    points.attr('r', 5)
+    points
+      .attr('r', 5)
       .attr('cx', d => this.getXScale()(d.x))
       .attr('cy', d => this.getYScale()(d.y))
   }
@@ -38,7 +41,8 @@ class ScatterPlot extends AbstractPlot {
     const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory10)
 
     // Start the points in the middle, then 'burst' them out.
-    points.attr('r', 5)
+    points
+      .attr('r', 5)
       .attr('cx', d => this.width / 2)
       .attr('cy', d => this.height / 2)
       .attr('fill', (d, i) => d.color || colorCategoryScale(i))
@@ -53,14 +57,19 @@ class ScatterPlot extends AbstractPlot {
       // which in turn will actually animate the height of the points.
       this.setState({ initialUpdate: false })
     }
-    this.svg.selectAll('.point').transition(this.transitionID()).duration(duration).call(this.setPointPositions)
+    this.svg
+      .selectAll('.point')
+      .transition(this.transitionID())
+      .duration(duration)
+      .call(this.setPointPositions)
   }
 
   updateGraphicContents () {
-    const points = this.wrapper.selectAll('.point')
-      .data(this.props.data)
+    const points = this.wrapper.selectAll('.point').data(this.props.data)
 
-    points.enter().append('circle')
+    points
+      .enter()
+      .append('circle')
       .attr('class', 'point')
 
     points.exit().remove()

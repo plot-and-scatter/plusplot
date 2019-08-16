@@ -39,7 +39,8 @@ class SlopeGraph extends AbstractPlot {
     const maxRange = this.width
     const minDomain = 0
     const maxDomain = 1
-    return d3.scaleLinear()
+    return d3
+      .scaleLinear()
       .range([minRange, maxRange])
       .domain([minDomain, maxDomain])
   }
@@ -49,7 +50,8 @@ class SlopeGraph extends AbstractPlot {
     const maxRange = this.height
     const minDomain = 0
     const maxDomain = d3.max(this.props.data.map(d => d3.max(d.values)))
-    return d3.scaleLinear()
+    return d3
+      .scaleLinear()
       .range([maxRange, minRange]) // Yes, we need to swap these
       .domain([minDomain, maxDomain])
   }
@@ -63,14 +65,16 @@ class SlopeGraph extends AbstractPlot {
   }
 
   drawSlopes (slopes) {
-    const lineFunction = d3.line()
+    const lineFunction = d3
+      .line()
       .curve(d3.curveBasis)
       .x((d, i) => this.getXScale()(i))
       .y((d, i) => this.getYScale()(d))
 
     const colorCategoryScale = d3.scaleOrdinal(d3.schemeCategory10)
 
-    slopes.attr('d', d => lineFunction(d.values))
+    slopes
+      .attr('d', d => lineFunction(d.values))
       .attr('fill', 'none')
       .attr('stroke', (d, i) => colorCategoryScale(i))
   }
@@ -78,12 +82,14 @@ class SlopeGraph extends AbstractPlot {
   drawLabels (gElements, side) {
     const index = side === 'left' ? 0 : 1
 
-    gElements.select('text')
+    gElements
+      .select('text')
       .text(d => `${d.category}:  ${d.values[index]}`)
       .attr('y', d => this.getYScale()(d.values[index]))
       .attr('x', this.getXScale()(index))
 
-    gElements.select('circle')
+    gElements
+      .select('circle')
       .attr('cy', d => this.getYScale()(d.values[index]))
       .attr('cx', this.getXScale()(index))
   }
@@ -93,7 +99,8 @@ class SlopeGraph extends AbstractPlot {
 
     const index = side === 'left' ? 0 : 1
 
-    gElements.select('text')
+    gElements
+      .select('text')
       .text(d => `${d.category}:  ${d.values[index]}`)
       .attr('fill', (d, i) => colorCategoryScale(i))
       .attr('y', d => this.getYScale()(d.values[index]))
@@ -103,7 +110,8 @@ class SlopeGraph extends AbstractPlot {
       .style('alignment-baseline', 'middle')
       .style('font-family', this.font)
 
-    gElements.select('circle')
+    gElements
+      .select('circle')
       .attr('fill', (d, i) => colorCategoryScale(i))
       .attr('cy', d => this.getYScale()(d.values[index]))
       .attr('cx', this.getXScale()(index))
@@ -112,7 +120,11 @@ class SlopeGraph extends AbstractPlot {
 
   updateVizComponents (duration = 500) {
     super.updateVizComponents(duration)
-    this.svg.selectAll('.line').transition(this.transitionID()).duration(duration).call(this.drawSlopes)
+    this.svg
+      .selectAll('.line')
+      .transition(this.transitionID())
+      .duration(duration)
+      .call(this.drawSlopes)
     if (this.state.initialUpdate) {
       // Initial update? No animation
       this.svg.selectAll('g.left-label').call(this.drawInitialLabels, 'left')
@@ -121,23 +133,35 @@ class SlopeGraph extends AbstractPlot {
       // which in turn will actually animate the height of the bars.
       this.setState({ initialUpdate: false })
     }
-    this.svg.selectAll('g.left-label').transition(this.transitionID()).duration(duration).call(this.drawLabels, 'left')
-    this.svg.selectAll('g.right-label').transition(this.transitionID()).duration(duration).call(this.drawLabels, 'right')
+    this.svg
+      .selectAll('g.left-label')
+      .transition(this.transitionID())
+      .duration(duration)
+      .call(this.drawLabels, 'left')
+    this.svg
+      .selectAll('g.right-label')
+      .transition(this.transitionID())
+      .duration(duration)
+      .call(this.drawLabels, 'right')
   }
 
   updateGraphicContents () {
-    const slopes = this.wrapper.selectAll('.line')
-      .data(this.props.data)
+    const slopes = this.wrapper.selectAll('.line').data(this.props.data)
 
-    slopes.enter().append('path')
+    slopes
+      .enter()
+      .append('path')
       .attr('class', 'line')
 
     slopes.exit().remove()
 
-    const leftLabels = this.wrapper.selectAll('g.left-label')
+    const leftLabels = this.wrapper
+      .selectAll('g.left-label')
       .data(this.props.data)
 
-    const leftLabelsEnter = leftLabels.enter().append('g')
+    const leftLabelsEnter = leftLabels
+      .enter()
+      .append('g')
       .attr('class', 'label left-label')
 
     leftLabelsEnter.append('text').attr('class', 'label left-label')
@@ -145,10 +169,13 @@ class SlopeGraph extends AbstractPlot {
 
     leftLabels.exit().remove()
 
-    const rightLabels = this.wrapper.selectAll('g.right-label')
+    const rightLabels = this.wrapper
+      .selectAll('g.right-label')
       .data(this.props.data)
 
-    const rightLabelsEnter = rightLabels.enter().append('g')
+    const rightLabelsEnter = rightLabels
+      .enter()
+      .append('g')
       .attr('class', 'label right-label')
 
     rightLabelsEnter.append('text').attr('class', 'label right-label')
@@ -165,10 +192,13 @@ class SlopeGraph extends AbstractPlot {
 }
 
 SlopeGraph.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.shape({
-    category: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-    values: PropTypes.array.isRequired
-  })).isRequired
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      category: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+        .isRequired,
+      values: PropTypes.array.isRequired
+    })
+  ).isRequired
 }
 
 module.exports = SlopeGraph

@@ -34,7 +34,8 @@ class BarChart extends AbstractPlot {
     const minRange = 0
     const maxRange = this.height
     const domain = this.props.data.map(d => d.category)
-    return d3.scaleBand()
+    return d3
+      .scaleBand()
       .range([minRange, maxRange])
       .domain(domain)
       .padding(0.2)
@@ -45,7 +46,8 @@ class BarChart extends AbstractPlot {
     const maxRange = Math.max(this.width, 1)
     const minDomain = 0
     const maxDomain = d3.max(this.props.data.map(d => d.count))
-    return d3.scaleLinear()
+    return d3
+      .scaleLinear()
       .range([minRange, maxRange])
       .domain([minDomain, maxDomain])
       .nice()
@@ -81,31 +83,55 @@ class BarChart extends AbstractPlot {
 
   updateVizComponents (duration = 500, delay = 0) {
     super.updateVizComponents(duration, delay)
-    this.svg.selectAll('.xLine')
-      .transition(this.transitionID()).duration(duration).delay(delay).call(this.setXLines)
-    this.svg.selectAll('.xLineLabel')
-      .transition(this.transitionID()).duration(duration).delay(delay).call(this.setXLineLabels)
-    this.svg.selectAll('.bar')
-      .transition(this.transitionID()).duration(duration).delay(delay).call(this.setBarSizes)
-    this.svg.selectAll('.dataLabel')
-      .transition(this.transitionID()).duration(duration).delay(delay).call(this.setDataLabels)
+    this.svg
+      .selectAll('.xLine')
+      .transition(this.transitionID())
+      .duration(duration)
+      .delay(delay)
+      .call(this.setXLines)
+    this.svg
+      .selectAll('.xLineLabel')
+      .transition(this.transitionID())
+      .duration(duration)
+      .delay(delay)
+      .call(this.setXLineLabels)
+    this.svg
+      .selectAll('.bar')
+      .transition(this.transitionID())
+      .duration(duration)
+      .delay(delay)
+      .call(this.setBarSizes)
+    this.svg
+      .selectAll('.dataLabel')
+      .transition(this.transitionID())
+      .duration(duration)
+      .delay(delay)
+      .call(this.setDataLabels)
   }
 
   setDataLabels (dataLabels) {
     const positionAdjustment = this.dataLabels.position || 0
     dataLabels
-      .attr('y', d => this.getYScale()(d.category) + 0.5 * this.getYScale().bandwidth())
+      .attr(
+        'y',
+        d => this.getYScale()(d.category) + 0.5 * this.getYScale().bandwidth()
+      )
       .attr('x', d => this.getXScale()(d.count) + positionAdjustment)
       .style('font-family', this.font)
       .style('text-anchor', 'middle')
       .style('alignment-baseline', 'middle')
       .style('fill', this.dataLabels.color)
-      .text(d => this.dataLabels.formatter ? this.dataLabels.formatter(d.count) : d.count)
+      .text(d =>
+        this.dataLabels.formatter ? this.dataLabels.formatter(d.count) : d.count
+      )
   }
 
   setInitialDataLabels (dataLabels) {
     dataLabels
-      .attr('y', d => this.getYScale()(d.category) + 0.5 * this.getYScale().bandwidth())
+      .attr(
+        'y',
+        d => this.getYScale()(d.category) + 0.5 * this.getYScale().bandwidth()
+      )
       .attr('x', 0)
       .style('font-family', this.font)
       .style('text-anchor', 'middle')
@@ -126,7 +152,9 @@ class BarChart extends AbstractPlot {
     xLineLabels
       .attr('y', d => {
         return d.yPosition
-          ? (d.yPosition < 0 ? this.height + d.yPosition : d.yPosition)
+          ? d.yPosition < 0
+            ? this.height + d.yPosition
+            : d.yPosition
           : 0
       })
       .attr('x', d => this.getXScale()(d.value) + 5)
@@ -141,54 +169,78 @@ class BarChart extends AbstractPlot {
     const DURATION = 300
 
     // Link data
-    const bars = this.wrapper.selectAll('.bar')
+    const bars = this.wrapper
+      .selectAll('.bar')
       .data(this.props.data, d => d.category)
 
-    const dataLabels = this.wrapper.selectAll('.dataLabel')
+    const dataLabels = this.wrapper
+      .selectAll('.dataLabel')
       .data(this.props.data, d => d.category)
 
     // Exit
-    bars.exit()
-      .transition(this.transitionID()).duration(DURATION).on('end', () => bars.exit().remove())
+    bars
+      .exit()
+      .transition(this.transitionID())
+      .duration(DURATION)
+      .on('end', () => bars.exit().remove())
       .call(this.setExitingBarSizes)
 
-    dataLabels.exit()
-      .transition(this.transitionID()).duration(DURATION).on('end', () => dataLabels.exit().remove())
+    dataLabels
+      .exit()
+      .transition(this.transitionID())
+      .duration(DURATION)
+      .on('end', () => dataLabels.exit().remove())
       .call(this.setExitingDataLabels)
 
     // console.log('bars.exit()', bars.exit(), bars.exit().size())
 
     const delay = bars.exit().size() ? DURATION : 0
 
-    bars.enter().append('rect')
+    bars
+      .enter()
+      .append('rect')
       .attr('class', 'bar')
       .call(this.setInitialBarSizes)
-      .transition(this.transitionID()).delay(delay).duration(DURATION)
-      .call(this.setBarSizes)
-
-    dataLabels.enter().append('text')
-      .attr('class', 'dataLabel')
-      .call(this.setInitialDataLabels)
-      .transition(this.transitionID()).delay(delay).duration(DURATION)
-      .call(this.setDataLabels)
-
-    bars
-      .transition(this.transitionID()).delay(delay).duration(DURATION)
+      .transition(this.transitionID())
+      .delay(delay)
+      .duration(DURATION)
       .call(this.setBarSizes)
 
     dataLabels
-      .transition(this.transitionID()).delay(delay).duration(DURATION)
+      .enter()
+      .append('text')
+      .attr('class', 'dataLabel')
+      .call(this.setInitialDataLabels)
+      .transition(this.transitionID())
+      .delay(delay)
+      .duration(DURATION)
       .call(this.setDataLabels)
 
-    const xLines = this.wrapper.selectAll('.xLine')
-      .data(this.props.xLines)
-    xLines.enter().append('rect')
+    bars
+      .transition(this.transitionID())
+      .delay(delay)
+      .duration(DURATION)
+      .call(this.setBarSizes)
+
+    dataLabels
+      .transition(this.transitionID())
+      .delay(delay)
+      .duration(DURATION)
+      .call(this.setDataLabels)
+
+    const xLines = this.wrapper.selectAll('.xLine').data(this.props.xLines)
+    xLines
+      .enter()
+      .append('rect')
       .attr('class', 'xLine')
     xLines.exit().remove()
 
-    const xLineLabels = this.wrapper.selectAll('.xLineLabel')
+    const xLineLabels = this.wrapper
+      .selectAll('.xLineLabel')
       .data(this.props.xLines)
-    xLineLabels.enter().append('text')
+    xLineLabels
+      .enter()
+      .append('text')
       .attr('class', 'xLineLabel')
     xLineLabels.exit().remove()
 
@@ -201,11 +253,14 @@ class BarChart extends AbstractPlot {
 }
 
 BarChart.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.shape({
-    category: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-    count: PropTypes.number.isRequired,
-    color: PropTypes.string
-  })).isRequired
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      category: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+        .isRequired,
+      count: PropTypes.number.isRequired,
+      color: PropTypes.string
+    })
+  ).isRequired
 }
 
 module.exports = BarChart

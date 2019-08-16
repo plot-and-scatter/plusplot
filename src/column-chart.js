@@ -35,7 +35,8 @@ class ColumnChart extends AbstractPlot {
     const minRange = 0
     const maxRange = this.width
     const domain = this.props.data.map(d => d.category)
-    return d3.scaleBand()
+    return d3
+      .scaleBand()
       .range([minRange, maxRange])
       .domain(domain)
       .padding(0.2)
@@ -46,7 +47,8 @@ class ColumnChart extends AbstractPlot {
     const maxRange = this.height
     const minDomain = 0
     const maxDomain = d3.max(this.props.data.map(d => +d.count || 0))
-    return d3.scaleLinear()
+    return d3
+      .scaleLinear()
       .range([maxRange, minRange]) // Yes, we need to swap these
       .domain([minDomain, maxDomain])
       .nice()
@@ -90,7 +92,10 @@ class ColumnChart extends AbstractPlot {
   setDataLabels (dataLabels) {
     const positionAdjustment = this.dataLabels.position || 0
     dataLabels
-      .attr('x', d => this.getXScale()(d.category) + 0.5 * this.getXScale().bandwidth())
+      .attr(
+        'x',
+        d => this.getXScale()(d.category) + 0.5 * this.getXScale().bandwidth()
+      )
       .attr('y', d => {
         const yValue = this.getYScale()(d.count)
         return (isNaN(yValue) ? this.height : yValue) + positionAdjustment
@@ -99,12 +104,17 @@ class ColumnChart extends AbstractPlot {
       .style('text-anchor', 'middle')
       .style('alignment-baseline', 'middle')
       .style('fill', this.dataLabels.color)
-      .text(d => this.dataLabels.formatter ? this.dataLabels.formatter(d.count) : d.count)
+      .text(d =>
+        this.dataLabels.formatter ? this.dataLabels.formatter(d.count) : d.count
+      )
   }
 
   setInitialDataLabels (dataLabels) {
     dataLabels
-      .attr('x', d => this.getXScale()(d.category) + 0.5 * this.getXScale().bandwidth())
+      .attr(
+        'x',
+        d => this.getXScale()(d.category) + 0.5 * this.getXScale().bandwidth()
+      )
       .attr('y', this.height)
       .style('font-family', this.font)
       .style('text-anchor', 'middle')
@@ -136,68 +146,108 @@ class ColumnChart extends AbstractPlot {
 
   updateVizComponents (duration = 500, delay = 0) {
     super.updateVizComponents(duration, delay)
-    this.svg.selectAll('.yLine')
-      .transition(this.transitionID()).duration(duration).delay(delay).call(this.setYLines)
-    this.svg.selectAll('.yLineLabel')
-      .transition(this.transitionID()).duration(duration).delay(delay).call(this.setYLineLabels)
-    this.svg.selectAll('.bar')
-      .transition(this.transitionID()).duration(duration).delay(delay).call(this.setBarSizes)
-    this.svg.selectAll('.dataLabel')
-      .transition(this.transitionID()).duration(duration).delay(delay).call(this.setDataLabels)
+    this.svg
+      .selectAll('.yLine')
+      .transition(this.transitionID())
+      .duration(duration)
+      .delay(delay)
+      .call(this.setYLines)
+    this.svg
+      .selectAll('.yLineLabel')
+      .transition(this.transitionID())
+      .duration(duration)
+      .delay(delay)
+      .call(this.setYLineLabels)
+    this.svg
+      .selectAll('.bar')
+      .transition(this.transitionID())
+      .duration(duration)
+      .delay(delay)
+      .call(this.setBarSizes)
+    this.svg
+      .selectAll('.dataLabel')
+      .transition(this.transitionID())
+      .duration(duration)
+      .delay(delay)
+      .call(this.setDataLabels)
   }
 
   updateGraphicContents () {
     const DURATION = 300
 
     // Link data
-    const bars = this.wrapper.selectAll('.bar')
+    const bars = this.wrapper
+      .selectAll('.bar')
       .data(this.props.data, d => d.category)
 
-    const dataLabels = this.wrapper.selectAll('.dataLabel')
+    const dataLabels = this.wrapper
+      .selectAll('.dataLabel')
       .data(this.props.data, d => d.category)
 
     // Exit
-    bars.exit()
-      .transition(this.transitionID()).duration(DURATION).on('end', () => bars.exit().remove())
+    bars
+      .exit()
+      .transition(this.transitionID())
+      .duration(DURATION)
+      .on('end', () => bars.exit().remove())
       .call(this.setExitingBarSizes)
 
-    dataLabels.exit()
-      .transition(this.transitionID()).duration(DURATION).on('end', () => dataLabels.exit().remove())
+    dataLabels
+      .exit()
+      .transition(this.transitionID())
+      .duration(DURATION)
+      .on('end', () => dataLabels.exit().remove())
       .call(this.setExitingDataLabels)
 
     // console.log('bars.exit()', bars.exit(), bars.exit().size())
 
     const delay = bars.exit().size() ? DURATION : 0
 
-    bars.enter().append('rect')
+    bars
+      .enter()
+      .append('rect')
       .attr('class', 'bar')
       .call(this.setInitialBarSizes)
-      .transition(this.transitionID()).delay(delay).duration(DURATION)
-      .call(this.setBarSizes)
-
-    dataLabels.enter().append('text')
-      .attr('class', 'dataLabel')
-      .call(this.setInitialDataLabels)
-      .transition(this.transitionID()).delay(delay).duration(DURATION)
-      .call(this.setDataLabels)
-
-    bars
-      .transition(this.transitionID()).delay(delay).duration(DURATION)
+      .transition(this.transitionID())
+      .delay(delay)
+      .duration(DURATION)
       .call(this.setBarSizes)
 
     dataLabels
-      .transition(this.transitionID()).delay(delay).duration(DURATION)
+      .enter()
+      .append('text')
+      .attr('class', 'dataLabel')
+      .call(this.setInitialDataLabels)
+      .transition(this.transitionID())
+      .delay(delay)
+      .duration(DURATION)
       .call(this.setDataLabels)
 
-    const yLines = this.wrapper.selectAll('.yLine')
-      .data(this.props.yLines)
-    yLines.enter().append('rect')
+    bars
+      .transition(this.transitionID())
+      .delay(delay)
+      .duration(DURATION)
+      .call(this.setBarSizes)
+
+    dataLabels
+      .transition(this.transitionID())
+      .delay(delay)
+      .duration(DURATION)
+      .call(this.setDataLabels)
+
+    const yLines = this.wrapper.selectAll('.yLine').data(this.props.yLines)
+    yLines
+      .enter()
+      .append('rect')
       .attr('class', 'yLine')
     yLines.exit().remove()
 
-    const yLineLabels = this.wrapper.selectAll('.yLineLabel')
+    const yLineLabels = this.wrapper
+      .selectAll('.yLineLabel')
       .data(this.props.yLines)
-    yLineLabels.enter().append('text')
+    yLineLabels
+      .enter()
+      .append('text')
       .attr('class', 'yLineLabel')
     yLineLabels.exit().remove()
 
